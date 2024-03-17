@@ -1,9 +1,12 @@
 using Microsoft.EntityFrameworkCore;
+using StudentOglasi.Services;
 using StudentOglasi.Services.Database;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+
+builder.Services.AddTransient<IObjaveService, ObjaveService>();
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -13,6 +16,8 @@ builder.Services.AddSwaggerGen();
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<StudentoglasiContext>(options =>
 options.UseSqlServer(connectionString));
+
+builder.Services.AddAutoMapper(typeof(IObjaveService));
 
 var app = builder.Build();
 
