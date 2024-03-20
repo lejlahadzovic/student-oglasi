@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using StudentOglasi.Model.Requests;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,6 +12,10 @@ namespace StudentOglasi.Services
     {
         public MappingProfile()
         {
+            CreateMap<Database.Korisnici, Model.Korisnik>();
+            CreateMap<KorisniciInsertRequest, Database.Korisnici>();
+            CreateMap<KorisniciUpdateRequest, Database.Korisnici>();
+            CreateMap<Database.Uloge, Model.Uloge>();
             CreateMap<Database.Objave, Model.Objave>();
             CreateMap<Model.Requests.ObjaveInsertRequest, Database.Objave>();
             CreateMap<Model.Requests.ObjaveUpdateRequest, Database.Objave>()

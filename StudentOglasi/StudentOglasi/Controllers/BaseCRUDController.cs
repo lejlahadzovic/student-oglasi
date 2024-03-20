@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using StudentOglasi.Model;
-using StudentOglasi.Services;
+using StudentOglasi.Services.Interfaces;
 
 namespace StudentOglasi.Controllers
 {

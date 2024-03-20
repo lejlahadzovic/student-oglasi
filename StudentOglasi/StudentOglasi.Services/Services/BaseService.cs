@@ -3,13 +3,14 @@ using Microsoft.EntityFrameworkCore;
 using StudentOglasi.Model;
 using StudentOglasi.Model.SearchObjects;
 using StudentOglasi.Services.Database;
+using StudentOglasi.Services.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace StudentOglasi.Services
+namespace StudentOglasi.Services.Services
 {
     public class BaseService<T, TDb, TSearch> : IService<T, TSearch> where TDb : class where T : class where TSearch : BaseSearchObject
     {
@@ -46,13 +47,16 @@ namespace StudentOglasi.Services
             result.Result = tmp;
             return result;
         }
-
+        public virtual IQueryable<TDb> AddInclude(IQueryable<TDb> query, TSearch? search = null)
+        {
+            return query;
+        }
         public virtual IQueryable<TDb> AddFilter(IQueryable<TDb> query, TSearch? search = null)
         {
             return query;
         }
 
-                public virtual async Task<T> GetById(int id)
+        public virtual async Task<T> GetById(int id)
         {
             var entity = await _context.Set<TDb>().FindAsync(id);
 

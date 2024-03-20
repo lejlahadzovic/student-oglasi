@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace StudentOglasi.Services
+namespace StudentOglasi.Services.Interfaces
 {
     public interface IService<T, TSearch> where TSearch : class
     {

@@ -8,10 +8,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace StudentOglasi.Services
+namespace StudentOglasi.Services.Interfaces
 {
-    public interface IObjaveService : ICRUDService<Objave,ObjaveSearchObject,ObjaveInsertRequest,ObjaveUpdateRequest>
+    public interface IObjaveService : ICRUDService<Objave, ObjaveSearchObject, ObjaveInsertRequest, ObjaveUpdateRequest>
     {
-
     }
 }

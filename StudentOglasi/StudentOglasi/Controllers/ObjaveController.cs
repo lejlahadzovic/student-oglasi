@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using StudentOglasi.Model;
 using StudentOglasi.Model.Requests;
 using StudentOglasi.Model.SearchObjects;
-using StudentOglasi.Services;
+using StudentOglasi.Services.Interfaces;
 
 namespace StudentOglasi.Controllers
 {

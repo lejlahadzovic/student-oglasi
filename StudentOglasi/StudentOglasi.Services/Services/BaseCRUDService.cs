@@ -7,19 +7,16 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace StudentOglasi.Services
+namespace StudentOglasi.Services.Services
 {
     public class BaseCRUDService<T, TDb, TSearch, TInsert, TUpdate> : BaseService<T, TDb, TSearch> where TDb : class where T : class where TSearch : BaseSearchObject
     {
         public BaseCRUDService(StudentoglasiContext context, IMapper mapper) : base(context, mapper)
         {
         }
-
         public virtual async Task BeforeInsert(TDb entity, TInsert insert)
         {
-
         }
-
         public virtual async Task<T> Insert(TInsert insert)
         {
             var set = _context.Set<TDb>();
@@ -32,8 +29,6 @@ namespace StudentOglasi.Services
             await _context.SaveChangesAsync();
             return _mapper.Map<T>(entity);
         }
-
-
         public virtual async Task<T> Update(int id, TUpdate update)
         {
             var set = _context.Set<TDb>();
@@ -45,6 +40,5 @@ namespace StudentOglasi.Services
             await _context.SaveChangesAsync();
             return _mapper.Map<T>(entity);
         }
-
     }
 }
