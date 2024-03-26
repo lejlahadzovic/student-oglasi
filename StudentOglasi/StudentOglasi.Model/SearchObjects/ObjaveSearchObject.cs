@@ -8,5 +8,6 @@ namespace StudentOglasi.Model.SearchObjects
 {
     public class ObjaveSearchObject : BaseSearchObject
     {
+        public string? Naslov { get; set; }
     }
 }

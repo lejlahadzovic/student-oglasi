@@ -28,7 +28,7 @@ namespace StudentOglasi
             var username = credentials[0];
             var password = credentials[1];
             var user = await _korisniciService.Login(username, password);
-            if (username == null || password == null)
+            if (user == null)
             {
                 return AuthenticateResult.Fail("Incorrect username or password.");
             }

@@ -21,6 +21,17 @@ namespace StudentOglasi.Services.Services
         {
             entity.VrijemeObjave = DateTime.Now;
         }
+        public override IQueryable<Database.Objave> AddFilter(IQueryable<Database.Objave> query, ObjaveSearchObject? search = null)
+        {
+            var filteredQuery = base.AddFilter(query, search);
+
+            if (!string.IsNullOrWhiteSpace(search?.Naslov))
+            {
+                filteredQuery = filteredQuery.Where(x => x.Naslov.Contains(search.Naslov));
+            }
+
+            return filteredQuery;
+        }
 
     }
 }
