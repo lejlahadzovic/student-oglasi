@@ -32,6 +32,8 @@ namespace StudentOglasi.Services.Services
 
             query = AddFilter(query, search);
 
+            query = AddInclude(query, search);
+
             result.Count = await query.CountAsync();
 
             if (search?.Page.HasValue == true && search?.PageSize.HasValue == true)

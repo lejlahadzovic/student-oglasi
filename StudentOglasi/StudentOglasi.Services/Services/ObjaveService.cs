@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using StudentOglasi.Model;
 using StudentOglasi.Model.Requests;
 using StudentOglasi.Model.SearchObjects;
@@ -29,9 +30,16 @@ namespace StudentOglasi.Services.Services
             {
                 filteredQuery = filteredQuery.Where(x => x.Naslov.Contains(search.Naslov));
             }
+            if(search?.KategorijaID!= null)
+            {
+                filteredQuery = filteredQuery.Where(x => x.KategorijaId == search.KategorijaID);
+            }
 
             return filteredQuery;
         }
-
+        public override IQueryable<Database.Objave> AddInclude(IQueryable<Database.Objave> query, ObjaveSearchObject? search = null)
+        {
+            return base.AddInclude(query.Include("Kategorija"), search);
+        }
     }
 }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:studentoglasi_admin/main.dart';
+import 'package:studentoglasi_admin/screens/login.dart';
 import 'package:studentoglasi_admin/screens/objave_list_screen.dart';
 
 class MasterScreenWidget extends StatefulWidget {
@@ -35,7 +36,7 @@ class _MasterScreenWidgetState extends State<MasterScreenWidget> {
               },
             ),
             ListTile(
-              title: Text('Logout'),
+              title: Text('Odjavi se'),
               onTap: () {
                 Navigator.of(context).push(
                   MaterialPageRoute(

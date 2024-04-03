@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/http.dart';
 import 'package:studentoglasi_admin/models/search_result.dart';
+import 'package:studentoglasi_admin/utils/util.dart';
 
 abstract class BaseProvider<T> with ChangeNotifier {
   static String? _baseUrl;
@@ -62,10 +63,8 @@ abstract class BaseProvider<T> with ChangeNotifier {
   }
 
   Map<String, String> createHeaders() {
-    String username = "admin";
-    String password = "admin";
-
-    print("passed creds: $username, $password");
+    String username = Authorization.username ?? '';
+    String password = Authorization.password ?? '';
 
     String basicAuth =
         "Basic ${base64Encode(utf8.encode('$username:$password'))}";

@@ -17,6 +17,7 @@ namespace StudentOglasi.Services
             CreateMap<KorisniciUpdateRequest, Database.Korisnici>();
             CreateMap<Database.Uloge, Model.Uloge>();
             CreateMap<Database.Objave, Model.Objave>();
+            CreateMap<Database.Kategorija, Model.Kategorija>();
             CreateMap<Model.Requests.ObjaveInsertRequest, Database.Objave>();
             CreateMap<Model.Requests.ObjaveUpdateRequest, Database.Objave>()
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null)); ;
