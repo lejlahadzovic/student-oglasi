@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:studentoglasi_admin/main.dart';
 import 'package:studentoglasi_admin/screens/objave_list_screen.dart';
+import 'package:studentoglasi_admin/screens/prakse_list_screen.dart';
+import 'package:studentoglasi_admin/screens/stipendije_list_screen.dart';
 
 class MasterScreenWidget extends StatefulWidget {
   Widget? child;
@@ -30,6 +32,26 @@ class _MasterScreenWidgetState extends State<MasterScreenWidget> {
                 Navigator.of(context).push(
                   MaterialPageRoute(
                     builder: (context) => const ObjaveListScreen(),
+                  ),
+                );
+              },
+            ),
+            ListTile(
+              title: Text('Prakse'),
+              onTap: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => const PrakseListScreen(),
+                  ),
+                );
+              },
+            ),
+            ListTile(
+              title: Text('Stipendije'),
+              onTap: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => const StipendijeListScreen(),
                   ),
                 );
               },

@@ -30,5 +30,11 @@ namespace StudentOglasi.Controllers
             return await _service.Update(id, update);
         }
 
+        [HttpDelete("{id}")]
+        public virtual async Task Delete(int id)
+        {
+           await _service.Delete(id);
+        }
+
     }
 }

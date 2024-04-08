@@ -3,12 +3,16 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:studentoglasi_admin/providers/objave_provider.dart';
+import 'package:studentoglasi_admin/providers/prakse_provider.dart';
+import 'package:studentoglasi_admin/providers/stipendije_provider.dart';
 import 'package:studentoglasi_admin/screens/objave_list_screen.dart';
 import 'package:studentoglasi_admin/utils/util.dart';
 
 void main() {
   runApp(MultiProvider(
-    providers: [ChangeNotifierProvider(create: (_) => ObjaveProvider())],
+    providers: [ChangeNotifierProvider(create: (_) => ObjaveProvider()),
+    ChangeNotifierProvider(create: (context) => PraksaProvider()),
+    ChangeNotifierProvider(create: (context) => StipendijeProvider())],
     child: const MyApp(),
   ));
 }

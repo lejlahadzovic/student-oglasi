@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/http.dart';
 import 'package:studentoglasi_admin/models/search_result.dart';
+import 'package:studentoglasi_admin/utils/util.dart';
 
 abstract class BaseProvider<T> with ChangeNotifier {
   static String? _baseUrl;
@@ -60,10 +61,19 @@ abstract class BaseProvider<T> with ChangeNotifier {
       throw new Exception("Something bad happened please try again");
     }
   }
-
+   Future<bool> delete(int? id) async {
+    var url = Uri.parse('$_baseUrl$_endPoint/$id');
+    var headers=createHeaders();
+    final response =await http.delete(url,headers: headers);
+    if (response.statusCode == 200) {
+     return true;
+    } else {
+      throw Exception('Failed to delete');
+    }
+  }
   Map<String, String> createHeaders() {
-    String username = "admin";
-    String password = "admin";
+    String username=Authorization.username??"";
+    String password=Authorization.password??"";
 
     print("passed creds: $username, $password");
 

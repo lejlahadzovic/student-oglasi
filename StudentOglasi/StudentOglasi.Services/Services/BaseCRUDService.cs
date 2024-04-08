@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using StudentOglasi.Model.SearchObjects;
 using StudentOglasi.Services.Database;
 using System;
@@ -6,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace StudentOglasi.Services.Services
 {
@@ -39,6 +41,16 @@ namespace StudentOglasi.Services.Services
 
             await _context.SaveChangesAsync();
             return _mapper.Map<T>(entity);
+        }
+        public virtual async Task Delete(int id)
+        {
+            var set =  _context.Set<TDb>();
+            var entity =await set.FindAsync(id);
+            if (entity != null)
+            {
+                set.Remove(entity);
+                await _context.SaveChangesAsync();
+            }
         }
     }
 }

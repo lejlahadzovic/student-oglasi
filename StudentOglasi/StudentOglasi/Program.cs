@@ -11,6 +11,8 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddTransient<IObjaveService, ObjaveService>();
 builder.Services.AddTransient<IKorisniciService, KorisniciService>();
+builder.Services.AddTransient<IPrakseService, PrakseService>();
+builder.Services.AddTransient<IStipendijeService, StipendijeService>();
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -38,7 +40,9 @@ builder.Services.AddDbContext<StudentoglasiContext>(options =>
 options.UseSqlServer(connectionString));
 
 builder.Services.AddAutoMapper(typeof(IObjaveService));
+builder.Services.AddAutoMapper(typeof(IPrakseService));
 builder.Services.AddAutoMapper(typeof(IKorisniciService));
+builder.Services.AddAutoMapper(typeof(IStipendijeService));
 builder.Services.AddAuthentication("BasicAuthentication")
     .AddScheme<AuthenticationSchemeOptions, BasicAuthenticationHandler>("BasicAuthentication", null);
 
