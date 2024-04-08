@@ -1,5 +1,7 @@
 // ignore_for_file: prefer_const_literals_to_create_immutables
 
+import 'package:dropdown_button2/dropdown_button2.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
@@ -45,7 +47,9 @@ class _ObjaveListScreenState extends State<ObjaveListScreen> {
   @override
   Widget build(BuildContext context) {
     return MasterScreenWidget(
-      title_widget: Text("Novosti"),
+      //title_widget: Text("Novosti"),
+      title: "Novosti",
+      addButtonLabel: "Dodaj objavu",
       child: Container(
         child: Column(
           children: [_buildSearch(), _buildDataListView()],
@@ -63,6 +67,7 @@ class _ObjaveListScreenState extends State<ObjaveListScreen> {
       kategorijeResult = kategorijeData;
     });
   }
+  
 
   Widget _buildSearch() {
     return Padding(
@@ -70,7 +75,7 @@ class _ObjaveListScreenState extends State<ObjaveListScreen> {
       child: Row(
         children: [
           Expanded(
-            flex: 2,
+            flex: 6,
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 8.0),
               child: TextField(
@@ -85,9 +90,15 @@ class _ObjaveListScreenState extends State<ObjaveListScreen> {
           ),
           SizedBox(width: 30.0),
           Expanded(
+            flex: 4,
             child: Padding(
               padding: const EdgeInsets.only(top: 25.0),
-              child: DropdownButton<Kategorija>(
+              child: DropdownButton2<Kategorija>(
+                
+          isExpanded: true,
+          hint: Text(
+            'Kategorija',
+          ),
                 value: selectedKategorija,
                 onChanged: (Kategorija? newValue) {
                   setState(() {
@@ -103,22 +114,25 @@ class _ObjaveListScreenState extends State<ObjaveListScreen> {
                     [],
               ),
             ),
+            ),
+            SizedBox(width: 30.0),
+          Expanded(
+            flex: 2,
+            child: Padding(
+              padding: const EdgeInsets.only(top: 25.0),
+              child: ElevatedButton(
+                  onPressed: () async {
+                    // Navigator.of(context).pop();
+            
+                    var data = await _objaveProvider
+                        .get(filter: {'naslov': _naslovController.text, 'kategorijaID':selectedKategorija?.id});
+                    setState(() {
+                      result = data;
+                    });
+                  },
+                  child: Text("Filtriraj")),
+            ),
           ),
-          SizedBox(width: 30),
-          Padding(
-            padding: const EdgeInsets.only(top: 25.0),
-            child: ElevatedButton(
-                onPressed: () async {
-                  // Navigator.of(context).pop();
-
-                  var data = await _objaveProvider
-                      .get(filter: {'naslov': _naslovController.text, 'kategorijaID':selectedKategorija?.id});
-                  setState(() {
-                    result = data;
-                  });
-                },
-                child: Text("Filtriraj")),
-          )
         ],
       ),
     );
