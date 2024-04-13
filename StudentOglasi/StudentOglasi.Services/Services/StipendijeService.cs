@@ -31,7 +31,7 @@ namespace StudentOglasi.Services.Services
         }
         public override async Task<PagedResult<Model.Stipendije>> Get(StipendijeSearchObject? search = null)
         {
-            var query = _context.Set<Database.Stipendije>().Include(p => p.IdNavigation).Include(p => p.Status).AsQueryable();
+            var query = _context.Set<Database.Stipendije>().Include(p => p.IdNavigation).Include(p => p.Status).Include(p=>p.Stipenditor).AsQueryable();
 
             PagedResult<Model.Stipendije> result = new PagedResult<Model.Stipendije>();
 

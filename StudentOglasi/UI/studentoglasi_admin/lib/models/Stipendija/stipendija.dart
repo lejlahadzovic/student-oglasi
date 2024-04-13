@@ -13,7 +13,7 @@ class Stipendije {
   int? id;
   String? uslovi;
   double? iznos;
-  double? kriterij;
+  String? kriterij;
   String? potrebnaDokumentacija;
   String? izvor;
   String? nivoObrazovanja;

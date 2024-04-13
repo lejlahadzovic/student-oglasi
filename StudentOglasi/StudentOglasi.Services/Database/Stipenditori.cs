@@ -22,4 +22,6 @@ public partial class Stipenditori
     public virtual Grad Grad { get; set; } = null!;
 
     public virtual ICollection<Ocjene> Ocjenes { get; set; } = new List<Ocjene>();
+
+    public virtual ICollection<Stipendije> Stipendijes { get; set; } = new List<Stipendije>();
 }

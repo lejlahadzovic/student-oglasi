@@ -71,6 +71,8 @@ public partial class StudentoglasiContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        modelBuilder.UseCollation("SQL_Latin1_General_CP1_CI_AS");
+
         modelBuilder.Entity<Fakulteti>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("PK_Fakultet");
@@ -80,13 +82,12 @@ public partial class StudentoglasiContext : DbContext
             entity.HasIndex(e => e.UniverzitetId, "IX_Fakultet_UniverzitetID");
 
             entity.Property(e => e.Id).HasColumnName("ID");
-            entity.Property(e => e.Adresa).HasMaxLength(50);
+            entity.Property(e => e.Adresa).HasMaxLength(200);
             entity.Property(e => e.Email).HasMaxLength(50);
-            entity.Property(e => e.Link).HasMaxLength(50);
-            entity.Property(e => e.Logo).HasMaxLength(50);
-            entity.Property(e => e.Naziv).HasMaxLength(50);
-            entity.Property(e => e.Opis).HasMaxLength(50);
-            entity.Property(e => e.Slika).HasMaxLength(50);
+            entity.Property(e => e.Link).HasMaxLength(100);
+            entity.Property(e => e.Logo).HasMaxLength(100);
+            entity.Property(e => e.Naziv).HasMaxLength(200);
+            entity.Property(e => e.Slika).HasMaxLength(100);
             entity.Property(e => e.Telefon).HasMaxLength(50);
             entity.Property(e => e.UniverzitetId).HasColumnName("UniverzitetID");
 
@@ -109,7 +110,7 @@ public partial class StudentoglasiContext : DbContext
 
             entity.Property(e => e.Id).HasColumnName("ID");
             entity.Property(e => e.Naziv).HasMaxLength(50);
-            entity.Property(e => e.Opis).HasMaxLength(50);
+            entity.Property(e => e.Opis).HasMaxLength(500);
         });
 
         modelBuilder.Entity<Komentari>(entity =>
@@ -131,7 +132,7 @@ public partial class StudentoglasiContext : DbContext
             entity.Property(e => e.KorisnikId).HasColumnName("KorisnikID");
             entity.Property(e => e.ObjavaId).HasColumnName("ObjavaID");
             entity.Property(e => e.OglasId).HasColumnName("OglasID");
-            entity.Property(e => e.Text).HasMaxLength(50);
+            entity.Property(e => e.Text).HasMaxLength(3000);
 
             entity.HasOne(d => d.Komentar).WithMany(p => p.InverseKomentar)
                 .HasForeignKey(d => d.KomentarId)
@@ -163,7 +164,7 @@ public partial class StudentoglasiContext : DbContext
             entity.Property(e => e.LozinkaHash).HasMaxLength(50);
             entity.Property(e => e.LozinkaSalt).HasMaxLength(50);
             entity.Property(e => e.Prezime).HasMaxLength(50);
-            entity.Property(e => e.Slika).HasMaxLength(50);
+            entity.Property(e => e.Slika).HasMaxLength(100);
             entity.Property(e => e.UlogaId).HasColumnName("UlogaID");
 
             entity.HasOne(d => d.Uloga).WithMany(p => p.Korisnicis)
@@ -181,8 +182,7 @@ public partial class StudentoglasiContext : DbContext
             entity.Property(e => e.Id)
                 .ValueGeneratedNever()
                 .HasColumnName("ID");
-            entity.Property(e => e.Naziv).HasMaxLength(50);
-            entity.Property(e => e.Opis).HasMaxLength(250);
+            entity.Property(e => e.Naziv).HasMaxLength(100);
         });
 
         modelBuilder.Entity<Objave>(entity =>
@@ -195,9 +195,8 @@ public partial class StudentoglasiContext : DbContext
 
             entity.Property(e => e.Id).HasColumnName("ID");
             entity.Property(e => e.KategorijaId).HasColumnName("KategorijaID");
-            entity.Property(e => e.Naslov).HasMaxLength(50);
-            entity.Property(e => e.Sadrzaj).HasMaxLength(500);
-            entity.Property(e => e.Slika).HasMaxLength(50);
+            entity.Property(e => e.Naslov).HasMaxLength(200);
+            entity.Property(e => e.Slika).HasMaxLength(100);
 
             entity.HasOne(d => d.Kategorija).WithMany(p => p.Objaves)
                 .HasForeignKey(d => d.KategorijaId)
@@ -225,7 +224,6 @@ public partial class StudentoglasiContext : DbContext
             entity.Property(e => e.Id).HasColumnName("ID");
             entity.Property(e => e.FakultetId).HasColumnName("FakultetID");
             entity.Property(e => e.FirmaId).HasColumnName("FirmaID");
-            entity.Property(e => e.Komentar).HasMaxLength(50);
             entity.Property(e => e.SmjestajId).HasColumnName("SmjestajID");
             entity.Property(e => e.StipenditorId).HasColumnName("StipenditorID");
             entity.Property(e => e.UniverzitetId).HasColumnName("UniverzitetID");
@@ -262,9 +260,8 @@ public partial class StudentoglasiContext : DbContext
             entity.ToTable("Oglasi");
 
             entity.Property(e => e.Id).HasColumnName("ID");
-            entity.Property(e => e.Naslov).HasMaxLength(50);
-            entity.Property(e => e.Opis).HasMaxLength(500);
-            entity.Property(e => e.Slika).HasMaxLength(50);
+            entity.Property(e => e.Naslov).HasMaxLength(200);
+            entity.Property(e => e.Slika).HasMaxLength(100);
         });
 
         modelBuilder.Entity<Organizacije>(entity =>
@@ -276,11 +273,11 @@ public partial class StudentoglasiContext : DbContext
             entity.HasIndex(e => e.GradId, "IX_Firma_GradID");
 
             entity.Property(e => e.Id).HasColumnName("ID");
-            entity.Property(e => e.Adresa).HasMaxLength(50);
+            entity.Property(e => e.Adresa).HasMaxLength(200);
             entity.Property(e => e.Email).HasMaxLength(50);
             entity.Property(e => e.GradId).HasColumnName("GradID");
             entity.Property(e => e.Link).HasMaxLength(50);
-            entity.Property(e => e.Naziv).HasMaxLength(50);
+            entity.Property(e => e.Naziv).HasMaxLength(200);
             entity.Property(e => e.Telefon).HasMaxLength(50);
 
             entity.HasOne(d => d.Grad).WithMany(p => p.Organizacijes)
@@ -297,8 +294,8 @@ public partial class StudentoglasiContext : DbContext
             entity.Property(e => e.Id)
                 .ValueGeneratedNever()
                 .HasColumnName("ID");
-            entity.Property(e => e.Benefiti).HasMaxLength(200);
-            entity.Property(e => e.Kvalifikacije).HasMaxLength(200);
+            entity.Property(e => e.Benefiti).HasMaxLength(3000);
+            entity.Property(e => e.Kvalifikacije).HasMaxLength(3000);
             entity.Property(e => e.OrganizacijaId).HasColumnName("OrganizacijaID");
             entity.Property(e => e.StatusId).HasColumnName("StatusID");
 
@@ -309,7 +306,7 @@ public partial class StudentoglasiContext : DbContext
             entity.HasOne(d => d.Organizacija).WithMany(p => p.Prakses)
                 .HasForeignKey(d => d.OrganizacijaId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_Stipendije_Organizacija");
+                .HasConstraintName("FK_Prakse_Organizacija");
 
             entity.HasOne(d => d.Status).WithMany(p => p.Prakses)
                 .HasForeignKey(d => d.StatusId)
@@ -325,11 +322,11 @@ public partial class StudentoglasiContext : DbContext
 
             entity.HasIndex(e => e.PraksaId, "IX_PrijavaPraksa_PraksaId");
 
-            entity.Property(e => e.Certifikati).HasMaxLength(50);
+            entity.Property(e => e.Certifikati).HasMaxLength(100);
             entity.Property(e => e.Cv)
-                .HasMaxLength(50)
+                .HasMaxLength(100)
                 .HasColumnName("CV");
-            entity.Property(e => e.PropratnoPismo).HasMaxLength(50);
+            entity.Property(e => e.PropratnoPismo).HasMaxLength(100);
             entity.Property(e => e.StatusId).HasColumnName("StatusID");
 
             entity.HasOne(d => d.Praksa).WithMany(p => p.PrijavePraksas)
@@ -358,9 +355,9 @@ public partial class StudentoglasiContext : DbContext
 
             entity.Property(e => e.StipendijaId).HasColumnName("StipendijaID");
             entity.Property(e => e.Cv)
-                .HasMaxLength(50)
+                .HasMaxLength(100)
                 .HasColumnName("CV");
-            entity.Property(e => e.Dokumentacija).HasMaxLength(50);
+            entity.Property(e => e.Dokumentacija).HasMaxLength(100);
             entity.Property(e => e.ProsjekOcjena).HasColumnType("decimal(4, 2)");
             entity.Property(e => e.StatusId).HasColumnName("StatusID");
 
@@ -388,7 +385,6 @@ public partial class StudentoglasiContext : DbContext
 
             entity.HasIndex(e => e.SmjestajId, "IX_Rezervacija_SmjestajId");
 
-            entity.Property(e => e.Napomena).HasMaxLength(50);
             entity.Property(e => e.StatusId).HasColumnName("StatusID");
 
             entity.HasOne(d => d.Smjestaj).WithMany(p => p.Rezervacijes)
@@ -417,7 +413,6 @@ public partial class StudentoglasiContext : DbContext
                 .ValueGeneratedNever()
                 .HasColumnName("ID");
             entity.Property(e => e.Naziv).HasMaxLength(50);
-            entity.Property(e => e.Opis).HasMaxLength(250);
         });
 
         modelBuilder.Entity<SmjeroviFakulteti>(entity =>
@@ -454,9 +449,9 @@ public partial class StudentoglasiContext : DbContext
             entity.Property(e => e.Id)
                 .ValueGeneratedNever()
                 .HasColumnName("ID");
-            entity.Property(e => e.DodatneUsluge).HasMaxLength(200);
+            entity.Property(e => e.DodatneUsluge).HasMaxLength(3000);
             entity.Property(e => e.GradId).HasColumnName("GradID");
-            entity.Property(e => e.NacinGrijanja).HasMaxLength(50);
+            entity.Property(e => e.NacinGrijanja).HasMaxLength(100);
 
             entity.HasOne(d => d.Grad).WithMany(p => p.Smjestajis)
                 .HasForeignKey(d => d.GradId)
@@ -477,8 +472,7 @@ public partial class StudentoglasiContext : DbContext
                 .ValueGeneratedNever()
                 .HasColumnName("ID");
             entity.Property(e => e.Cijena).HasColumnType("decimal(10, 2)");
-            entity.Property(e => e.DodatneUsluge).HasMaxLength(50);
-            entity.Property(e => e.Opis).HasMaxLength(250);
+            entity.Property(e => e.DodatneUsluge).HasMaxLength(3000);
             entity.Property(e => e.SmjestajId).HasColumnName("SmjestajID");
 
             entity.HasOne(d => d.Smjestaj).WithMany(p => p.SmjestajnaJedinicas)
@@ -509,7 +503,6 @@ public partial class StudentoglasiContext : DbContext
                 .ValueGeneratedNever()
                 .HasColumnName("ID");
             entity.Property(e => e.Naziv).HasMaxLength(50);
-            entity.Property(e => e.Opis).HasMaxLength(250);
         });
 
         modelBuilder.Entity<Stipendije>(entity =>
@@ -521,12 +514,12 @@ public partial class StudentoglasiContext : DbContext
             entity.Property(e => e.Id)
                 .ValueGeneratedNever()
                 .HasColumnName("ID");
-            entity.Property(e => e.Izvor).HasMaxLength(50);
-            entity.Property(e => e.Kriterij).HasColumnType("numeric(18, 0)");
-            entity.Property(e => e.NivoObrazovanja).HasMaxLength(50);
-            entity.Property(e => e.PotrebnaDokumentacija).HasMaxLength(50);
+            entity.Property(e => e.Izvor).HasMaxLength(3000);
+            entity.Property(e => e.Kriterij).HasMaxLength(2000);
+            entity.Property(e => e.NivoObrazovanja).HasMaxLength(3000);
+            entity.Property(e => e.PotrebnaDokumentacija).HasMaxLength(3000);
             entity.Property(e => e.StatusId).HasColumnName("StatusID");
-            entity.Property(e => e.Uslovi).HasMaxLength(200);
+            entity.Property(e => e.StipenditorId).HasColumnName("StipenditorID");
 
             entity.HasOne(d => d.IdNavigation).WithOne(p => p.Stipendije)
                 .HasForeignKey<Stipendije>(d => d.Id)
@@ -536,6 +529,11 @@ public partial class StudentoglasiContext : DbContext
                 .HasForeignKey(d => d.StatusId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_Stipendije_StatusOglasi");
+
+            entity.HasOne(d => d.Stipenditor).WithMany(p => p.Stipendijes)
+                .HasForeignKey(d => d.StipenditorId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_Stipendije_Stipenditor");
         });
 
         modelBuilder.Entity<Stipenditori>(entity =>
@@ -551,8 +549,8 @@ public partial class StudentoglasiContext : DbContext
             entity.Property(e => e.Email).HasMaxLength(50);
             entity.Property(e => e.GradId).HasColumnName("GradID");
             entity.Property(e => e.Link).HasMaxLength(50);
-            entity.Property(e => e.Naziv).HasMaxLength(50);
-            entity.Property(e => e.TipUstanove).HasMaxLength(50);
+            entity.Property(e => e.Naziv).HasMaxLength(200);
+            entity.Property(e => e.TipUstanove).HasMaxLength(200);
 
             entity.HasOne(d => d.Grad).WithMany(p => p.Stipenditoris)
                 .HasForeignKey(d => d.GradId)
@@ -604,8 +602,7 @@ public partial class StudentoglasiContext : DbContext
             entity.Property(e => e.Id)
                 .ValueGeneratedNever()
                 .HasColumnName("ID");
-            entity.Property(e => e.Naziv).HasMaxLength(50);
-            entity.Property(e => e.Opis).HasMaxLength(250);
+            entity.Property(e => e.Naziv).HasMaxLength(200);
         });
 
         modelBuilder.Entity<Univerziteti>(entity =>
@@ -621,7 +618,7 @@ public partial class StudentoglasiContext : DbContext
             entity.Property(e => e.GradId).HasColumnName("GradID");
             entity.Property(e => e.Link).HasMaxLength(50);
             entity.Property(e => e.Logo).HasMaxLength(50);
-            entity.Property(e => e.Naziv).HasMaxLength(50);
+            entity.Property(e => e.Naziv).HasMaxLength(200);
             entity.Property(e => e.Slika).HasMaxLength(50);
             entity.Property(e => e.Telefon).HasMaxLength(50);
 

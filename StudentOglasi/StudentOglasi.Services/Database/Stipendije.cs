@@ -11,7 +11,7 @@ public partial class Stipendije
 
     public double Iznos { get; set; }
 
-    public decimal Kriterij { get; set; }
+    public string Kriterij { get; set; } = null!;
 
     public string PotrebnaDokumentacija { get; set; } = null!;
 
@@ -23,9 +23,13 @@ public partial class Stipendije
 
     public int StatusId { get; set; }
 
+    public int StipenditorId { get; set; }
+
     public virtual Oglasi IdNavigation { get; set; } = null!;
 
     public virtual ICollection<PrijaveStipendija> PrijaveStipendijas { get; set; } = new List<PrijaveStipendija>();
 
     public virtual StatusOglasi Status { get; set; } = null!;
+
+    public virtual Stipenditori Stipenditor { get; set; } = null!;
 }

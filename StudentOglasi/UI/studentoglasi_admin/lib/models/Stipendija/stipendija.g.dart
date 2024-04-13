@@ -10,7 +10,7 @@ Stipendije _$StipendijeFromJson(Map<String, dynamic> json) => Stipendije(
       json['id'] as int?,
       json['uslovi'] as String?,
       (json['iznos'] as num?)?.toDouble(),
-      (json['kriterij'] as num?)?.toDouble(),
+      json['kriterij'] as String?,
       json['potrebnaDokumentacija'] as String?,
       json['izvor'] as String?,
       json['nivoObrazovanja'] as String?,
