@@ -6,9 +6,8 @@ using System.Threading.Tasks;
 
 namespace StudentOglasi.Model.SearchObjects
 {
-    public class ObjaveSearchObject : BaseSearchObject
+    public class StipendijeSearchObject:BaseSearchObject
     {
         public string? Naslov { get; set; }
-        public int? KategorijaID { get; set; }
     }
 }

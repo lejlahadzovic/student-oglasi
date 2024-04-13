@@ -16,6 +16,16 @@ namespace StudentOglasi.Services
             CreateMap<KorisniciInsertRequest, Database.Korisnici>();
             CreateMap<KorisniciUpdateRequest, Database.Korisnici>();
             CreateMap<Database.Uloge, Model.Uloge>();
+            CreateMap<Database.Organizacije, Model.Organizacije>();
+            CreateMap<Database.StatusOglasi, Model.StatusOglasi>();
+            CreateMap<Database.Prakse, Model.Prakse>();
+            CreateMap<PrakseInsertRequest, Database.Prakse>();
+            CreateMap<PrakseUpdateRequest, Database.Prakse>();
+            CreateMap<Database.Oglasi, Model.Oglasi>();
+            CreateMap<Model.Oglasi, Database.Oglasi>();
+            CreateMap<Database.Stipendije, Model.Stipendije>();
+            CreateMap<StipendijeInsertRequest, Database.Stipendije>();
+            CreateMap<StipendijeUpdateRequest, Database.Stipendije>();
             CreateMap<Database.Objave, Model.Objave>();
             CreateMap<Database.Kategorija, Model.Kategorija>();
             CreateMap<Model.Requests.ObjaveInsertRequest, Database.Objave>();

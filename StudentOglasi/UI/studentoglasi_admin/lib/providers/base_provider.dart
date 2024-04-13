@@ -61,7 +61,16 @@ abstract class BaseProvider<T> with ChangeNotifier {
       throw new Exception("Something bad happened please try again");
     }
   }
-
+   Future<bool> delete(int? id) async {
+    var url = Uri.parse('$_baseUrl$_endPoint/$id');
+    var headers=createHeaders();
+    final response =await http.delete(url,headers: headers);
+    if (response.statusCode == 200) {
+     return true;
+    } else {
+      throw Exception('Failed to delete');
+    }
+  }
   Map<String, String> createHeaders() {
     String username = Authorization.username ?? '';
     String password = Authorization.password ?? '';
