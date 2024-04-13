@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:studentoglasi_admin/screens/login.dart';
 import 'package:studentoglasi_admin/screens/objave_list_screen.dart';
+import 'package:studentoglasi_admin/screens/prakse_list_screen.dart';
+import 'package:studentoglasi_admin/screens/stipendije_list_screen.dart';
 
 int _selectedIndex = 0;
 
@@ -21,38 +23,54 @@ class _SideMenuState extends State<SideMenu> {
   @override
   Widget build(BuildContext context) {
     return Drawer(
-        child: ListView(
-      children: [
-        DrawerHeader(
-          child: Align(
-              alignment: Alignment.center,
-              child: Text(
-                'StudentOglasi',
-                style: TextStyle(
-                    color: Colors.blue.shade900,
-                    fontSize: 30,
-                    fontWeight: FontWeight.bold),
-              )),
-        ),
-        _buildListTile(Icons.supervisor_account_outlined, 'Studenti', 0),
-        SizedBox(height: 3),
-        _buildListTile(Icons.article_outlined, 'Novosti', 1),
-        SizedBox(height: 3),
-        _buildListTile(Icons.hotel_outlined, 'Smještaji', 2),
-        SizedBox(height: 3),
-        _buildListTile(Icons.work_outline, 'Prakse', 3),
-        SizedBox(height: 3),
-        _buildListTile(Icons.school_outlined, 'Stipendije', 4),
-        SizedBox(height: 3),
-        _buildListTile(Icons.date_range_outlined, 'Rezervacije', 5),
-        SizedBox(height: 3),
-        _buildListTile(Icons.done_all_outlined, 'Praksa - prijave', 6),
-        SizedBox(height: 3),
-        _buildListTile(Icons.done_all_outlined, 'Stipendija - prijave', 7),
-        SizedBox(height: 3),
-        _buildListTile(Icons.exit_to_app_outlined, 'Odjavi se', 8)
-      ],
-    ));
+      child: Column(
+        children: [
+          Expanded(
+              child: ListView(
+            children: [
+              DrawerHeader(
+                child: Align(
+                    alignment: Alignment.center,
+                    child: Text(
+                      'StudentOglasi',
+                      style: TextStyle(
+                          color: Colors.blue.shade900,
+                          fontSize: 27,
+                          fontWeight: FontWeight.bold),
+                    )),
+              ),
+              _buildListTile(Icons.supervisor_account_outlined, 'Studenti', 0),
+              SizedBox(height: 3),
+              _buildListTile(Icons.article_outlined, 'Novosti', 1),
+              SizedBox(height: 3),
+              _buildListTile(Icons.hotel_outlined, 'Smještaji', 2),
+              SizedBox(height: 3),
+              _buildListTile(Icons.work_outline, 'Prakse', 3),
+              SizedBox(height: 3),
+              _buildListTile(Icons.school_outlined, 'Stipendije', 4),
+              SizedBox(height: 3),
+              _buildListTile(Icons.date_range_outlined, 'Rezervacije', 5),
+              SizedBox(height: 3),
+              _buildListTile(Icons.done_all_outlined, 'Praksa - prijave', 6),
+              SizedBox(height: 3),
+              _buildListTile(
+                  Icons.done_all_outlined, 'Stipendija - prijave', 7),
+            ],
+          )),
+          Container(
+              child: Align(
+                  alignment: FractionalOffset.bottomCenter,
+                  child: Container(
+                      child: Column(
+                    children: [
+                      Divider(),
+                      _buildListTile(
+                          Icons.exit_to_app_outlined, 'Odjavi se', 8),
+                    ],
+                  ))))
+        ],
+      ),
+    );
   }
 
   ListTile _buildListTile(IconData icon, String title, int index) {
@@ -83,6 +101,20 @@ class _SideMenuState extends State<SideMenu> {
         Navigator.of(context).push(
           MaterialPageRoute(
             builder: (context) => const ObjaveListScreen(),
+          ),
+        );
+        break;
+      case 3:
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (context) => const PrakseListScreen(),
+          ),
+        );
+        break;
+      case 4:
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (context) => const StipendijeListScreen(),
           ),
         );
         break;

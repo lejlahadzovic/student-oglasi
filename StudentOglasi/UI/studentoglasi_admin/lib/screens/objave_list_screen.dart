@@ -35,6 +35,7 @@ class _ObjaveListScreenState extends State<ObjaveListScreen> {
     _objaveProvider = context.read<ObjaveProvider>();
     _kategorijeProvider = context.read<KategorijaProvider>();
     _fetchData();
+    _fetchKategorije();
   }
 
   // @override
@@ -58,12 +59,17 @@ class _ObjaveListScreenState extends State<ObjaveListScreen> {
     );
   }
 
-  void _fetchData() async {
+  Future<void> _fetchData() async {
     var data =
-        await _objaveProvider.get(filter: {'naslov': _naslovController.text});
-    var kategorijeData = await _kategorijeProvider.get();
+        await _objaveProvider.get(filter: {'naslov': _naslovController.text, 'kategorijaID': selectedKategorija?.id});
     setState(() {
       result = data;
+    });
+  }
+
+    void _fetchKategorije() async {
+    var kategorijeData = await _kategorijeProvider.get();
+    setState(() {
       kategorijeResult = kategorijeData;
     });
   }
@@ -75,7 +81,7 @@ class _ObjaveListScreenState extends State<ObjaveListScreen> {
       child: Row(
         children: [
           Expanded(
-            flex: 6,
+            flex: 5,
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 8.0),
               child: TextField(
@@ -90,7 +96,7 @@ class _ObjaveListScreenState extends State<ObjaveListScreen> {
           ),
           SizedBox(width: 30.0),
           Expanded(
-            flex: 4,
+            flex: 3,
             child: Padding(
               padding: const EdgeInsets.only(top: 25.0),
               child: DropdownButton2<Kategorija>(
@@ -116,23 +122,14 @@ class _ObjaveListScreenState extends State<ObjaveListScreen> {
             ),
             ),
             SizedBox(width: 30.0),
-          Expanded(
-            flex: 2,
-            child: Padding(
+            Padding(
               padding: const EdgeInsets.only(top: 25.0),
               child: ElevatedButton(
                   onPressed: () async {
-                    // Navigator.of(context).pop();
-            
-                    var data = await _objaveProvider
-                        .get(filter: {'naslov': _naslovController.text, 'kategorijaID':selectedKategorija?.id});
-                    setState(() {
-                      result = data;
-                    });
+                    await _fetchData();
                   },
                   child: Text("Filtriraj")),
             ),
-          ),
         ],
       ),
     );
@@ -200,7 +197,6 @@ class _ObjaveListScreenState extends State<ObjaveListScreen> {
                                       color: Colors.blue,
                                     ),
                                     onPressed: () {
-                                      // Handle edit action
                                     },
                                   ),
                                   IconButton(
@@ -208,8 +204,9 @@ class _ObjaveListScreenState extends State<ObjaveListScreen> {
                                       Icons.delete,
                                       color: Colors.red,
                                     ),
-                                    onPressed: () {
-                                      // Handle delete action
+                                    onPressed: () async {
+                                      await _objaveProvider.delete(e.id);
+                                      await _fetchData();
                                     },
                                   ),
                                 ],

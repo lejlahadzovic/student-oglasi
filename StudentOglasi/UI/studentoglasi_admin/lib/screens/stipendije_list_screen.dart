@@ -26,12 +26,14 @@ class _StipendijeListScreenState extends State<StipendijeListScreen> {
     // TODO: implement didChangeDependencies
     super.didChangeDependencies();
     _stipendijeProvider = context.read<StipendijeProvider>();
+    _fetchData();
   }
 
   @override
   Widget build(BuildContext context) {
     return MasterScreenWidget(
-      title_widget: Text("Stipendije"),
+      title: "Stipendije",
+      addButtonLabel: "Dodaj stipendiju",
       child: Container(
         child: Column(
           children: [_buildSearch(), _buildDataListView()],
@@ -40,153 +42,163 @@ class _StipendijeListScreenState extends State<StipendijeListScreen> {
     );
   }
 
-  Widget _buildSearch() {
-    return Row(
-      children: [
-        Expanded(
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: TextField(
-              decoration: InputDecoration(labelText: "Naziv stipendije"),
-              controller: _naslovController,
-            ),
-          ),
-        ),
-        SizedBox(
-          height: 8,
-        ),
-        ElevatedButton(
-            onPressed: () async {
-              print("login proceed");
-              // Navigator.of(context).pop();
+  Future<void> _fetchData() async {
+    print("login proceed");
+    // Navigator.of(context).pop();
 
-              var data = await _stipendijeProvider
-                  .get(filter: {'naslov': _naslovController.text});
-              setState(() {
-                result = data;
-              });
-              print("data: ${data.result[0].id}");
-            },
-            child: Text("Pretraga"))
-      ],
-    );
+    var data = await _stipendijeProvider
+        .get(filter: {'naslov': _naslovController.text});
+    setState(() {
+      result = data;
+    });
+    print("data: ${data.result[0].id}");
+  }
+
+  Widget _buildSearch() {
+    return Padding(
+        padding: const EdgeInsets.fromLTRB(100, 10, 100, 0),
+        child: Row(
+          children: [
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: TextField(
+                  decoration: InputDecoration(labelText: "Naziv stipendije"),
+                  controller: _naslovController,
+                ),
+              ),
+            ),
+            SizedBox(height: 8, width: 30.0),
+            ElevatedButton(
+                onPressed: () async {
+                  await _fetchData();
+                },
+                child: Text("Filtriraj"))
+          ],
+        ));
   }
 
   Widget _buildDataListView() {
     return Expanded(
         child: SingleChildScrollView(
-      child: DataTable(
-          columns: [
-            const DataColumn(
-              label: Expanded(
-                child: Text(
-                  'ID',
-                  style: TextStyle(fontStyle: FontStyle.italic),
-                ),
-              ),
-            ),
-            const DataColumn(
-              label: Expanded(
-                child: Text(
-                  'Naslov',
-                  style: TextStyle(fontStyle: FontStyle.italic),
-                ),
-              ),
-            ),
-            const DataColumn(
-              label: Expanded(
-                child: Text(
-                  'Opis',
-                  style: TextStyle(fontStyle: FontStyle.italic),
-                ),
-              ),
-            ),
-            const DataColumn(
-              label: Expanded(
-                child: Text(
-                  'Uslovi',
-                  style: TextStyle(fontStyle: FontStyle.italic),
-                ),
-              ),
-            ),
-               const DataColumn(
-              label: Expanded(
-                child: Text(
-                  'Iznos',
-                  style: TextStyle(fontStyle: FontStyle.italic),
-                ),
-              ),
-            ),
-               const DataColumn(
-              label: Expanded(
-                child: Text(
-                  'Kriterij',
-                  style: TextStyle(fontStyle: FontStyle.italic),
-                ),
-              ),
-            ),
-            const DataColumn(
-              label: Expanded(
-                child: Text(
-                  'Status',
-                  style: TextStyle(fontStyle: FontStyle.italic),
-                ),
-              ),
-            ),
-            const DataColumn(
-              label: Expanded(
-                child: Text(
-                  'Potrebna dokumentacija',
-                  style: TextStyle(fontStyle: FontStyle.italic),
-                ),
-              ),
-            ),
-            const DataColumn(
-              label: Expanded(
-                child: Text(
-                  'Izvor',
-                  style: TextStyle(fontStyle: FontStyle.italic),
-                ),
-              ),
-            ),
-            const DataColumn(
-              label: Expanded(
-                child: Text(
-                  'Nivo obrazovanja',
-                  style: TextStyle(fontStyle: FontStyle.italic),
-                ),
-              ),
-            ),
-            const DataColumn(
-              label: Expanded(
-                child: Text(
-                  'Broj stipendista',
-                  style: TextStyle(fontStyle: FontStyle.italic),
-                ),
-              ),
-            ),
-          ],
-          rows: result?.result
-                  .map((Stipendije e) => DataRow(cells: [
-                        DataCell(Text(e.id?.toString() ?? "")),
-                        DataCell(Text(e.idNavigation?.naslov ?? "")),
-                        DataCell(Text(e.idNavigation?.opis ?? "")),
-                         DataCell(Text(e.uslovi??"")),
-                         DataCell(Text(formatNumber(e.iznos))),
-                        DataCell(Text(formatNumber(e.kriterij))),
-                        DataCell(Text(e.status?.naziv ?? "")),
-                        DataCell(Text(e.potrebnaDokumentacija?? "")),
-                        DataCell(Text(e.izvor ?? "")),
-                        DataCell(Text(e.nivoObrazovanja ?? "")),
-                        DataCell(Text(formatNumber(e.brojStipendisata))),
-                        DataCell( IconButton(
-              icon: Icon(Icons.delete),
-              onPressed: () => _stipendijeProvider.delete(e.id),
-               )),
-                    ]))
-                  .toList() ??
-              []),
-    ));
+            child: Padding(
+                padding: const EdgeInsets.fromLTRB(100, 30, 100, 0),
+                child: IntrinsicWidth(
+                  stepWidth: double.infinity,
+                  child: DataTable(
+                      columns: [
+                        const DataColumn(
+                          label: Expanded(
+                            child: Text(
+                              'Naslov',
+                              style: TextStyle(fontStyle: FontStyle.italic),
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+                        ),
+                        const DataColumn(
+                          label: Expanded(
+                            child: Text(
+                              'Iznos',
+                              style: TextStyle(fontStyle: FontStyle.italic),
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+                        ),
+                        const DataColumn(
+                          label: Expanded(
+                            child: Text(
+                              'Status',
+                              style: TextStyle(fontStyle: FontStyle.italic),
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+                        ),
+                        const DataColumn(
+                          label: Expanded(
+                            child: Text(
+                              'Izvor',
+                              style: TextStyle(fontStyle: FontStyle.italic),
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+                        ),
+                        const DataColumn(
+                          label: Expanded(
+                            child: Text(
+                              'Nivo obrazovanja',
+                              style: TextStyle(fontStyle: FontStyle.italic),
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+                        ),
+                        const DataColumn(
+                          label: Expanded(
+                            child: Text(
+                              'Broj stipendista',
+                              style: TextStyle(fontStyle: FontStyle.italic),
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+                        ),
+                        const DataColumn(
+                          label: Expanded(
+                            child: Text(
+                              'Akcije',
+                              style: TextStyle(fontStyle: FontStyle.italic),
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+                        ),
+                      ],
+                      rows: result?.result
+                              .map((Stipendije e) => DataRow(cells: [
+                                    DataCell(Center(
+                                        child: Text(
+                                            e.idNavigation?.naslov ?? "",
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.bold)))),
+                                    DataCell(Center(
+                                        child: Text(
+                                            '${formatNumber(e.iznos)} KM'))),
+                                    DataCell(Center(
+                                        child: Text(e.status?.naziv ?? ""))),
+                                    DataCell(
+                                        Center(child: Text(e.izvor ?? ""))),
+                                    DataCell(Center(
+                                        child: Text(e.nivoObrazovanja ?? ""))),
+                                    DataCell(Center(
+                                        child: Text(
+                                            formatNumber(e.brojStipendisata)))),
+                                    DataCell(
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          IconButton(
+                                            icon: Icon(
+                                              Icons.edit,
+                                              color: Colors.blue,
+                                            ),
+                                            onPressed: () {},
+                                          ),
+                                          IconButton(
+                                            icon: Icon(
+                                              Icons.delete,
+                                              color: Colors.red,
+                                            ),
+                                            onPressed: () async {
+                                              await _stipendijeProvider
+                                                  .delete(e.id);
+                                               await _fetchData();
+                                            },
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ]))
+                              .toList() ??
+                          []),
+                ))));
   }
 }
-
