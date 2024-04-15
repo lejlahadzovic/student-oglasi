@@ -35,6 +35,19 @@ class _PrakseListScreenState extends State<PrakseListScreen> {
     return MasterScreenWidget(
       title: "Prakse",
       addButtonLabel: "Dodaj praksu",
+      onAddButtonPressed: () {
+        showDialog(
+            context: context,
+            builder: (BuildContext context) => AlertDialog(
+                  title: Text("Test"),
+                  content: Text("Prakse klasa"),
+                  actions: [
+                    TextButton(
+                        onPressed: () => Navigator.pop(context),
+                        child: Text("OK"))
+                  ],
+                ));
+      },
       child: Container(
         child: Column(
           children: [_buildSearch(), _buildDataListView()],

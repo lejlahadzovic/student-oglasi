@@ -11,5 +11,6 @@ namespace StudentOglasi.Model.Requests
         public string? Naslov { get; set; }
         public string? Sadrzaj { get; set; }
         public string? Slika { get; set; }
+        public int? KategorijaId { get; set; }
     }
 }

@@ -10,6 +10,7 @@ import 'package:studentoglasi_admin/models/Objava/objava.dart';
 import 'package:studentoglasi_admin/models/search_result.dart';
 import 'package:studentoglasi_admin/providers/kategorije_provider.dart';
 import 'package:studentoglasi_admin/providers/objave_provider.dart';
+import 'package:studentoglasi_admin/screens/components/objave_details_dialog.dart';
 import 'package:studentoglasi_admin/widgets/master_screen.dart';
 import 'package:intl/intl.dart';
 
@@ -51,6 +52,18 @@ class _ObjaveListScreenState extends State<ObjaveListScreen> {
       //title_widget: Text("Novosti"),
       title: "Novosti",
       addButtonLabel: "Dodaj objavu",
+      onAddButtonPressed: () {
+        showDialog(
+            context: context,
+            builder: (BuildContext context) => ObjaveDetailsDialog(
+                  objava: null,
+                  kategorijeResult: kategorijeResult,
+                )).then((value) {
+          if (value != null && value) {
+            _fetchData();
+          }
+        });
+      },
       child: Container(
         child: Column(
           children: [_buildSearch(), _buildDataListView()],
@@ -60,20 +73,21 @@ class _ObjaveListScreenState extends State<ObjaveListScreen> {
   }
 
   Future<void> _fetchData() async {
-    var data =
-        await _objaveProvider.get(filter: {'naslov': _naslovController.text, 'kategorijaID': selectedKategorija?.id});
+    var data = await _objaveProvider.get(filter: {
+      'naslov': _naslovController.text,
+      'kategorijaID': selectedKategorija?.id
+    });
     setState(() {
       result = data;
     });
   }
 
-    void _fetchKategorije() async {
+  void _fetchKategorije() async {
     var kategorijeData = await _kategorijeProvider.get();
     setState(() {
       kategorijeResult = kategorijeData;
     });
   }
-  
 
   Widget _buildSearch() {
     return Padding(
@@ -100,11 +114,10 @@ class _ObjaveListScreenState extends State<ObjaveListScreen> {
             child: Padding(
               padding: const EdgeInsets.only(top: 25.0),
               child: DropdownButton2<Kategorija>(
-                
-          isExpanded: true,
-          hint: Text(
-            'Kategorija',
-          ),
+                isExpanded: true,
+                hint: Text(
+                  'Kategorija',
+                ),
                 value: selectedKategorija,
                 onChanged: (Kategorija? newValue) {
                   setState(() {
@@ -120,16 +133,16 @@ class _ObjaveListScreenState extends State<ObjaveListScreen> {
                     [],
               ),
             ),
-            ),
-            SizedBox(width: 30.0),
-            Padding(
-              padding: const EdgeInsets.only(top: 25.0),
-              child: ElevatedButton(
-                  onPressed: () async {
-                    await _fetchData();
-                  },
-                  child: Text("Filtriraj")),
-            ),
+          ),
+          SizedBox(width: 30.0),
+          Padding(
+            padding: const EdgeInsets.only(top: 25.0),
+            child: ElevatedButton(
+                onPressed: () async {
+                  await _fetchData();
+                },
+                child: Text("Filtriraj")),
+          ),
         ],
       ),
     );
@@ -197,6 +210,18 @@ class _ObjaveListScreenState extends State<ObjaveListScreen> {
                                       color: Colors.blue,
                                     ),
                                     onPressed: () {
+                                      showDialog(
+                                          context: context,
+                                          builder: (BuildContext context) =>
+                                              ObjaveDetailsDialog(
+                                                objava: e,
+                                                kategorijeResult:
+                                                    kategorijeResult,
+                                              )).then((value) {
+                                        if (value != null && value) {
+                                          _fetchData();
+                                        }
+                                      });
                                     },
                                   ),
                                   IconButton(

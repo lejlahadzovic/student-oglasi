@@ -17,6 +17,7 @@ namespace StudentOglasi.Model
         public DateTime VrijemeObjave { get; set; }
 
         public string Slika { get; set; } = null!;
+        public int KategorijaId { get; set; }
         public virtual Kategorija Kategorija { get; set; } = null!;
     }
 }

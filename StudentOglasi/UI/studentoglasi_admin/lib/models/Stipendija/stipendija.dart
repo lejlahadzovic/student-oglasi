@@ -1,6 +1,4 @@
 
-import 'dart:ffi';
-
 import 'package:json_annotation/json_annotation.dart';
 import 'package:studentoglasi_admin/models/Oglas/oglas.dart';
 import 'package:studentoglasi_admin/models/Organizacije/organizacije.dart';
