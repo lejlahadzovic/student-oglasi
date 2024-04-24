@@ -18,7 +18,7 @@ namespace StudentOglasi.Model.Requests
 
         public bool Placena { get; set; }
 
-        public Model.Oglasi IdNavigation { get; set; }
+        public Model.Oglasi? IdNavigation { get; set; }
 
         public int StatusId { get; set; }
 

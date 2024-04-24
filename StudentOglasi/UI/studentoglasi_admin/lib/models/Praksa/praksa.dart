@@ -9,16 +9,18 @@ part 'praksa.g.dart';
 class Praksa {
   int? id;
   DateTime? pocetakPrakse;
-  DateTime? krajPrakse;
+  DateTime krajPrakse;
   String? kvalifikacije;
   String? benefiti;
   bool? placena;
   Oglas? idNavigation;
+  int? statusId;
   StatusOglasi? status;
+  int? organizacijaId;
   Organizacije? organizacija;
 
 
-  Praksa(this.id, this.pocetakPrakse, this.krajPrakse,this.kvalifikacije,this.benefiti,this.idNavigation);
+  Praksa(this.id, this.pocetakPrakse, this.krajPrakse,this.kvalifikacije,this.benefiti,this.placena,this.idNavigation,this.status,this.organizacija);
   factory Praksa.fromJson(Map<String, dynamic> json) => _$PraksaFromJson(json);
 
   Map<String, dynamic> toJson() => _$PraksaToJson(this);

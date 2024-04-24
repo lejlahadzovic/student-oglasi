@@ -71,6 +71,39 @@ abstract class BaseProvider<T> with ChangeNotifier {
       throw Exception('Failed to delete');
     }
   }
+
+    Future<T> insert(dynamic request) async {
+    var url = "$_baseUrl$_endPoint";
+    var uri = Uri.parse(url);
+    var headers = createHeaders();
+
+    var jsonRequest =jsonEncode(request, toEncodable: myDateSerializer);
+    var response = await http.post(uri, headers: headers, body: jsonRequest);
+
+    if (isValidResponse(response)) {
+      var data = jsonDecode(response.body);
+      return fromJson(data);
+    } else {
+      throw new Exception("Unknown error");
+    }
+  }
+
+  Future<T> update(int id, [dynamic request]) async {
+    var url = "$_baseUrl$_endPoint/$id";
+    var uri = Uri.parse(url);
+    var headers = createHeaders();
+
+     var jsonRequest =jsonEncode(request, toEncodable: myDateSerializer);
+    var response = await http.put(uri, headers: headers, body: jsonRequest);
+
+    if (isValidResponse(response)) {
+      var data = jsonDecode(response.body);
+      return fromJson(data);
+    } else {
+      throw new Exception("Unknown error");
+    }
+  }
+
   Map<String, String> createHeaders() {
     String username = Authorization.username ?? '';
     String password = Authorization.password ?? '';
@@ -117,4 +150,11 @@ abstract class BaseProvider<T> with ChangeNotifier {
     });
     return query;
   }
+    dynamic myDateSerializer(dynamic object) {
+    if (object is DateTime) {
+      return object.toIso8601String();
+    }
+    return object;
+  }
+
 }

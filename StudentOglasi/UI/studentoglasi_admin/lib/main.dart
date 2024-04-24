@@ -4,6 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:studentoglasi_admin/providers/kategorije_provider.dart';
 import 'package:studentoglasi_admin/providers/objave_provider.dart';
+import 'package:studentoglasi_admin/providers/oglasi_provider.dart';
+import 'package:studentoglasi_admin/providers/organizacije_provider.dart';
+import 'package:studentoglasi_admin/providers/statusoglasi_provider.dart';
 import 'package:studentoglasi_admin/screens/login.dart';
 import 'package:studentoglasi_admin/providers/prakse_provider.dart';
 import 'package:studentoglasi_admin/providers/stipendije_provider.dart';
@@ -16,7 +19,10 @@ void main() {
       ChangeNotifierProvider(create: (_) => ObjaveProvider()),
       ChangeNotifierProvider(create: (_) => KategorijaProvider()),
     ChangeNotifierProvider(create: (context) => PraksaProvider()),
-    ChangeNotifierProvider(create: (context) => StipendijeProvider())],
+    ChangeNotifierProvider(create: (_) => StatusOglasiProvider()),
+    ChangeNotifierProvider(create: (context) => OrganizacijeProvider()),
+    ChangeNotifierProvider(create: (context) => StipendijeProvider()),
+    ChangeNotifierProvider(create: (context) => OglasiProvider())],
     child: const MyApp(),
   ));
 }

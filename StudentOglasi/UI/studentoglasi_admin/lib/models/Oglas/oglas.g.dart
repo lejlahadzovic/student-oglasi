@@ -9,9 +9,7 @@ part of 'oglas.dart';
 Oglas _$OglasFromJson(Map<String, dynamic> json) => Oglas(
       json['id'] as int?,
       json['naslov'] as String?,
-      json['rokPrijave'] == null
-          ? null
-          : DateTime.parse(json['rokPrijave'] as String),
+      DateTime.parse(json['rokPrijave'] as String),
       json['opis'] as String?,
       json['vrijemeObjave'] == null
           ? null
@@ -22,7 +20,7 @@ Oglas _$OglasFromJson(Map<String, dynamic> json) => Oglas(
 Map<String, dynamic> _$OglasToJson(Oglas instance) => <String, dynamic>{
       'id': instance.id,
       'naslov': instance.naslov,
-      'rokPrijave': instance.rokPrijave?.toIso8601String(),
+      'rokPrijave': instance.rokPrijave.toIso8601String(),
       'opis': instance.opis,
       'vrijemeObjave': instance.vrijemeObjave?.toIso8601String(),
       'slika': instance.slika,

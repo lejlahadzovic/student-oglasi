@@ -6,7 +6,7 @@ part 'oglas.g.dart';
 class Oglas {
   int? id;
   String? naslov;
-  DateTime? rokPrijave;
+  DateTime rokPrijave;
   String? opis;
   DateTime? vrijemeObjave;
   String? slika;
