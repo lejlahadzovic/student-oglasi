@@ -57,5 +57,15 @@ namespace StudentOglasi.Services.Services
             result.Result = tmp;
             return result;
         }
+        public override async Task<Model.Prakse> Update(int id, PrakseUpdateRequest update)
+        {
+            var set = _context.Set<Database.Prakse>();
+
+            var entity = await set.Include(p => p.IdNavigation).FirstOrDefaultAsync(e => e.Id == id);
+
+            _mapper.Map(update, entity);
+            await _context.SaveChangesAsync();
+            return _mapper.Map<Model.Prakse>(entity);
+        }
     }
 }

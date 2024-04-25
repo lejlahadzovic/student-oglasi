@@ -22,9 +22,15 @@ import '../../models/search_result.dart';
 class PraksaDetailsDialog extends StatefulWidget {
   Praksa? praksa;
   SearchResult<StatusOglasi>? statusResult;
-   SearchResult<Organizacije>? organizacijeResult;
-    SearchResult<Oglas>? oglasiResult;
-  PraksaDetailsDialog({Key? key, this.praksa,this.organizacijeResult,this.statusResult, this.oglasiResult}) : super(key: key);
+  SearchResult<Organizacije>? organizacijeResult;
+  SearchResult<Oglas>? oglasiResult;
+  PraksaDetailsDialog(
+      {Key? key,
+      this.praksa,
+      this.organizacijeResult,
+      this.statusResult,
+      this.oglasiResult})
+      : super(key: key);
 
   @override
   State<PraksaDetailsDialog> createState() => _PraksaDetailsDialogState();
@@ -32,30 +38,31 @@ class PraksaDetailsDialog extends StatefulWidget {
 
 class _PraksaDetailsDialogState extends State<PraksaDetailsDialog> {
   final _formKey = GlobalKey<FormBuilderState>();
-  Map<String, dynamic> _initialValue ={};
+  Map<String, dynamic> _initialValue = {};
   late PraksaProvider _PraksaProvider;
- 
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    _PraksaProvider=context.read<PraksaProvider>();
-    
-    _initialValue ={
-    'pocetakPrakse': widget.praksa?.pocetakPrakse,
-    'krajPrakse': widget.praksa?.krajPrakse,
-    'kvalifikacije': widget.praksa?.kvalifikacije,
-    'benefiti': widget.praksa?.benefiti,
-    'placena': widget.praksa?.placena,
-    'idNavigation.id':widget.praksa?.idNavigation?.id.toString(),
-    'idNavigation.naslov':widget.praksa?.idNavigation?.naslov, 
-    'idNavigation.opis':widget.praksa?.idNavigation?.opis, 
-    'idNavigation.rokPrijave':widget.praksa?.idNavigation?.rokPrijave, 
-    'idNavigation.slika':widget.praksa?.idNavigation?.slika, 
-    'idNavigation.vrijemeObjave':widget.praksa?.idNavigation?.vrijemeObjave, 
-    'statusId': widget.praksa?.status?.id.toString(),
-    'organizacijaId': widget.praksa?.organizacija?.id.toString(),};
-   }
+    _PraksaProvider = context.read<PraksaProvider>();
+
+    _initialValue = {
+      'pocetakPrakse': widget.praksa?.pocetakPrakse,
+      'krajPrakse': widget.praksa?.krajPrakse,
+      'kvalifikacije': widget.praksa?.kvalifikacije,
+      'benefiti': widget.praksa?.benefiti,
+      'placena': widget.praksa?.placena ?? false,
+      'idNavigation.id': widget.praksa?.idNavigation?.id.toString(),
+      'idNavigation.naslov': widget.praksa?.idNavigation?.naslov,
+      'idNavigation.opis': widget.praksa?.idNavigation?.opis,
+      'idNavigation.rokPrijave': widget.praksa?.idNavigation?.rokPrijave,
+      'idNavigation.slika': widget.praksa?.idNavigation?.slika,
+      'idNavigation.vrijemeObjave': widget.praksa?.idNavigation?.vrijemeObjave,
+      'statusId': widget.praksa?.status?.id.toString(),
+      'organizacijaId': widget.praksa?.organizacija?.id.toString(),
+    };
+  }
 
   @override
   void didChangeDependencies() {
@@ -63,9 +70,9 @@ class _PraksaDetailsDialogState extends State<PraksaDetailsDialog> {
     super.didChangeDependencies();
   }
 
-   @override
+  @override
   Widget build(BuildContext context) {
-   return AlertDialog(
+    return AlertDialog(
       title: Text('Dodaj praksu'),
       content: SingleChildScrollView(
         child: FormBuilder(
@@ -92,15 +99,15 @@ class _PraksaDetailsDialogState extends State<PraksaDetailsDialog> {
                   ),
                   SizedBox(width: 20),
                   Expanded(
-                     child: Container(
+                    child: Container(
                       width: 400,
-                       child: FormBuilderCheckbox(
-                                     name: 'placena',
-                                     initialValue: _initialValue['placena'],
-                                     title: Text('Placena'),
-                                   ),
-                     ),
+                      child: FormBuilderCheckbox(
+                        name: 'placena',
+                        initialValue: _initialValue['placena'],
+                        title: Text('Placena'),
+                      ),
                     ),
+                  ),
                 ],
               ),
               SizedBox(height: 10),
@@ -150,7 +157,8 @@ class _PraksaDetailsDialogState extends State<PraksaDetailsDialog> {
                         ),
                       ),
                       items: widget.organizacijeResult?.result
-                              .map((Organizacije organizacija) => DropdownMenuItem(
+                              .map((Organizacije organizacija) =>
+                                  DropdownMenuItem(
                                     value: organizacija.id.toString(),
                                     child: Text(organizacija.naziv ?? ''),
                                   ))
@@ -159,7 +167,7 @@ class _PraksaDetailsDialogState extends State<PraksaDetailsDialog> {
                     ),
                   ),
                   SizedBox(width: 20),
-                   Expanded(
+                  Expanded(
                     child: FormBuilderDropdown<String>(
                       name: 'statusId',
                       decoration: InputDecoration(
@@ -186,11 +194,12 @@ class _PraksaDetailsDialogState extends State<PraksaDetailsDialog> {
                     child: Container(
                       width: 400,
                       child: FormBuilderDateTimePicker(
-              name: 'idNavigation.vrijemeObjave',
-              inputType: InputType.date,
-              format: DateFormat('dd.MM.yyyy.'),
-              decoration: InputDecoration(labelText: 'Vrijeme objave'),
-            ),
+                        name: 'idNavigation.vrijemeObjave',
+                        inputType: InputType.date,
+                        format: DateFormat('dd.MM.yyyy.'),
+                        decoration:
+                            InputDecoration(labelText: 'Vrijeme objave'),
+                      ),
                     ),
                   ),
                   SizedBox(width: 20),
@@ -198,27 +207,28 @@ class _PraksaDetailsDialogState extends State<PraksaDetailsDialog> {
                     child: Container(
                       width: 400,
                       child: FormBuilderDateTimePicker(
-              name: 'idNavigation.rokPrijave',
-              inputType: InputType.date,
-              format: DateFormat('dd.MM.yyyy.'),
-              decoration: InputDecoration(labelText: 'Rok prijave'),
-            ),
+                        name: 'idNavigation.rokPrijave',
+                        inputType: InputType.date,
+                        format: DateFormat('dd.MM.yyyy.'),
+                        decoration: InputDecoration(labelText: 'Rok prijave'),
+                      ),
                     ),
                   ),
                 ],
               ),
-               SizedBox(height: 10),
+              SizedBox(height: 10),
               Row(
                 children: [
                   Expanded(
                     child: Container(
                       width: 400,
                       child: FormBuilderDateTimePicker(
-              name: 'pocetakPrakse',
-              inputType: InputType.date,
-              format: DateFormat('dd.MM.yyyy.'),
-              decoration: InputDecoration(labelText: 'Početak prakse'),
-            ),
+                        name: 'pocetakPrakse',
+                        inputType: InputType.date,
+                        format: DateFormat('dd.MM.yyyy.'),
+                        decoration:
+                            InputDecoration(labelText: 'Početak prakse'),
+                      ),
                     ),
                   ),
                   SizedBox(width: 20),
@@ -226,46 +236,46 @@ class _PraksaDetailsDialogState extends State<PraksaDetailsDialog> {
                     child: Container(
                       width: 400,
                       child: FormBuilderDateTimePicker(
-              name: 'krajPrakse',
-              inputType: InputType.date,
-              format: DateFormat('dd.MM.yyyy.'),
-              decoration: InputDecoration(labelText: 'Kraj prakse'),
-            ),
+                        name: 'krajPrakse',
+                        inputType: InputType.date,
+                        format: DateFormat('dd.MM.yyyy.'),
+                        decoration: InputDecoration(labelText: 'Kraj prakse'),
+                      ),
                     ),
                   ),
                 ],
               ),
               SizedBox(height: 10),
-             Row(
+              Row(
                 children: [
                   Expanded(
                     child: Container(
                       width: 400,
-                       child: FormBuilderTextField(
-                       name: 'idNavigation.slika',
-                       decoration: InputDecoration(
-                       labelText: 'Slika',
-                       border: OutlineInputBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(10)),
-                  ),
-                ),
-              ),
+                      child: FormBuilderTextField(
+                        name: 'idNavigation.slika',
+                        decoration: InputDecoration(
+                          labelText: 'Slika',
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.all(Radius.circular(10)),
+                          ),
+                        ),
+                      ),
                     ),
                   ),
                   SizedBox(width: 20),
                   Expanded(
                     child: Container(
                       width: 400,
-                      child:FormBuilderTextField(
-                name: 'idNavigation.opis',
-                maxLines: 5,
-                decoration: InputDecoration(
-                  labelText: 'Opis',
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(10)),
-                  ),
-                ),
-              ),
+                      child: FormBuilderTextField(
+                        name: 'idNavigation.opis',
+                        maxLines: 5,
+                        decoration: InputDecoration(
+                          labelText: 'Opis',
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.all(Radius.circular(10)),
+                          ),
+                        ),
+                      ),
                     ),
                   ),
                 ],
@@ -275,25 +285,40 @@ class _PraksaDetailsDialogState extends State<PraksaDetailsDialog> {
         ),
       ),
       actions: [
-         Column(
-          crossAxisAlignment: CrossAxisAlignment.end,
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            ElevatedButton(
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                      },
-                      child:Text('Otkaži'),
-          style: ButtonStyle(
-            textStyle: MaterialStateProperty.all<TextStyle>(
-                TextStyle(fontWeight: FontWeight.bold)),
-          ),
-                    ),
-         ] ),
+        Column(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: Text('Otkaži'),
+                style: ButtonStyle(
+                  textStyle: MaterialStateProperty.all<TextStyle>(
+                      TextStyle(fontWeight: FontWeight.bold)),
+                ),
+              ),
+            ]),
         ElevatedButton(
           onPressed: () async {
             _formKey.currentState?.saveAndValidate();
             var request = Map.from(_formKey.currentState!.value);
+
+            request['idNavigation'] = {
+              'id':widget.praksa?.idNavigation?.id,
+              'naslov': request['idNavigation.naslov'],
+              'opis': request['idNavigation.opis'],
+              'rokPrijave': request['idNavigation.rokPrijave'],
+              'vrijemeObjave': request['idNavigation.vrijemeObjave'],
+              'slika': request['idNavigation.slika'],
+            };
+            request.remove('idNavigation.naslov');
+            request.remove('idNavigation.opis');
+            request.remove('idNavigation.rokPrijave');
+            request.remove('idNavigation.vrijemeObjave');
+            request.remove('idNavigation.slika');
+
             try {
               widget.praksa == null
                   ? await _PraksaProvider.insert(request)
