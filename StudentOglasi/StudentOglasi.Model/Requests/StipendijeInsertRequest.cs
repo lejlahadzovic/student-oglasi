@@ -12,7 +12,7 @@ namespace StudentOglasi.Model.Requests
 
         public double Iznos { get; set; }
 
-        public string Kriterij { get; set; }
+        public string? Kriterij { get; set; }
 
         public string PotrebnaDokumentacija { get; set; } = null!;
 
@@ -22,7 +22,7 @@ namespace StudentOglasi.Model.Requests
 
         public int BrojStipendisata { get; set; }
 
-        public Model.Oglasi IdNavigation { get; set; }
+        public Model.Oglasi? IdNavigation { get; set; }
 
         public int StatusId { get; set; }
         public int StipenditorId { get; set; }

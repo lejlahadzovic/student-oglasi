@@ -12,7 +12,7 @@ namespace StudentOglasi.Model.Requests
 
         public double Iznos { get; set; }
 
-        public string Kriterij { get; set; }
+        public string? Kriterij { get; set; }
 
         public string PotrebnaDokumentacija { get; set; } = null!;
 

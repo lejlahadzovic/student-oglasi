@@ -38,15 +38,6 @@ class _PrakseListScreenState extends State<PrakseListScreen> {
   TextEditingController _organizacijaController = new TextEditingController();
   TextEditingController _statusController = new TextEditingController();
 
-  // @override
-  // void didChangeDependencies() {
-  //   // TODO: implement didChangeDependencies
-  //   super.didChangeDependencies();
-  //   _prakseProvider = context.read<PraksaProvider>();
-
-  //   _fetchData();
-  // }
-
   @override
   void initState() {
     // TODO: implement initState
@@ -60,21 +51,21 @@ class _PrakseListScreenState extends State<PrakseListScreen> {
     _fetchStatusOglasi();
     _fetchOrganizacije();
   }
-  
+
   void _fetchStatusOglasi() async {
     var statusData = await _statusProvider.get();
     setState(() {
       statusResult = statusData;
     });
   }
-   
+
   void _fetchOglasi() async {
     var oglasData = await _oglasiProvider.get();
     setState(() {
       oglasiResult = oglasData;
     });
   }
- 
+
   void _fetchOrganizacije() async {
     var organizacijeData = await _organizacijeProvider.get();
     setState(() {
@@ -87,15 +78,14 @@ class _PrakseListScreenState extends State<PrakseListScreen> {
     return MasterScreenWidget(
       title: "Prakse",
       addButtonLabel: "Dodaj praksu",
-       onAddButtonPressed: () {
+      onAddButtonPressed: () {
         showDialog(
             context: context,
             builder: (BuildContext context) => PraksaDetailsDialog(
-                  praksa: null,
-                   statusResult: statusResult,
-                   organizacijeResult: organizacijeResult,
-                   oglasiResult:oglasiResult
-                )).then((value) {
+                praksa: null,
+                statusResult: statusResult,
+                organizacijeResult: organizacijeResult,
+                oglasiResult: oglasiResult)).then((value) {
           if (value != null && value) {
             _fetchData();
           }
@@ -126,81 +116,82 @@ class _PrakseListScreenState extends State<PrakseListScreen> {
 
   Widget _buildSearch() {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(100, 10, 100, 0),
-      child: Row(
-      children: [
-        Expanded(
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: TextField(
-              decoration: InputDecoration(labelText: "Naziv"),
-              controller: _naslovController,
-            ),
-          ),
-        ),
-        SizedBox(width: 30.0),
-          Expanded(
-            flex: 1,
-            child: Padding(
-              padding: const EdgeInsets.only(top: 25.0),
-              child: DropdownButton2<StatusOglasi>(
-                isExpanded: true,
-                hint: Text(
-                  'Status oglasa',
+        padding: const EdgeInsets.fromLTRB(100, 10, 100, 0),
+        child: Row(
+          children: [
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: TextField(
+                  decoration: InputDecoration(labelText: "Naziv"),
+                  controller: _naslovController,
                 ),
-                value: selectedStatusOglasi,
-                onChanged: (StatusOglasi? newValue) {
-                  setState(() {
-                    selectedStatusOglasi = newValue;
-                  });
-                },
-                items: statusResult?.result.map((StatusOglasi status) {
-                      return DropdownMenuItem<StatusOglasi>(
-                        value: status,
-                        child: Text(status.naziv ?? ''),
-                      );
-                    }).toList() ??
-                    [],
               ),
             ),
-          ),
-          SizedBox(width: 20.0),
-          Expanded(
-            flex: 1,
-            child: Padding(
-              padding: const EdgeInsets.only(top: 25.0),
-              child: DropdownButton2<Organizacije>(
-                isExpanded: true,
-                hint: Text(
-                  'Organizacija',
+            SizedBox(width: 30.0),
+            Expanded(
+              flex: 1,
+              child: Padding(
+                padding: const EdgeInsets.only(top: 25.0),
+                child: DropdownButton2<StatusOglasi>(
+                  isExpanded: true,
+                  hint: Text(
+                    'Status oglasa',
+                  ),
+                  value: selectedStatusOglasi,
+                  onChanged: (StatusOglasi? newValue) {
+                    setState(() {
+                      selectedStatusOglasi = newValue;
+                    });
+                  },
+                  items: statusResult?.result.map((StatusOglasi status) {
+                        return DropdownMenuItem<StatusOglasi>(
+                          value: status,
+                          child: Text(status.naziv ?? ''),
+                        );
+                      }).toList() ??
+                      [],
                 ),
-                value: selectedOrganizacije,
-                onChanged: (Organizacije? newValue) {
-                  setState(() {
-                    selectedOrganizacije = newValue;
-                  });
-                },
-                items: organizacijeResult?.result.map((Organizacije organizacija) {
-                      return DropdownMenuItem<Organizacije>(
-                        value: organizacija,
-                        child: Text(organizacija.naziv ?? ''),
-                      );
-                    }).toList() ??
-                    [],
               ),
             ),
-          ),
-        SizedBox(width: 30.0),
-        ElevatedButton(
-            onPressed: () async {
-              await _fetchData();
-            },
-            child: Text("Filtriraj")),
-        SizedBox(
-          height: 8,
-        ),
-      ],
-    ));
+            SizedBox(width: 20.0),
+            Expanded(
+              flex: 1,
+              child: Padding(
+                padding: const EdgeInsets.only(top: 25.0),
+                child: DropdownButton2<Organizacije>(
+                  isExpanded: true,
+                  hint: Text(
+                    'Organizacija',
+                  ),
+                  value: selectedOrganizacije,
+                  onChanged: (Organizacije? newValue) {
+                    setState(() {
+                      selectedOrganizacije = newValue;
+                    });
+                  },
+                  items: organizacijeResult?.result
+                          .map((Organizacije organizacija) {
+                        return DropdownMenuItem<Organizacije>(
+                          value: organizacija,
+                          child: Text(organizacija.naziv ?? ''),
+                        );
+                      }).toList() ??
+                      [],
+                ),
+              ),
+            ),
+            SizedBox(width: 30.0),
+            ElevatedButton(
+                onPressed: () async {
+                  await _fetchData();
+                },
+                child: Text("Filtriraj")),
+            SizedBox(
+              height: 8,
+            ),
+          ],
+        ));
   }
 
   Widget _buildDataListView() {
@@ -271,7 +262,9 @@ class _PrakseListScreenState extends State<PrakseListScreen> {
                               .map((Praksa e) => DataRow(cells: [
                                     DataCell(Center(
                                         child: Text(
-                                            e.idNavigation?.naslov ?? "", style: TextStyle(fontWeight: FontWeight.bold)))),
+                                            e.idNavigation?.naslov ?? "",
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.bold)))),
                                     DataCell(Center(
                                         child: Text(e.pocetakPrakse != null
                                             ? DateFormat('dd.MM.yyyy')
@@ -295,20 +288,24 @@ class _PrakseListScreenState extends State<PrakseListScreen> {
                                               color: Colors.blue,
                                             ),
                                             onPressed: () {
-                                      showDialog(
-                                          context: context,
-                                          builder: (BuildContext context) =>
-                                              PraksaDetailsDialog(
-                                                praksa: e,
-                                                statusResult: statusResult,
-                                                organizacijeResult: organizacijeResult,
-                                                oglasiResult:oglasiResult
-                                              )).then((value) {
-                                        if (value != null && value) {
-                                          _fetchData();
-                                        }
-                                      });
-                                    },
+                                              showDialog(
+                                                  context: context,
+                                                  builder: (BuildContext
+                                                          context) =>
+                                                      PraksaDetailsDialog(
+                                                          praksa: e,
+                                                          statusResult:
+                                                              statusResult,
+                                                          organizacijeResult:
+                                                              organizacijeResult,
+                                                          oglasiResult:
+                                                              oglasiResult)).then(
+                                                  (value) {
+                                                if (value != null && value) {
+                                                  _fetchData();
+                                                }
+                                              });
+                                            },
                                           ),
                                           IconButton(
                                             icon: Icon(
@@ -316,7 +313,8 @@ class _PrakseListScreenState extends State<PrakseListScreen> {
                                               color: Colors.red,
                                             ),
                                             onPressed: () async {
-                                              await _prakseProvider.delete(e.id);
+                                              await _prakseProvider
+                                                  .delete(e.id);
                                               await _fetchData();
                                             },
                                           ),

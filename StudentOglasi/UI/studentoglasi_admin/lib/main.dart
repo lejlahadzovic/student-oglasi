@@ -10,8 +10,6 @@ import 'package:studentoglasi_admin/providers/statusoglasi_provider.dart';
 import 'package:studentoglasi_admin/screens/login.dart';
 import 'package:studentoglasi_admin/providers/prakse_provider.dart';
 import 'package:studentoglasi_admin/providers/stipendije_provider.dart';
-import 'package:studentoglasi_admin/screens/objave_list_screen.dart';
-import 'package:studentoglasi_admin/utils/util.dart';
 
 void main() {
   runApp(MultiProvider(

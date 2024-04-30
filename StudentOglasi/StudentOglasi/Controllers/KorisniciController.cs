@@ -13,9 +13,5 @@ namespace StudentOglasi.Controllers
         public KorisniciController(ILogger<BaseController<Korisnik, KorisniciSearchObject>> logger, IKorisniciService korisniciService) : base(logger, korisniciService)
         {
         }
-        public override Task<Korisnik> Insert([FromBody] KorisniciInsertRequest insert)
-        {
-            return base.Insert(insert);
-        }
     }
 }

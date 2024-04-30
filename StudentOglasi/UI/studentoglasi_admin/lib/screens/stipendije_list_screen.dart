@@ -1,7 +1,6 @@
 // ignore_for_file: prefer_const_literals_to_create_immutables
 
 import 'package:flutter/material.dart';
-import 'package:http/http.dart';
 import 'package:provider/provider.dart';
 import 'package:studentoglasi_admin/models/Stipendija/stipendija.dart';
 import 'package:studentoglasi_admin/models/search_result.dart';
@@ -190,7 +189,7 @@ class _StipendijeListScreenState extends State<StipendijeListScreen> {
                                             onPressed: () async {
                                               await _stipendijeProvider
                                                   .delete(e.id);
-                                               await _fetchData();
+                                              await _fetchData();
                                             },
                                           ),
                                         ],

@@ -1,12 +1,6 @@
 // ignore_for_file: prefer_const_constructors
 
-import 'dart:collection';
-import 'dart:convert';
-import 'dart:io';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/foundation/key.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -15,7 +9,6 @@ import 'package:studentoglasi_admin/models/Organizacije/organizacije.dart';
 import 'package:studentoglasi_admin/models/Praksa/praksa.dart';
 import 'package:studentoglasi_admin/models/StatusOglasi/statusoglasi.dart';
 import 'package:studentoglasi_admin/providers/prakse_provider.dart';
-import 'package:studentoglasi_admin/widgets/master_screen.dart';
 
 import '../../models/search_result.dart';
 
@@ -94,6 +87,7 @@ class _PraksaDetailsDialogState extends State<PraksaDetailsDialog> {
                             borderRadius: BorderRadius.all(Radius.circular(10)),
                           ),
                         ),
+                        validator:validateText
                       ),
                     ),
                   ),
@@ -124,6 +118,7 @@ class _PraksaDetailsDialogState extends State<PraksaDetailsDialog> {
                             borderRadius: BorderRadius.all(Radius.circular(10)),
                           ),
                         ),
+                        validator:validateText
                       ),
                     ),
                   ),
@@ -139,6 +134,7 @@ class _PraksaDetailsDialogState extends State<PraksaDetailsDialog> {
                             borderRadius: BorderRadius.all(Radius.circular(10)),
                           ),
                         ),
+                        validator: validateText
                       ),
                     ),
                   ),
@@ -164,6 +160,7 @@ class _PraksaDetailsDialogState extends State<PraksaDetailsDialog> {
                                   ))
                               .toList() ??
                           [],
+                      validator: validateText
                     ),
                   ),
                   SizedBox(width: 20),
@@ -183,6 +180,7 @@ class _PraksaDetailsDialogState extends State<PraksaDetailsDialog> {
                                   ))
                               .toList() ??
                           [],
+                      validator: validateText
                     ),
                   ),
                 ],
@@ -199,6 +197,12 @@ class _PraksaDetailsDialogState extends State<PraksaDetailsDialog> {
                         format: DateFormat('dd.MM.yyyy.'),
                         decoration:
                             InputDecoration(labelText: 'Vrijeme objave'),
+                        validator: (value) {
+                          if (value == null) {
+                            return 'Izaberite datum';
+                          }
+                          return null;
+                        },
                       ),
                     ),
                   ),
@@ -211,6 +215,22 @@ class _PraksaDetailsDialogState extends State<PraksaDetailsDialog> {
                         inputType: InputType.date,
                         format: DateFormat('dd.MM.yyyy.'),
                         decoration: InputDecoration(labelText: 'Rok prijave'),
+                        validator: (value) {
+                          if (value == null) {
+                            return 'Izaberite datum';
+                          }else if (_formKey
+                                  .currentState
+                                  ?.fields['idNavigation.vrijemeObjave']
+                                  ?.value !=
+                              null) {
+                            DateTime vrijemeObjave = _formKey.currentState
+                                ?.fields['idNavigation.vrijemeObjave']?.value;
+                            if (value.isBefore(vrijemeObjave)) {
+                              return 'Izabrani datum mora biti poslije vremena objave';
+                            }
+                          }
+                          return null;
+                        },
                       ),
                     ),
                   ),
@@ -228,6 +248,22 @@ class _PraksaDetailsDialogState extends State<PraksaDetailsDialog> {
                         format: DateFormat('dd.MM.yyyy.'),
                         decoration:
                             InputDecoration(labelText: 'Početak prakse'),
+                        validator: (value) {
+                          if (value == null) {
+                            return 'Izaberite datum';
+                          } else if (_formKey
+                                  .currentState
+                                  ?.fields['idNavigation.rokPrijave']
+                                  ?.value !=
+                              null) {
+                            DateTime rokPrijave = _formKey.currentState
+                                ?.fields['idNavigation.rokPrijave']?.value;
+                            if (value.isBefore(rokPrijave)) {
+                              return 'Izabrani datum mora biti poslije roka prijave';
+                            }
+                          }
+                          return null;
+                        },
                       ),
                     ),
                   ),
@@ -240,6 +276,22 @@ class _PraksaDetailsDialogState extends State<PraksaDetailsDialog> {
                         inputType: InputType.date,
                         format: DateFormat('dd.MM.yyyy.'),
                         decoration: InputDecoration(labelText: 'Kraj prakse'),
+                        validator: (value) {
+                          if (value == null) {
+                            return 'Izaberite datum';
+                          } else if (_formKey
+                                  .currentState
+                                  ?.fields['pocetakPrakse']
+                                  ?.value !=
+                              null) {
+                            DateTime pocetakPrakse = _formKey.currentState
+                                ?.fields['pocetakPrakse']?.value;
+                            if (value.isBefore(pocetakPrakse)) {
+                              return 'Izabrani datum mora biti poslije početka prakse';
+                            }
+                          }
+                          return null;
+                        },
                       ),
                     ),
                   ),
@@ -275,6 +327,7 @@ class _PraksaDetailsDialogState extends State<PraksaDetailsDialog> {
                             borderRadius: BorderRadius.all(Radius.circular(10)),
                           ),
                         ),
+                        validator:validateText
                       ),
                     ),
                   ),
@@ -306,7 +359,7 @@ class _PraksaDetailsDialogState extends State<PraksaDetailsDialog> {
             var request = Map.from(_formKey.currentState!.value);
 
             request['idNavigation'] = {
-              'id':widget.praksa?.idNavigation?.id,
+              'id': widget.praksa?.idNavigation?.id ?? 0,
               'naslov': request['idNavigation.naslov'],
               'opis': request['idNavigation.opis'],
               'rokPrijave': request['idNavigation.rokPrijave'],
@@ -351,4 +404,11 @@ class _PraksaDetailsDialogState extends State<PraksaDetailsDialog> {
       ],
     );
   }
+
 }
+String? validateText(String? value) {
+  if (value == null || value.isEmpty) {
+    return 'Unesite vrijednost u polje.';
+  }
+  return null;
+ }
