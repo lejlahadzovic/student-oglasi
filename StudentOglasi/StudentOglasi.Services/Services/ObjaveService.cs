@@ -15,12 +15,58 @@ namespace StudentOglasi.Services.Services
 {
     public class ObjaveService : BaseCRUDService<Model.Objave, Database.Objave, ObjaveSearchObject, ObjaveInsertRequest, ObjaveUpdateRequest>, IObjaveService
     {
-        public ObjaveService(StudentoglasiContext context, IMapper mapper): base(context, mapper)
+        public readonly FileService _fileService;
+        public ObjaveService(StudentoglasiContext context, IMapper mapper, FileService fileService) : base(context, mapper)
         {
+            _fileService = fileService;
         }
         public override async Task BeforeInsert(Database.Objave entity, ObjaveInsertRequest insert)
         {
             entity.VrijemeObjave = DateTime.Now;
+            var uploadResponse = await _fileService.UploadAsync(insert.Slika);
+            if (!uploadResponse.Error)
+            {
+                entity.Slika = uploadResponse.Blob.Name;
+            }
+            else
+            {
+                throw new Exception("Greška pri uploadu slike");
+            }
+        }
+        public override async Task BeforeDelete(Database.Objave entity)
+        {
+            if (entity.Slika != null)
+            {
+                try
+                {
+                    await _fileService.DeleteAsync(entity.Slika);
+                }
+                catch (Exception ex)
+                {
+                    throw new Exception("Greška pri brisanju slike.", ex);
+                }
+            }
+        }
+        public override async Task BeforeUpdate(Database.Objave entity, ObjaveUpdateRequest update)
+        {
+            if(update.Slika != null)
+            {
+                if (entity.Slika != null)
+                {
+                    await _fileService.DeleteAsync(entity.Slika);
+                }
+
+                var uploadResponse = await _fileService.UploadAsync(update.Slika);
+
+                if (!uploadResponse.Error)
+                {
+                    entity.Slika = uploadResponse.Blob.Name;
+                }
+                else
+                {
+                    throw new Exception("Greška pri uploadu slike");
+                }
+            }
         }
         public override IQueryable<Database.Objave> AddFilter(IQueryable<Database.Objave> query, ObjaveSearchObject? search = null)
         {

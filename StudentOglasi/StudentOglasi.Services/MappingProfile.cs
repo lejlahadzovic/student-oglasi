@@ -31,6 +31,7 @@ namespace StudentOglasi.Services
             CreateMap<Database.Kategorija, Model.Kategorija>();
             CreateMap<Model.Requests.ObjaveInsertRequest, Database.Objave>();
             CreateMap<Model.Requests.ObjaveUpdateRequest, Database.Objave>()
+                .ForMember(dest => dest.Slika, opt => opt.Ignore())
                 .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null)); ;
         }
     }

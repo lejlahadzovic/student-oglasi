@@ -12,3 +12,11 @@ String formatNumber(dynamic) {
   }
   return f.format(dynamic);
 }
+
+class FilePathManager {
+  static String baseUrl = "https://studentoglasirs2.blob.core.windows.net/files/";
+
+  static String constructUrl(String fileName) {
+    return baseUrl + fileName;
+  }
+}

@@ -1,3 +1,4 @@
+
 import 'package:studentoglasi_admin/models/Objava/objava.dart';
 import 'package:studentoglasi_admin/providers/base_provider.dart';
 
@@ -9,4 +10,5 @@ class ObjaveProvider extends BaseProvider<Objava> {
     // TODO: implement fromJson
     return Objava.fromJson(data);
   }
+
 }

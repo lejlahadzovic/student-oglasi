@@ -1,11 +1,16 @@
+import 'dart:io';
+
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
+import 'package:http/http.dart';
 import 'package:provider/provider.dart';
 import 'package:studentoglasi_admin/models/Kategorija/kategorija.dart';
 import 'package:studentoglasi_admin/models/Objava/objava.dart';
 import 'package:studentoglasi_admin/models/search_result.dart';
 import 'package:studentoglasi_admin/providers/kategorije_provider.dart';
 import 'package:studentoglasi_admin/providers/objave_provider.dart';
+import 'package:studentoglasi_admin/utils/util.dart';
 
 class ObjaveDetailsDialog extends StatefulWidget {
   Objava? objava;
@@ -24,6 +29,8 @@ class _ObjaveDetailsDialogState extends State<ObjaveDetailsDialog> {
   // late KategorijaProvider _kategorijeProvider;
   // Kategorija? _selectedKategorija;
   late ObjaveProvider _objaveProvider;
+  String? _filePath;
+  String? _imageUrl;
 
   @override
   void initState() {
@@ -41,12 +48,14 @@ class _ObjaveDetailsDialogState extends State<ObjaveDetailsDialog> {
     //     );
     //   }
     // }
+    if (widget.objava != null && widget.objava!.slika != null) {
+      _imageUrl = FilePathManager.constructUrl(widget.objava!.slika!);
+    }
 
     _intialValue = {
       'naslov': widget.objava?.naslov,
       'sadrzaj': widget.objava?.sadrzaj,
-      'slika': widget.objava?.slika ?? 'Image not available',
-      'kategorijaId': widget.objava?.kategorijaId.toString()
+      'kategorijaId': widget.objava?.kategorijaId.toString(),
     };
   }
 
@@ -61,14 +70,61 @@ class _ObjaveDetailsDialogState extends State<ObjaveDetailsDialog> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              FormBuilderTextField(
-                name: 'slika',
-                decoration: InputDecoration(
-                  labelText: 'Slika',
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(10)),
-                  ),
-                ),
+              FormBuilderField(
+                name: 'filePath',
+                builder: (FormFieldState<dynamic> field) {
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Center(
+                        child: _filePath != null
+                            ? Image.file(
+                                File(_filePath!),
+                                fit: BoxFit.cover,
+                                width: 800,
+                              )
+                            : _imageUrl != null
+                                ? Image.network(
+                                    _imageUrl!,
+                                    fit: BoxFit.cover,
+                                    width: 800,
+                                  )
+                                : Text(''),
+                      ),
+                      SizedBox(height: 10),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: Text(
+                              _filePath != null ? _filePath! : (_imageUrl != null ? '' : 'Nema odabrane slike'),
+                              style: TextStyle(fontSize: 16),
+                            ),
+                          ),
+                          ElevatedButton(
+                            onPressed: () async {
+                              FilePickerResult? result = await FilePicker
+                                  .platform
+                                  .pickFiles(type: FileType.image);
+
+                              if (result != null) {
+                                setState(() {
+                                  _filePath = result.files.single.path;
+                                });
+                                field.didChange(_filePath);
+                              }
+                            },
+                            child: Text('Odaberite sliku'),
+                          ),
+                        ],
+                      ),
+                      if (field.errorText != null)
+                        Text(
+                          field.errorText!,
+                          style: TextStyle(color: Colors.red),
+                        ),
+                    ],
+                  );
+                },
               ),
               SizedBox(height: 10),
               Row(
@@ -127,12 +183,13 @@ class _ObjaveDetailsDialogState extends State<ObjaveDetailsDialog> {
         ElevatedButton(
           onPressed: () async {
             _formKey.currentState?.saveAndValidate();
-            var request = Map.from(_formKey.currentState!.value);
+            var request =
+                Map<String, dynamic>.from(_formKey.currentState!.value);
 
             try {
               widget.objava == null
-                  ? await _objaveProvider.insert(request)
-                  : await _objaveProvider.update(widget.objava!.id!, request);
+                  ? await _objaveProvider.insertWithImage(request)
+                  : await _objaveProvider.updateWithImage(widget.objava!.id!, request);
 
               Navigator.pop(context, true);
             } on Exception catch (e) {

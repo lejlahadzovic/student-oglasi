@@ -31,21 +31,28 @@ namespace StudentOglasi.Services.Services
             await _context.SaveChangesAsync();
             return _mapper.Map<T>(entity);
         }
+        public virtual async Task BeforeUpdate(TDb entity, TUpdate update)
+        {
+        }
         public virtual async Task<T> Update(int id, TUpdate update)
         {
             var set = _context.Set<TDb>();
 
             var entity = await set.FindAsync(id);
 
+            await BeforeUpdate(entity, update);
             _mapper.Map(update, entity);
-
             await _context.SaveChangesAsync();
             return _mapper.Map<T>(entity);
+        }
+        public virtual async Task BeforeDelete(TDb entity)
+        {
         }
         public virtual async Task Delete(int id)
         {
             var set =  _context.Set<TDb>();
             var entity =await set.FindAsync(id);
+            await BeforeDelete(entity);
             if (entity != null)
             {
                 set.Remove(entity);

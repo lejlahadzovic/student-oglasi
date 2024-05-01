@@ -88,6 +88,36 @@ abstract class BaseProvider<T> with ChangeNotifier {
     }
   }
 
+  Future<T> insertWithImage(Map<String, dynamic> formData) async {
+    var url = "$_baseUrl$_endPoint";
+    var request = http.MultipartRequest(
+      'POST',
+      Uri.parse(url),
+    );
+
+    request.headers.addAll(createHeaders());
+
+    formData.forEach((key, value) async {
+      if (key == 'filePath') {
+        var filePath = value.toString();
+      var file = await http.MultipartFile.fromPath('slika', filePath);
+      request.files.add(file);
+      } else {
+        request.fields[key] = value.toString();
+      }
+    });
+    var streamedResponse = await request.send();
+    var response = await http.Response.fromStream(streamedResponse);
+
+   
+    if (isValidResponse(response)) {
+      var data = jsonDecode(response.body);
+      return fromJson(data);
+    } else {
+      throw Exception("Unknown error");
+    }
+  }
+
   Future<T> update(int id, [dynamic request]) async {
     var url = "$_baseUrl$_endPoint/$id";
     var uri = Uri.parse(url);
@@ -95,6 +125,35 @@ abstract class BaseProvider<T> with ChangeNotifier {
 
     var jsonRequest = jsonEncode(request);
     var response = await http.put(uri, headers: headers, body: jsonRequest);
+
+    if (isValidResponse(response)) {
+      var data = jsonDecode(response.body);
+      return fromJson(data);
+    } else {
+      throw new Exception("Unknown error");
+    }
+  }
+
+  Future<T> updateWithImage(int id, Map<String, dynamic> formData) async {
+    var url = "$_baseUrl$_endPoint/$id";
+    var request = http.MultipartRequest(
+      'PUT',
+      Uri.parse(url),
+    );
+
+    request.headers.addAll(createHeaders());
+
+    formData.forEach((key, value) async {
+      if (key == 'filePath') {
+        var filePath = value.toString();
+      var file = await http.MultipartFile.fromPath('slika', filePath);
+      request.files.add(file);
+      } else {
+        request.fields[key] = value.toString();
+      }
+    });
+    var streamedResponse = await request.send();
+    var response = await http.Response.fromStream(streamedResponse);
 
     if (isValidResponse(response)) {
       var data = jsonDecode(response.body);

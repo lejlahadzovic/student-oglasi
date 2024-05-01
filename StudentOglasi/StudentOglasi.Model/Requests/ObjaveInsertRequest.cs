@@ -1,8 +1,10 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Http;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+
 
 namespace StudentOglasi.Model.Requests
 {
@@ -12,7 +14,7 @@ namespace StudentOglasi.Model.Requests
 
         public string Sadrzaj { get; set; } = null!;
 
-        public string Slika { get; set; } = null!;
+        public IFormFile Slika { get; set; } = null!;
 
         public int KategorijaId { get; set; }
     }
