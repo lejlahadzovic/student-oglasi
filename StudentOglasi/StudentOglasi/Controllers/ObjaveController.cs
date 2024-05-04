@@ -18,13 +18,25 @@ namespace StudentOglasi.Controllers
 
         }
 
-        public override async Task<Objave> Insert([FromForm] ObjaveInsertRequest insert)
+        public override async Task<IActionResult> Insert([FromForm] ObjaveInsertRequest insert)
         {
-            return await _service.Insert(insert);
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var result = await _service.Insert(insert);
+            return Ok(result);
         }
-        public override async Task<Objave> Update(int id, [FromForm] ObjaveUpdateRequest update)
+        public override async Task<IActionResult> Update(int id, [FromForm] ObjaveUpdateRequest update)
         {
-            return await _service.Update(id, update);
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var result = await _service.Update(id, update);
+            return Ok(result);
         }
     }
 }

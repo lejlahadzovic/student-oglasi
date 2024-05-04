@@ -62,7 +62,7 @@ namespace StudentOglasi.Model.Requests
                 var firstDate = (DateTime)nestedPropertyInfo.GetValue(idNavigationValue);
                 var secondDate = (DateTime)value;
 
-                if (firstDate <= secondDate)
+                if (firstDate >= secondDate)
                 {
                     return new ValidationResult($"The {_endDatePropertyName} must be after RokPrijave");
                 }
