@@ -10,6 +10,7 @@ namespace StudentOglasi.Model.Requests
     public class PrakseUpdateRequest
     {
         [Required]
+        [DateMustBeAfter(nameof(IdNavigation), nameof(PocetakPrakse))]
         public DateTime PocetakPrakse { get; set; }
 
         [Required]
