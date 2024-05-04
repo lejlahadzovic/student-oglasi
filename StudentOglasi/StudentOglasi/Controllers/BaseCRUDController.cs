@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.ComponentModel.DataAnnotations;
 using StudentOglasi.Model;
 using StudentOglasi.Services.Interfaces;
 
@@ -19,15 +20,27 @@ namespace StudentOglasi.Controllers
         }
 
         [HttpPost]
-        public virtual async Task<T> Insert([FromBody] TInsert insert)
-        {
-            return await _service.Insert(insert);
+        public virtual async Task<IActionResult> Insert([FromBody] TInsert insert)
+        {            
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var result = await _service.Insert(insert);
+            return Ok(result);
         }
 
         [HttpPut("{id}")]
-        public virtual async Task<T> Update(int id, [FromBody] TUpdate update)
+        public virtual async Task<IActionResult> Update(int id, [FromBody] TUpdate update)
         {
-            return await _service.Update(id, update);
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var result = await _service.Update(id, update);
+            return Ok(result);
         }
 
         [HttpDelete("{id}")]

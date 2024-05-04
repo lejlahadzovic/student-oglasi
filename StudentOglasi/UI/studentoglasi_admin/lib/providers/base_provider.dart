@@ -77,7 +77,8 @@ abstract class BaseProvider<T> with ChangeNotifier {
     var uri = Uri.parse(url);
     var headers = createHeaders();
 
-    var jsonRequest = jsonEncode(request);
+
+    var jsonRequest =jsonEncode(request, toEncodable: myDateSerializer);
     var response = await http.post(uri, headers: headers, body: jsonRequest);
 
     if (isValidResponse(response)) {
@@ -123,7 +124,8 @@ abstract class BaseProvider<T> with ChangeNotifier {
     var uri = Uri.parse(url);
     var headers = createHeaders();
 
-    var jsonRequest = jsonEncode(request);
+
+    var jsonRequest =jsonEncode(request, toEncodable: myDateSerializer);
     var response = await http.put(uri, headers: headers, body: jsonRequest);
 
     if (isValidResponse(response)) {
@@ -209,4 +211,11 @@ abstract class BaseProvider<T> with ChangeNotifier {
     });
     return query;
   }
+    dynamic myDateSerializer(dynamic object) {
+    if (object is DateTime) {
+      return object.toIso8601String();
+    }
+    return object;
+  }
+
 }
