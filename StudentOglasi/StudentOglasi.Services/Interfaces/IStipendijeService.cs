@@ -11,5 +11,8 @@ namespace StudentOglasi.Services.Interfaces
 {
     public interface IStipendijeService : ICRUDService<Stipendije, StipendijeSearchObject, StipendijeInsertRequest, StipendijeUpdateRequest>
     {
+        Task<Model.Stipendije> Activate(int id);
+        Task<Model.Stipendije> Hide(int id);
+        Task<List<string>> AllowedActions(int id);
     }
 }

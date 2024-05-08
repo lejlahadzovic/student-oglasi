@@ -4,7 +4,11 @@ using Microsoft.OpenApi.Models;
 using StudentOglasi;
 using StudentOglasi.Services.Database;
 using StudentOglasi.Services.Interfaces;
+using StudentOglasi.Services.OglasiStateMachine;
 using StudentOglasi.Services.Services;
+using StudentOglasi.Services.StateMachine.PrakseStateMaachine;
+using StudentOglasi.Services.StateMachine.StipendijeStateMachine;
+using StudentOglasi.Services.StateMachines.PrakseStateMachine;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,6 +22,14 @@ builder.Services.AddSingleton<FileService>();
 builder.Services.AddTransient<IStatusOglasiService, StatusOglasiService>();
 builder.Services.AddTransient<IOglasiService, OglasiService>();
 builder.Services.AddTransient<IOrganizacijeService, OrganizacijeService>();
+builder.Services.AddTransient<BasePrakseState>();
+builder.Services.AddTransient<InitialPraksaState>();
+builder.Services.AddTransient<ActivePrakseState>();
+builder.Services.AddTransient<DraftPrakseState>();
+builder.Services.AddTransient<BaseStipendijeState>();
+builder.Services.AddTransient<InitialStipendijeState>();
+builder.Services.AddTransient<ActiveStipendijeState>();
+builder.Services.AddTransient<DraftStipendijeState>();
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

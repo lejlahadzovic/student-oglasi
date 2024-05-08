@@ -11,5 +11,8 @@ namespace StudentOglasi.Services.Interfaces
 {
     public interface IPrakseService : ICRUDService<Prakse, PrakseSearchObject, PrakseInsertRequest, PrakseUpdateRequest>
     {
+        Task<Model.Prakse> Activate(int id);
+        Task<Model.Prakse> Hide(int id);
+        Task<List<string>> AllowedActions(int id);
     }
 }

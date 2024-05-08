@@ -22,7 +22,6 @@ namespace StudentOglasi.Model.Requests
 
         public int BrojStipendisata { get; set; }
 
-        public int StatusId { get; set; }
         public int StipenditorId { get; set; }
     }
 }

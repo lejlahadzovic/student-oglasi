@@ -18,6 +18,24 @@ namespace StudentOglasi.Controllers
 
         }
 
+        [HttpPut("{id}/activate")]
+        public virtual async Task<Model.Stipendije> Activate(int id)
+        {
+            return await (_service as IStipendijeService).Activate(id);
+        }
+
+        [HttpPut("{id}/hide")]
+        public virtual async Task<Model.Stipendije> Hide(int id)
+        {
+            return await (_service as IStipendijeService).Hide(id);
+        }
+
+        [HttpGet("{id}/allowedActions")]
+        public async Task<List<string>> AllowedActions(int id)
+        {
+            return await (_service as IStipendijeService).AllowedActions(id);
+        }
+
     }
     
 }

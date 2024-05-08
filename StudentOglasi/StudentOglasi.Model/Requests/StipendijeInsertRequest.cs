@@ -24,7 +24,6 @@ namespace StudentOglasi.Model.Requests
 
         public Model.Oglasi? IdNavigation { get; set; }
 
-        public int StatusId { get; set; }
         public int StipenditorId { get; set; }
     }
 }
