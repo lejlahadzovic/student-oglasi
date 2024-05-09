@@ -5,18 +5,21 @@ using StudentOglasi.Model.Requests;
 using StudentOglasi.Model.SearchObjects;
 using StudentOglasi.Services.Database;
 using StudentOglasi.Services.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using StudentOglasi.Services.OglasiStateMachine;
 
 namespace StudentOglasi.Services.Services
 {
     public class StipendijeService : BaseCRUDService<Model.Stipendije, Database.Stipendije, StipendijeSearchObject, StipendijeInsertRequest, StipendijeUpdateRequest>, IStipendijeService
     {
-        public StipendijeService(StudentoglasiContext context, IMapper mapper) : base(context, mapper)
+        public BaseStipendijeState _baseState { get; set; }
+        public StipendijeService(StudentoglasiContext context, IMapper mapper, BaseStipendijeState baseState) : base(context, mapper)
         {
+            _baseState = baseState;
+        }
+        public override Task<Model.Stipendije> Insert(StipendijeInsertRequest insert)
+        {
+            var state = _baseState.CreateState("Initial");
+            return state.Insert(insert);
         }
         public override IQueryable<Database.Stipendije> AddFilter(IQueryable<Database.Stipendije> query, StipendijeSearchObject? search = null)
         {
@@ -49,6 +52,45 @@ namespace StudentOglasi.Services.Services
             var tmp = _mapper.Map<List<Model.Stipendije>>(list);
             result.Result = tmp;
             return result;
+        }
+        public override async Task<Model.Stipendije> Update(int id, StipendijeUpdateRequest update)
+        {
+            var set = _context.Set<Database.Stipendije>();
+
+            var entity = await set.Include(p => p.IdNavigation).FirstOrDefaultAsync(e => e.Id == id);
+            entity.Status = await _context.StatusOglasis.FindAsync(entity.StatusId);
+            var state = _baseState.CreateState(entity.Status.Naziv);
+
+            return await state.Update(id, update);
+        }
+        public async Task<Model.Stipendije> Activate(int id)
+        {
+            var set = _context.Set<Database.Stipendije>();
+
+            var entity = await set.FindAsync(id);
+            entity.Status = await _context.StatusOglasis.FindAsync(entity.StatusId);
+            var state = _baseState.CreateState(entity.Status.Naziv);
+
+            return await state.Activate(id);
+        }
+        public async Task<Model.Stipendije> Hide(int id)
+        {
+            var set = _context.Set<Database.Stipendije>();
+
+            var entity = await set.FindAsync(id);
+            entity.Status = await _context.StatusOglasis.FindAsync(entity.StatusId);
+            var state = _baseState.CreateState(entity.Status.Naziv);
+
+            return await state.Hide(id);
+        }
+        public async Task<List<string>> AllowedActions(int id)
+        {
+            var set = _context.Set<Database.Stipendije>();
+
+            var entity = await set.FindAsync(id);
+            entity.Status = await _context.StatusOglasis.FindAsync(entity.StatusId);
+            var state = _baseState.CreateState(entity.Status.Naziv ?? "Initial");
+            return await state.AllowedActions();
         }
     }
 }

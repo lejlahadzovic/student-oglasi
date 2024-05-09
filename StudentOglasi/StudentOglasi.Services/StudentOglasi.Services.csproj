@@ -18,7 +18,8 @@
 	  <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.3">
 		  <PrivateAssets>all</PrivateAssets>
 		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-	  </PackageReference> </ItemGroup>
+	  </PackageReference>
+	  <PackageReference Include="Microsoft.VisualStudio.Services.Client" Version="19.225.1" /> </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\StudentOglasi.Model\StudentOglasi.Model.csproj" />

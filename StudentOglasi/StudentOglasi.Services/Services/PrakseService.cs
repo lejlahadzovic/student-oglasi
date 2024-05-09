@@ -5,18 +5,21 @@ using StudentOglasi.Model.Requests;
 using StudentOglasi.Model.SearchObjects;
 using StudentOglasi.Services.Database;
 using StudentOglasi.Services.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using StudentOglasi.Services.StateMachines.PrakseStateMachine;
 
 namespace StudentOglasi.Services.Services
 {
     public class PrakseService : BaseCRUDService<Model.Prakse, Database.Prakse, PrakseSearchObject, PrakseInsertRequest, PrakseUpdateRequest>, IPrakseService
     {
-        public PrakseService(StudentoglasiContext context, IMapper mapper) : base(context, mapper)
+        public BasePrakseState _baseState { get; set; }
+        public PrakseService(StudentoglasiContext context, IMapper mapper, BasePrakseState baseState) : base(context, mapper)
         {
+            _baseState = baseState;
+        }
+        public override Task<Model.Prakse> Insert(PrakseInsertRequest insert)
+        {
+            var state = _baseState.CreateState("Initial");
+            return state.Insert(insert);
         }
         public override IQueryable<Database.Prakse> AddFilter(IQueryable<Database.Prakse> query, PrakseSearchObject? search = null)
         {
@@ -62,10 +65,39 @@ namespace StudentOglasi.Services.Services
             var set = _context.Set<Database.Prakse>();
 
             var entity = await set.Include(p => p.IdNavigation).FirstOrDefaultAsync(e => e.Id == id);
+            entity.Status = await _context.StatusOglasis.FindAsync(entity.StatusId);
+            var state = _baseState.CreateState(entity.Status.Naziv);
 
-            _mapper.Map(update, entity);
-            await _context.SaveChangesAsync();
-            return _mapper.Map<Model.Prakse>(entity);
+           return await state.Update(id, update);
+        }
+        public async Task<Model.Prakse> Activate(int id)
+        {
+            var set = _context.Set<Database.Prakse>();
+
+            var entity = await set.FindAsync(id);
+            entity.Status = await _context.StatusOglasis.FindAsync(entity.StatusId);
+            var state = _baseState.CreateState(entity.Status.Naziv);
+
+            return await state.Activate(id);
+        }
+        public async Task<Model.Prakse> Hide(int id)
+        {
+            var set = _context.Set<Database.Prakse>();
+
+            var entity = await set.FindAsync(id);
+            entity.Status = await _context.StatusOglasis.FindAsync(entity.StatusId);
+            var state = _baseState.CreateState(entity.Status.Naziv);
+
+            return await state.Hide(id);
+        }
+        public async Task<List<string>> AllowedActions(int id)
+        {
+            var set = _context.Set<Database.Prakse>();
+
+            var entity = await set.FindAsync(id);
+            entity.Status = await _context.StatusOglasis.FindAsync(entity.StatusId);
+            var state = _baseState.CreateState(entity.Status.Naziv??"Initial");
+            return await state.AllowedActions();
         }
     }
 }
