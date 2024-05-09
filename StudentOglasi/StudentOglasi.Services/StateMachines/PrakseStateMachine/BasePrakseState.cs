@@ -20,23 +20,23 @@ namespace StudentOglasi.Services.StateMachines.PrakseStateMachine
         }
         public virtual Task<Model.Prakse> Insert(PrakseInsertRequest request)
         {
-            throw new UserException("Not allowed!");
+            throw new UserException("Action is not allowed!");
         }
         public virtual Task<Model.Prakse> Update(int id, PrakseUpdateRequest request)
         {
-            throw new UserException("Not allowed!");
+            throw new UserException("Action is not allowed!");
         }
         public virtual Task<Model.Prakse> Activate(int id)
         {
-            throw new UserException("Not allowed!");
+            throw new UserException("Action is not allowed!");
         }
         public virtual Task<Model.Prakse> Hide(int id)
         {
-            throw new UserException("Not allowed!");
+            throw new UserException("Action is not allowed!");
         }
         public virtual Task<Model.Prakse> Delete(int id)
         {
-            throw new UserException("Not allowed!");
+            throw new UserException("Action is not allowed!");
         }
         public BasePrakseState CreateState(string stateName)
         {
@@ -53,7 +53,7 @@ namespace StudentOglasi.Services.StateMachines.PrakseStateMachine
                     return _serviceProvider.GetService<ActivePrakseState>();
                     break;
                 default:
-                    throw new Exception("Not allowed");
+                    throw new UserException("Action is not allowed!");
             }
         }
         public virtual async Task<List<string>> AllowedActions()

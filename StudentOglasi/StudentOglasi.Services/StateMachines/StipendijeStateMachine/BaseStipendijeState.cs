@@ -20,23 +20,23 @@ namespace StudentOglasi.Services.OglasiStateMachine
         }
         public virtual Task<Model.Stipendije> Insert(StipendijeInsertRequest request)
         {
-            throw new UserException("Not allowed!");
+            throw new UserException("Action is not allowed!");
         }
         public virtual Task<Model.Stipendije> Update(int id, StipendijeUpdateRequest request)
         {
-            throw new UserException("Not allowed!");
+            throw new UserException("Action is not allowed!");
         }
         public virtual Task<Model.Stipendije> Activate(int id)
         {
-            throw new UserException("Not allowed!");
+            throw new UserException("Action is not allowed!");
         }
         public virtual Task<Model.Stipendije> Hide(int id)
         {
-            throw new UserException("Not allowed!");
+            throw new UserException("Action is not allowed!");
         }
         public virtual Task<Model.Stipendije> Delete(int id)
         {
-            throw new UserException("Not allowed!");
+            throw new UserException("Action is not allowed!");
         }
         public BaseStipendijeState CreateState(string stateName)
         {
@@ -53,7 +53,7 @@ namespace StudentOglasi.Services.OglasiStateMachine
                     return _serviceProvider.GetService<ActiveStipendijeState>();
                     break;
                 default:
-                    throw new Exception("Not allowed");
+                    throw new UserException("Action is not allowed!");
             }
         }
         public virtual async Task<List<string>> AllowedActions()

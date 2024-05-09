@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using StudentOglasi;
+using StudentOglasi.Filters;
 using StudentOglasi.Services.Database;
 using StudentOglasi.Services.Interfaces;
 using StudentOglasi.Services.OglasiStateMachine;
@@ -22,6 +23,7 @@ builder.Services.AddSingleton<FileService>();
 builder.Services.AddTransient<IStatusOglasiService, StatusOglasiService>();
 builder.Services.AddTransient<IOglasiService, OglasiService>();
 builder.Services.AddTransient<IOrganizacijeService, OrganizacijeService>();
+
 builder.Services.AddTransient<BasePrakseState>();
 builder.Services.AddTransient<InitialPraksaState>();
 builder.Services.AddTransient<ActivePrakseState>();
@@ -31,7 +33,10 @@ builder.Services.AddTransient<InitialStipendijeState>();
 builder.Services.AddTransient<ActiveStipendijeState>();
 builder.Services.AddTransient<DraftStipendijeState>();
 
-builder.Services.AddControllers();
+builder.Services.AddControllers(x =>
+{
+    x.Filters.Add<ErrorFilter>();
+});
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
