@@ -23,6 +23,7 @@ builder.Services.AddSingleton<FileService>();
 builder.Services.AddTransient<IStatusOglasiService, StatusOglasiService>();
 builder.Services.AddTransient<IOglasiService, OglasiService>();
 builder.Services.AddTransient<IOrganizacijeService, OrganizacijeService>();
+builder.Services.AddTransient<IStipenditoriService, StipenditoriService>();
 
 builder.Services.AddTransient<BasePrakseState>();
 builder.Services.AddTransient<InitialPraksaState>();

@@ -2,11 +2,19 @@
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:studentoglasi_admin/models/Oglas/oglas.dart';
+import 'package:studentoglasi_admin/models/StatusOglasi/statusoglasi.dart';
 import 'package:studentoglasi_admin/models/Stipendija/stipendija.dart';
+import 'package:studentoglasi_admin/models/Stipenditor/stipenditor.dart';
 import 'package:studentoglasi_admin/models/search_result.dart';
+import 'package:studentoglasi_admin/providers/oglasi_provider.dart';
+import 'package:studentoglasi_admin/providers/statusoglasi_provider.dart';
 import 'package:studentoglasi_admin/providers/stipendije_provider.dart';
 import 'package:studentoglasi_admin/utils/util.dart';
 import 'package:studentoglasi_admin/widgets/master_screen.dart';
+
+import '../providers/stipenditori_provider.dart';
+import 'components/stipendije_details_dialog.dart';
 
 class StipendijeListScreen extends StatefulWidget {
   const StipendijeListScreen({super.key});
@@ -17,7 +25,13 @@ class StipendijeListScreen extends StatefulWidget {
 
 class _StipendijeListScreenState extends State<StipendijeListScreen> {
   late StipendijeProvider _stipendijeProvider;
+  late StatusOglasiProvider _statusProvider;
+  late StipenditoriProvider _stipenditorProvider;
+  late OglasiProvider _oglasiProvider;
   SearchResult<Stipendije>? result;
+  SearchResult<Stipenditor>? stipenditoriResult;
+  SearchResult<StatusOglasi>? statusResult;
+  SearchResult<Oglas>? oglasiResult;
   TextEditingController _naslovController = new TextEditingController();
 
   @override
@@ -25,7 +39,34 @@ class _StipendijeListScreenState extends State<StipendijeListScreen> {
     // TODO: implement didChangeDependencies
     super.didChangeDependencies();
     _stipendijeProvider = context.read<StipendijeProvider>();
+    _oglasiProvider=context.read<OglasiProvider>();
+    _statusProvider=context.read<StatusOglasiProvider>();
+    _stipenditorProvider=context.read<StipenditoriProvider>();
     _fetchData();
+    _fetchOglasi();
+    _fetchStatusOglasi();
+    _fetchStipenditori();
+  }
+
+  void _fetchStatusOglasi() async {
+    var statusData = await _statusProvider.get();
+    setState(() {
+      statusResult = statusData;
+    });
+  }
+
+  void _fetchOglasi() async {
+    var oglasData = await _oglasiProvider.get();
+    setState(() {
+      oglasiResult = oglasData;
+    });
+  }
+
+ void _fetchStipenditori() async {
+    var stipenditoriData = await _stipenditorProvider.get();
+    setState(() {
+      stipenditoriResult = stipenditoriData;
+    });
   }
 
   @override
@@ -33,6 +74,19 @@ class _StipendijeListScreenState extends State<StipendijeListScreen> {
     return MasterScreenWidget(
       title: "Stipendije",
       addButtonLabel: "Dodaj stipendiju",
+      onAddButtonPressed: () {
+        showDialog(
+            context: context,
+            builder: (BuildContext context) => StipendijeDetailsDialog(
+                stipendija: null,
+                statusResult: statusResult,
+                stipenditoriResult: stipenditoriResult,
+                oglasiResult: oglasiResult)).then((value) {
+          if (value != null && value) {
+            _fetchData();
+          }
+        });
+      },
       child: Container(
         child: Column(
           children: [_buildSearch(), _buildDataListView()],

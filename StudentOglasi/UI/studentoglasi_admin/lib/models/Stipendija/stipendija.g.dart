@@ -21,6 +21,9 @@ Stipendije _$StipendijeFromJson(Map<String, dynamic> json) => Stipendije(
       json['status'] == null
           ? null
           : StatusOglasi.fromJson(json['status'] as Map<String, dynamic>),
+      json['stipenditor'] == null
+          ? null
+          : Stipenditor.fromJson(json['stipenditor'] as Map<String, dynamic>),
     );
 
 Map<String, dynamic> _$StipendijeToJson(Stipendije instance) =>
@@ -35,4 +38,5 @@ Map<String, dynamic> _$StipendijeToJson(Stipendije instance) =>
       'brojStipendisata': instance.brojStipendisata,
       'idNavigation': instance.idNavigation,
       'status': instance.status,
+      'stipenditor': instance.stipenditor,
     };
