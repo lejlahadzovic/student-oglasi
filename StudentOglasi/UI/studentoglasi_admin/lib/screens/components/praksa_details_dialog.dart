@@ -13,12 +13,14 @@ import 'package:studentoglasi_admin/providers/prakse_provider.dart';
 import '../../models/search_result.dart';
 
 class PraksaDetailsDialog extends StatefulWidget {
+  String? title;
   Praksa? praksa;
   SearchResult<StatusOglasi>? statusResult;
   SearchResult<Organizacije>? organizacijeResult;
   SearchResult<Oglas>? oglasiResult;
   PraksaDetailsDialog(
       {Key? key,
+      this.title,
       this.praksa,
       this.organizacijeResult,
       this.statusResult,
@@ -66,7 +68,7 @@ class _PraksaDetailsDialogState extends State<PraksaDetailsDialog> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: Text('Dodaj praksu'),
+      title: Text(widget.title ?? ''),
       content: SingleChildScrollView(
         child: FormBuilder(
           key: _formKey,
@@ -80,15 +82,15 @@ class _PraksaDetailsDialogState extends State<PraksaDetailsDialog> {
                     child: Container(
                       width: 400,
                       child: FormBuilderTextField(
-                        name: 'idNavigation.naslov',
-                        decoration: InputDecoration(
-                          labelText: 'Naslov',
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.all(Radius.circular(10)),
+                          name: 'idNavigation.naslov',
+                          decoration: InputDecoration(
+                            labelText: 'Naslov',
+                            border: OutlineInputBorder(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(10)),
+                            ),
                           ),
-                        ),
-                        validator:validateText
-                      ),
+                          validator: validateText),
                     ),
                   ),
                   SizedBox(width: 20),
@@ -111,15 +113,15 @@ class _PraksaDetailsDialogState extends State<PraksaDetailsDialog> {
                     child: Container(
                       width: 400,
                       child: FormBuilderTextField(
-                        name: 'kvalifikacije',
-                        decoration: InputDecoration(
-                          labelText: 'Kvalifikacije',
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.all(Radius.circular(10)),
+                          name: 'kvalifikacije',
+                          decoration: InputDecoration(
+                            labelText: 'Kvalifikacije',
+                            border: OutlineInputBorder(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(10)),
+                            ),
                           ),
-                        ),
-                        validator:validateText
-                      ),
+                          validator: validateText),
                     ),
                   ),
                   SizedBox(width: 20),
@@ -127,15 +129,15 @@ class _PraksaDetailsDialogState extends State<PraksaDetailsDialog> {
                     child: Container(
                       width: 400,
                       child: FormBuilderTextField(
-                        name: 'benefiti',
-                        decoration: InputDecoration(
-                          labelText: 'Benefiti',
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.all(Radius.circular(10)),
+                          name: 'benefiti',
+                          decoration: InputDecoration(
+                            labelText: 'Benefiti',
+                            border: OutlineInputBorder(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(10)),
+                            ),
                           ),
-                        ),
-                        validator: validateText
-                      ),
+                          validator: validateText),
                     ),
                   ),
                 ],
@@ -145,43 +147,41 @@ class _PraksaDetailsDialogState extends State<PraksaDetailsDialog> {
                 children: [
                   Expanded(
                     child: FormBuilderDropdown<String>(
-                      name: 'organizacijaId',
-                      decoration: InputDecoration(
-                        labelText: 'Organizacija',
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
+                        name: 'organizacijaId',
+                        decoration: InputDecoration(
+                          labelText: 'Organizacija',
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
                         ),
-                      ),
-                      items: widget.organizacijeResult?.result
-                              .map((Organizacije organizacija) =>
-                                  DropdownMenuItem(
-                                    value: organizacija.id.toString(),
-                                    child: Text(organizacija.naziv ?? ''),
-                                  ))
-                              .toList() ??
-                          [],
-                      validator: validateText
-                    ),
+                        items: widget.organizacijeResult?.result
+                                .map((Organizacije organizacija) =>
+                                    DropdownMenuItem(
+                                      value: organizacija.id.toString(),
+                                      child: Text(organizacija.naziv ?? ''),
+                                    ))
+                                .toList() ??
+                            [],
+                        validator: validateText),
                   ),
                   SizedBox(width: 20),
                   Expanded(
                     child: FormBuilderDropdown<String>(
-                      name: 'statusId',
-                      decoration: InputDecoration(
-                        labelText: 'Status',
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
+                        name: 'statusId',
+                        decoration: InputDecoration(
+                          labelText: 'Status',
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
                         ),
-                      ),
-                      items: widget.statusResult?.result
-                              .map((StatusOglasi status) => DropdownMenuItem(
-                                    value: status.id.toString(),
-                                    child: Text(status.naziv ?? ''),
-                                  ))
-                              .toList() ??
-                          [],
-                      validator: validateText
-                    ),
+                        items: widget.statusResult?.result
+                                .map((StatusOglasi status) => DropdownMenuItem(
+                                      value: status.id.toString(),
+                                      child: Text(status.naziv ?? ''),
+                                    ))
+                                .toList() ??
+                            [],
+                        validator: validateText),
                   ),
                 ],
               ),
@@ -218,7 +218,7 @@ class _PraksaDetailsDialogState extends State<PraksaDetailsDialog> {
                         validator: (value) {
                           if (value == null) {
                             return 'Izaberite datum';
-                          }else if (_formKey
+                          } else if (_formKey
                                   .currentState
                                   ?.fields['idNavigation.vrijemeObjave']
                                   ?.value !=
@@ -251,10 +251,8 @@ class _PraksaDetailsDialogState extends State<PraksaDetailsDialog> {
                         validator: (value) {
                           if (value == null) {
                             return 'Izaberite datum';
-                          } else if (_formKey
-                                  .currentState
-                                  ?.fields['idNavigation.rokPrijave']
-                                  ?.value !=
+                          } else if (_formKey.currentState
+                                  ?.fields['idNavigation.rokPrijave']?.value !=
                               null) {
                             DateTime rokPrijave = _formKey.currentState
                                 ?.fields['idNavigation.rokPrijave']?.value;
@@ -279,13 +277,11 @@ class _PraksaDetailsDialogState extends State<PraksaDetailsDialog> {
                         validator: (value) {
                           if (value == null) {
                             return 'Izaberite datum';
-                          } else if (_formKey
-                                  .currentState
-                                  ?.fields['pocetakPrakse']
-                                  ?.value !=
+                          } else if (_formKey.currentState
+                                  ?.fields['pocetakPrakse']?.value !=
                               null) {
-                            DateTime pocetakPrakse = _formKey.currentState
-                                ?.fields['pocetakPrakse']?.value;
+                            DateTime pocetakPrakse = _formKey
+                                .currentState?.fields['pocetakPrakse']?.value;
                             if (value.isBefore(pocetakPrakse)) {
                               return 'Izabrani datum mora biti poslije početka prakse';
                             }
@@ -319,16 +315,16 @@ class _PraksaDetailsDialogState extends State<PraksaDetailsDialog> {
                     child: Container(
                       width: 400,
                       child: FormBuilderTextField(
-                        name: 'idNavigation.opis',
-                        maxLines: 5,
-                        decoration: InputDecoration(
-                          labelText: 'Opis',
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.all(Radius.circular(10)),
+                          name: 'idNavigation.opis',
+                          maxLines: 5,
+                          decoration: InputDecoration(
+                            labelText: 'Opis',
+                            border: OutlineInputBorder(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(10)),
+                            ),
                           ),
-                        ),
-                        validator:validateText
-                      ),
+                          validator: validateText),
                     ),
                   ),
                 ],
@@ -404,11 +400,11 @@ class _PraksaDetailsDialogState extends State<PraksaDetailsDialog> {
       ],
     );
   }
-
 }
+
 String? validateText(String? value) {
   if (value == null || value.isEmpty) {
     return 'Unesite vrijednost u polje.';
   }
   return null;
- }
+}

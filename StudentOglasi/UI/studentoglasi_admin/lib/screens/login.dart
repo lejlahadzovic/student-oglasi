@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:studentoglasi_admin/providers/objave_provider.dart';
-import 'package:studentoglasi_admin/screens/objave_list_screen.dart';
+import 'package:studentoglasi_admin/providers/studenti_provider.dart';
+import 'package:studentoglasi_admin/screens/studetni_list_screen.dart';
 import 'package:studentoglasi_admin/utils/util.dart';
 
 class LoginPage extends StatelessWidget {
@@ -9,11 +9,11 @@ class LoginPage extends StatelessWidget {
 
   TextEditingController _usernameController = new TextEditingController();
   TextEditingController _passwordController = new TextEditingController();
-  late ObjaveProvider _objaveProvider;
+  late StudentiProvider _studetniProvider;
 
   @override
   Widget build(BuildContext context) {
-    _objaveProvider = context.read<ObjaveProvider>();
+    _studetniProvider = context.read<StudentiProvider>();
 
     return Scaffold(
       body: Container(
@@ -80,11 +80,11 @@ class LoginPage extends StatelessWidget {
                         Authorization.password = password;
 
                         try {
-                          await _objaveProvider.get();
+                          await _studetniProvider.get();
 
                           Navigator.of(context).push(
                             MaterialPageRoute(
-                              builder: (context) => const ObjaveListScreen(),
+                              builder: (context) => const StudentiListScreen(),
                             ),
                           );
                         } on Exception catch (e) {

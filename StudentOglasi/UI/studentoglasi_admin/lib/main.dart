@@ -2,11 +2,15 @@
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:studentoglasi_admin/providers/fakulteti_provider.dart';
 import 'package:studentoglasi_admin/providers/kategorije_provider.dart';
+import 'package:studentoglasi_admin/providers/nacin_studiranja_provider.dart';
 import 'package:studentoglasi_admin/providers/objave_provider.dart';
 import 'package:studentoglasi_admin/providers/oglasi_provider.dart';
 import 'package:studentoglasi_admin/providers/organizacije_provider.dart';
 import 'package:studentoglasi_admin/providers/statusoglasi_provider.dart';
+import 'package:studentoglasi_admin/providers/studenti_provider.dart';
+import 'package:studentoglasi_admin/providers/univerziteti_provider.dart';
 import 'package:studentoglasi_admin/screens/login.dart';
 import 'package:studentoglasi_admin/providers/prakse_provider.dart';
 import 'package:studentoglasi_admin/providers/stipendije_provider.dart';
@@ -16,11 +20,16 @@ void main() {
     providers: [
       ChangeNotifierProvider(create: (_) => ObjaveProvider()),
       ChangeNotifierProvider(create: (_) => KategorijaProvider()),
-    ChangeNotifierProvider(create: (context) => PraksaProvider()),
-    ChangeNotifierProvider(create: (_) => StatusOglasiProvider()),
-    ChangeNotifierProvider(create: (context) => OrganizacijeProvider()),
-    ChangeNotifierProvider(create: (context) => StipendijeProvider()),
-    ChangeNotifierProvider(create: (context) => OglasiProvider())],
+      ChangeNotifierProvider(create: (context) => PraksaProvider()),
+      ChangeNotifierProvider(create: (_) => StatusOglasiProvider()),
+      ChangeNotifierProvider(create: (context) => OrganizacijeProvider()),
+      ChangeNotifierProvider(create: (context) => StipendijeProvider()),
+      ChangeNotifierProvider(create: (context) => OglasiProvider()),
+      ChangeNotifierProvider(create: (context) => StudentiProvider()),
+      ChangeNotifierProvider(create: (context) => FakultetiProvider()),
+      ChangeNotifierProvider(create: (context) => UniverzitetiProvider()),
+      ChangeNotifierProvider(create: (context) => NacinStudiranjaProvider()),
+    ],
     child: const MyApp(),
   ));
 }

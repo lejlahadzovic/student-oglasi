@@ -13,6 +13,7 @@ namespace StudentOglasi.Model
         public string Prezime { get; set; } = null!;
         public string KroisnickoIme { get; set; } = null!;
         public string Email { get; set; } = null!;
+        public string? Slika { get; set; }
         public int RoleId { get; set; }
         public virtual Uloge Uloga { get; set; } = null!;
     }

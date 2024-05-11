@@ -56,6 +56,7 @@ class _ObjaveListScreenState extends State<ObjaveListScreen> {
         showDialog(
             context: context,
             builder: (BuildContext context) => ObjaveDetailsDialog(
+                  title: 'Dodaj objavu',
                   objava: null,
                   kategorijeResult: kategorijeResult,
                 )).then((value) {
@@ -214,6 +215,7 @@ class _ObjaveListScreenState extends State<ObjaveListScreen> {
                                           context: context,
                                           builder: (BuildContext context) =>
                                               ObjaveDetailsDialog(
+                                                title: 'Uredi objavu',
                                                 objava: e,
                                                 kategorijeResult:
                                                     kategorijeResult,

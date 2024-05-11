@@ -82,6 +82,7 @@ class _PrakseListScreenState extends State<PrakseListScreen> {
         showDialog(
             context: context,
             builder: (BuildContext context) => PraksaDetailsDialog(
+                title: 'Dodaj praksu',
                 praksa: null,
                 statusResult: statusResult,
                 organizacijeResult: organizacijeResult,
@@ -293,6 +294,8 @@ class _PrakseListScreenState extends State<PrakseListScreen> {
                                                   builder: (BuildContext
                                                           context) =>
                                                       PraksaDetailsDialog(
+                                                          title:
+                                                              'Detalji prakse',
                                                           praksa: e,
                                                           statusResult:
                                                               statusResult,

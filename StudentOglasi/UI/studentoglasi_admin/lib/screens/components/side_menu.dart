@@ -3,6 +3,7 @@ import 'package:studentoglasi_admin/screens/login.dart';
 import 'package:studentoglasi_admin/screens/objave_list_screen.dart';
 import 'package:studentoglasi_admin/screens/prakse_list_screen.dart';
 import 'package:studentoglasi_admin/screens/stipendije_list_screen.dart';
+import 'package:studentoglasi_admin/screens/studetni_list_screen.dart';
 
 int _selectedIndex = 0;
 
@@ -97,6 +98,13 @@ class _SideMenuState extends State<SideMenu> {
 
   void _navigateToScreen(int index) {
     switch (index) {
+      case 0:
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (context) => const StudentiListScreen(),
+          ),
+        );
+        break;
       case 1:
         Navigator.of(context).push(
           MaterialPageRoute(

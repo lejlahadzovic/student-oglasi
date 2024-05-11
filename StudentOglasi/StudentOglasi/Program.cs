@@ -18,6 +18,11 @@ builder.Services.AddSingleton<FileService>();
 builder.Services.AddTransient<IStatusOglasiService, StatusOglasiService>();
 builder.Services.AddTransient<IOglasiService, OglasiService>();
 builder.Services.AddTransient<IOrganizacijeService, OrganizacijeService>();
+builder.Services.AddTransient<IStudentiService, StudentiService>();
+builder.Services.AddTransient<KorisniciService>();
+builder.Services.AddTransient<IFakultetiService, FakultetiService>();
+builder.Services.AddTransient<IUniverzitetiService, UniverzitetiService>();
+builder.Services.AddTransient<INacinStudiranjaService, NacinStudiranjaService>();
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
