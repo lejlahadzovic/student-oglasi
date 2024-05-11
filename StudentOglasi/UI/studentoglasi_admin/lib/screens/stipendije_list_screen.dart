@@ -233,7 +233,23 @@ class _StipendijeListScreenState extends State<StipendijeListScreen> {
                                               Icons.edit,
                                               color: Colors.blue,
                                             ),
-                                            onPressed: () {},
+                                            onPressed: () {showDialog(
+                                                  context: context,
+                                                  builder: (BuildContext
+                                                          context) =>
+                                                      StipendijeDetailsDialog(
+                                                          stipendija: e,
+                                                          statusResult:
+                                                              statusResult,
+                                                          stipenditoriResult:
+                                                              stipenditoriResult,
+                                                          oglasiResult:
+                                                              oglasiResult)).then(
+                                                  (value) {
+                                                if (value != null && value) {
+                                                  _fetchData();
+                                                }
+                                              });},
                                           ),
                                           IconButton(
                                             icon: Icon(
