@@ -27,15 +27,15 @@ namespace StudentOglasi.Services.Services
 
             if (!string.IsNullOrWhiteSpace(search?.Naslov))
             {
-                filteredQuery = filteredQuery.Where(x => x.IdNavigation.Naslov.Contains(search.Naslov) || x.Organizacija.Naziv.Contains(search.Organizacija));
+                filteredQuery = filteredQuery.Where(x => x.IdNavigation.Naslov.Contains(search.Naslov));
             }
-            if (!string.IsNullOrWhiteSpace(search?.Organizacija))
+            if (search?.Organizacija!=null)
             {
-                filteredQuery = filteredQuery.Where(x => x.Organizacija.Naziv.Contains(search.Organizacija));
+                filteredQuery = filteredQuery.Where(x=>x.Organizacija.Id == search.Organizacija);
             }
-            if (!string.IsNullOrWhiteSpace(search?.Status))
+            if (search?.Status != null)
             {
-                filteredQuery = filteredQuery.Where(x => x.Status.Naziv.Contains(search.Status));
+                filteredQuery = filteredQuery.Where(x => x.StatusId == search.Status);
             }
             return filteredQuery;
         }

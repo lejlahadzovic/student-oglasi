@@ -9,5 +9,6 @@ namespace StudentOglasi.Model.SearchObjects
     public class StipendijeSearchObject:BaseSearchObject
     {
         public string? Naslov { get; set; }
+        public int? Stipenditor { get; set; }
     }
 }

@@ -1,5 +1,6 @@
 // ignore_for_file: prefer_const_literals_to_create_immutables
 
+import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:studentoglasi_admin/models/Oglas/oglas.dart';
@@ -28,6 +29,7 @@ class _StipendijeListScreenState extends State<StipendijeListScreen> {
   late StatusOglasiProvider _statusProvider;
   late StipenditoriProvider _stipenditorProvider;
   late OglasiProvider _oglasiProvider;
+  Stipenditor? selectedStipenditor;
   SearchResult<Stipendije>? result;
   SearchResult<Stipenditor>? stipenditoriResult;
   SearchResult<StatusOglasi>? statusResult;
@@ -100,7 +102,8 @@ class _StipendijeListScreenState extends State<StipendijeListScreen> {
     // Navigator.of(context).pop();
 
     var data = await _stipendijeProvider
-        .get(filter: {'naslov': _naslovController.text});
+        .get(filter: {'naslov': _naslovController.text,
+      'stipenditor': selectedStipenditor?.id,});
     setState(() {
       result = data;
     });
@@ -118,6 +121,32 @@ class _StipendijeListScreenState extends State<StipendijeListScreen> {
                 child: TextField(
                   decoration: InputDecoration(labelText: "Naziv stipendije"),
                   controller: _naslovController,
+                ),
+              ),
+            ),
+            SizedBox(width: 30.0),
+            Expanded(
+              flex: 1,
+              child: Padding(
+                padding: const EdgeInsets.only(top: 25.0),
+                child: DropdownButton2<Stipenditor>(
+                  isExpanded: true,
+                  hint: Text(
+                    'Stipenditor',
+                  ),
+                  value: selectedStipenditor,
+                  onChanged: (Stipenditor? newValue) {
+                    setState(() {
+                      selectedStipenditor = newValue;
+                    });
+                  },
+                  items: stipenditoriResult?.result.map((Stipenditor stipenditor) {
+                        return DropdownMenuItem<Stipenditor>(
+                          value: stipenditor,
+                          child: Text(stipenditor.naziv ?? ''),
+                        );
+                      }).toList() ??
+                      [],
                 ),
               ),
             ),

@@ -35,8 +35,6 @@ class _PrakseListScreenState extends State<PrakseListScreen> {
   SearchResult<Oglas>? oglasiResult;
   SearchResult<Praksa>? result;
   TextEditingController _naslovController = new TextEditingController();
-  TextEditingController _organizacijaController = new TextEditingController();
-  TextEditingController _statusController = new TextEditingController();
 
   @override
   void initState() {
@@ -105,8 +103,8 @@ class _PrakseListScreenState extends State<PrakseListScreen> {
 
     var data = await _prakseProvider.get(filter: {
       'naslov': _naslovController.text,
-      'organizacija': _organizacijaController.text,
-      'status': _statusController.text,
+      'organizacija': selectedOrganizacije?.id,
+      'status': selectedStatusOglasi?.id,
     });
     setState(() {
       result = data;

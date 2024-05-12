@@ -29,7 +29,10 @@ namespace StudentOglasi.Services.Services
             {
                 filteredQuery = filteredQuery.Where(x => x.IdNavigation.Naslov.Contains(search.Naslov));
             }
-           
+            if (search?.Stipenditor != null)
+            {
+                filteredQuery = filteredQuery.Where(x => x.Stipenditor.Id == search.Stipenditor);
+            }
             return filteredQuery;
         }
         public override async Task<PagedResult<Model.Stipendije>> Get(StipendijeSearchObject? search = null)
