@@ -5,7 +5,7 @@ class Authorization {
 }
 
 String formatNumber(dynamic) {
-  var f = NumberFormat('###,00');
+  var f = NumberFormat();
 
   if (dynamic == null) {
     return "";
