@@ -13,9 +13,11 @@ import 'package:studentoglasi_admin/providers/objave_provider.dart';
 import 'package:studentoglasi_admin/utils/util.dart';
 
 class ObjaveDetailsDialog extends StatefulWidget {
+  String? title;
   Objava? objava;
   SearchResult<Kategorija>? kategorijeResult;
-  ObjaveDetailsDialog({super.key, this.objava, this.kategorijeResult});
+  ObjaveDetailsDialog(
+      {super.key, this.title, this.objava, this.kategorijeResult});
 
   @override
   _ObjaveDetailsDialogState createState() => _ObjaveDetailsDialogState();
@@ -62,7 +64,7 @@ class _ObjaveDetailsDialogState extends State<ObjaveDetailsDialog> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: Text('Dodaj novost'),
+      title: Text(widget.title ?? ''),
       content: SingleChildScrollView(
         child: FormBuilder(
           key: _formKey,
@@ -96,7 +98,11 @@ class _ObjaveDetailsDialogState extends State<ObjaveDetailsDialog> {
                         children: [
                           Expanded(
                             child: Text(
-                              _filePath != null ? _filePath! : (_imageUrl != null ? '' : 'Nema odabrane slike'),
+                              _filePath != null
+                                  ? _filePath!
+                                  : (_imageUrl != null
+                                      ? ''
+                                      : 'Nema odabrane slike'),
                               style: TextStyle(fontSize: 16),
                             ),
                           ),
@@ -180,6 +186,21 @@ class _ObjaveDetailsDialogState extends State<ObjaveDetailsDialog> {
         ),
       ),
       actions: [
+        Column(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: Text('Otkaži'),
+                style: ButtonStyle(
+                  textStyle: MaterialStateProperty.all<TextStyle>(
+                      TextStyle(fontWeight: FontWeight.bold)),
+                ),
+              ),
+            ]),
         ElevatedButton(
           onPressed: () async {
             _formKey.currentState?.saveAndValidate();
@@ -189,7 +210,8 @@ class _ObjaveDetailsDialogState extends State<ObjaveDetailsDialog> {
             try {
               widget.objava == null
                   ? await _objaveProvider.insertWithImage(request)
-                  : await _objaveProvider.updateWithImage(widget.objava!.id!, request);
+                  : await _objaveProvider.updateWithImage(
+                      widget.objava!.id!, request);
 
               Navigator.pop(context, true);
             } on Exception catch (e) {

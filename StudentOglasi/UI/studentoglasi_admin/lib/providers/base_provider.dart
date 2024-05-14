@@ -99,7 +99,7 @@ abstract class BaseProvider<T> with ChangeNotifier {
     request.headers.addAll(createHeaders());
 
     formData.forEach((key, value) async {
-      if (key == 'filePath') {
+      if (key == 'filePath'  && value != null) {
         var filePath = value.toString();
       var file = await http.MultipartFile.fromPath('slika', filePath);
       request.files.add(file);
@@ -146,7 +146,7 @@ abstract class BaseProvider<T> with ChangeNotifier {
     request.headers.addAll(createHeaders());
 
     formData.forEach((key, value) async {
-      if (key == 'filePath') {
+      if (key == 'filePath' && value != null) {
         var filePath = value.toString();
       var file = await http.MultipartFile.fromPath('slika', filePath);
       request.files.add(file);

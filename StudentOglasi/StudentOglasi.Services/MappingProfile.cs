@@ -32,7 +32,15 @@ namespace StudentOglasi.Services
             CreateMap<Model.Requests.ObjaveInsertRequest, Database.Objave>();
             CreateMap<Model.Requests.ObjaveUpdateRequest, Database.Objave>()
                 .ForMember(dest => dest.Slika, opt => opt.Ignore())
-                .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null)); ;
+                .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+            CreateMap<Database.Studenti, Model.Studenti>();
+            CreateMap<Database.Fakulteti, Model.Fakulteti>()
+                .ForMember(dest => dest.Smjerovi, opt => opt.MapFrom(src => src.SmjeroviFakultetis.Select(sf => sf.Smjer).ToList()));
+            CreateMap<Database.NacinStudiranja, Model.NacinStudiranja>();
+            CreateMap<Database.Smjerovi, Model.Smjerovi>();
+            CreateMap<Model.Requests.StudentiInsertRequest, Database.Studenti>();
+            CreateMap<Model.Requests.StudentiUpdateRequest, Database.Studenti>();
+            CreateMap<Database.Univerziteti, Model.Univerziteti>();
         }
     }
 }

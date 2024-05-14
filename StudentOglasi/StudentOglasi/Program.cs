@@ -24,7 +24,11 @@ builder.Services.AddTransient<IStatusOglasiService, StatusOglasiService>();
 builder.Services.AddTransient<IOglasiService, OglasiService>();
 builder.Services.AddTransient<IOrganizacijeService, OrganizacijeService>();
 builder.Services.AddTransient<IStipenditoriService, StipenditoriService>();
-
+builder.Services.AddTransient<IStudentiService, StudentiService>();
+builder.Services.AddTransient<KorisniciService>();
+builder.Services.AddTransient<IFakultetiService, FakultetiService>();
+builder.Services.AddTransient<IUniverzitetiService, UniverzitetiService>();
+builder.Services.AddTransient<INacinStudiranjaService, NacinStudiranjaService>();
 builder.Services.AddTransient<BasePrakseState>();
 builder.Services.AddTransient<InitialPraksaState>();
 builder.Services.AddTransient<ActivePrakseState>();
