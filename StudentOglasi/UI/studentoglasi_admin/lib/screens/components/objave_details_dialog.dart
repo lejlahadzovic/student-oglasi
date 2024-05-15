@@ -25,7 +25,7 @@ class ObjaveDetailsDialog extends StatefulWidget {
 
 class _ObjaveDetailsDialogState extends State<ObjaveDetailsDialog> {
   final _formKey = GlobalKey<FormBuilderState>();
-  Map<String, dynamic> _intialValue = {};
+  Map<String, dynamic> _initialValue = {};
   // TextEditingController _naslovController = TextEditingController();
   // TextEditingController _sadrzajController = TextEditingController();
   // late KategorijaProvider _kategorijeProvider;
@@ -54,7 +54,7 @@ class _ObjaveDetailsDialogState extends State<ObjaveDetailsDialog> {
       _imageUrl = FilePathManager.constructUrl(widget.objava!.slika!);
     }
 
-    _intialValue = {
+    _initialValue = {
       'naslov': widget.objava?.naslov,
       'sadrzaj': widget.objava?.sadrzaj,
       'kategorijaId': widget.objava?.kategorijaId.toString(),
@@ -68,7 +68,7 @@ class _ObjaveDetailsDialogState extends State<ObjaveDetailsDialog> {
       content: SingleChildScrollView(
         child: FormBuilder(
           key: _formKey,
-          initialValue: _intialValue,
+          initialValue: _initialValue,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [

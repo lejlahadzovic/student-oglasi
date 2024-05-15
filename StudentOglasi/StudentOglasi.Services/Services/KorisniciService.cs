@@ -67,7 +67,7 @@ namespace StudentOglasi.Services.Services
         }
         public async Task<Korisnik> Login(string username, string password)
         {
-            var entity = await _context.Korisnicis.Include("Uloga").FirstOrDefaultAsync(x => x.KroisnickoIme == username);
+            var entity = await _context.Korisnicis.Include("Uloga").FirstOrDefaultAsync(x => x.KorisnickoIme == username);
             if (entity == null)
             {
                 return null;

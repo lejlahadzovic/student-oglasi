@@ -11,9 +11,11 @@ public partial class Korisnici
 
     public string Prezime { get; set; } = null!;
 
-    public string KroisnickoIme { get; set; } = null!;
+    public string KorisnickoIme { get; set; } = null!;
 
     public string Email { get; set; } = null!;
+
+    public string? BrojTelefona { get; set; }
 
     public string? Slika { get; set; }
 

@@ -9,19 +9,17 @@ public partial class Rezervacije
 
     public int StudentId { get; set; }
 
-    public DateTime DatumPrijave { get; set; }
+    public DateOnly DatumPrijave { get; set; }
 
-    public DateTime DatumOdjave { get; set; }
+    public DateOnly DatumOdjave { get; set; }
 
-    public int BrojOsoba { get; set; }
+    public int? BrojOsoba { get; set; }
 
-    public string Napomena { get; set; } = null!;
+    public string? Napomena { get; set; }
 
-    public int StatusId { get; set; }
+    public int? StatusId { get; set; }
 
-    public virtual Smjestaji Smjestaj { get; set; } = null!;
-
-    public virtual StatusPrijave Status { get; set; } = null!;
+    public virtual StatusPrijave? Status { get; set; }
 
     public virtual Studenti Student { get; set; } = null!;
 }

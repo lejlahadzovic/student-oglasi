@@ -9,6 +9,8 @@ public partial class Fakulteti
 
     public string Naziv { get; set; } = null!;
 
+    public string? Skracenica { get; set; }
+
     public string Adresa { get; set; } = null!;
 
     public string Email { get; set; } = null!;

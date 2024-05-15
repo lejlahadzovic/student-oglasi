@@ -37,7 +37,7 @@ namespace StudentOglasi
                 var claims = new List<Claim>()
                 {
                     new Claim(ClaimTypes.Name,user.Ime),
-                    new Claim(ClaimTypes.NameIdentifier,user.KroisnickoIme),
+                    new Claim(ClaimTypes.NameIdentifier,user.KorisnickoIme),
                     new Claim(ClaimTypes.Role, user.Uloga.Naziv)
                 };
                 var identity = new ClaimsIdentity(claims, Scheme.Name);

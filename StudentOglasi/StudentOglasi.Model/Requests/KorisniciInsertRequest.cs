@@ -19,7 +19,7 @@ namespace StudentOglasi.Model.Requests
         [EmailAddress]
         public string? Email { get; set; }
         [Required]
-        public string KroisnickoIme { get; set; } = null!;
+        public string KorisnickoIme { get; set; } = null!;
         [Required]
         // [RegularExpressionAttribute(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,15}$", ErrorMessage = "Password not strong enough")]
         public string Password { get; set; }

@@ -23,6 +23,10 @@ builder.Services.AddTransient<KorisniciService>();
 builder.Services.AddTransient<IFakultetiService, FakultetiService>();
 builder.Services.AddTransient<IUniverzitetiService, UniverzitetiService>();
 builder.Services.AddTransient<INacinStudiranjaService, NacinStudiranjaService>();
+builder.Services.AddTransient<ISmjestajiService, SmjestajiService>();
+builder.Services.AddTransient<ISmjestajanaJedinicaService, SmjestajnaJedinicaService>();
+builder.Services.AddTransient<IGradoviService, GradoviService>();
+builder.Services.AddTransient<ITipSmjestajaService, TipSmjestajaService>();
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

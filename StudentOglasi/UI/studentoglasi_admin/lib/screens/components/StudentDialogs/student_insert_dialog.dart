@@ -149,7 +149,7 @@ class _StudentDetailsDialogState extends State<StudentInsertDialog> {
                           ),
                           SizedBox(height: 20),
                           FormBuilderTextField(
-                            name: 'idNavigation.kroisnickoIme',
+                            name: 'idNavigation.korisnickoIme',
                             decoration: InputDecoration(
                               labelText: 'Korisničko ime',
                               border: OutlineInputBorder(

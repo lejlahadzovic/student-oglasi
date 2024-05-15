@@ -7,21 +7,33 @@ public partial class Smjestaji
 {
     public int Id { get; set; }
 
-    public string DodatneUsluge { get; set; } = null!;
+    public string Naziv { get; set; } = null!;
 
-    public bool Parking { get; set; }
+    public string Adresa { get; set; } = null!;
 
-    public string NacinGrijanja { get; set; } = null!;
+    public string? Opis { get; set; }
 
     public int GradId { get; set; }
 
-    public virtual Grad Grad { get; set; } = null!;
+    public string? DodatneUsluge { get; set; }
 
-    public virtual Oglasi IdNavigation { get; set; } = null!;
+    public int? TipSmjestajaId { get; set; }
+
+    public bool? WiFi { get; set; }
+
+    public bool? Parking { get; set; }
+
+    public bool? FitnessCentar { get; set; }
+
+    public bool? Restoran { get; set; }
+
+    public bool? UslugePrijevoza { get; set; }
+
+    public virtual Grad Grad { get; set; } = null!;
 
     public virtual ICollection<Ocjene> Ocjenes { get; set; } = new List<Ocjene>();
 
-    public virtual ICollection<Rezervacije> Rezervacijes { get; set; } = new List<Rezervacije>();
-
     public virtual ICollection<SmjestajnaJedinica> SmjestajnaJedinicas { get; set; } = new List<SmjestajnaJedinica>();
+
+    public virtual TipSmjestaja? TipSmjestaja { get; set; }
 }
