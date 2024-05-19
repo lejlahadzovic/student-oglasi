@@ -8,7 +8,10 @@ import 'package:studentoglasi_admin/providers/nacin_studiranja_provider.dart';
 import 'package:studentoglasi_admin/providers/objave_provider.dart';
 import 'package:studentoglasi_admin/providers/oglasi_provider.dart';
 import 'package:studentoglasi_admin/providers/organizacije_provider.dart';
+import 'package:studentoglasi_admin/providers/prijavepraksa_provider.dart';
+import 'package:studentoglasi_admin/providers/prijavestipendija_provider.dart';
 import 'package:studentoglasi_admin/providers/statusoglasi_provider.dart';
+import 'package:studentoglasi_admin/providers/statusprijave_provider.dart';
 import 'package:studentoglasi_admin/providers/stipenditori_provider.dart';
 import 'package:studentoglasi_admin/providers/studenti_provider.dart';
 import 'package:studentoglasi_admin/providers/univerziteti_provider.dart';
@@ -26,7 +29,7 @@ void main() {
     ChangeNotifierProvider(create: (context) => OrganizacijeProvider()),
     ChangeNotifierProvider(create: (context) => StipendijeProvider()),
     ChangeNotifierProvider(create: (context) => OglasiProvider()),
-    ChangeNotifierProvider(create: (context) => StipenditoriProvider())],
+    ChangeNotifierProvider(create: (context) => StipenditoriProvider()),
       ChangeNotifierProvider(create: (context) => PraksaProvider()),
       ChangeNotifierProvider(create: (_) => StatusOglasiProvider()),
       ChangeNotifierProvider(create: (context) => OrganizacijeProvider()),
@@ -36,6 +39,9 @@ void main() {
       ChangeNotifierProvider(create: (context) => FakultetiProvider()),
       ChangeNotifierProvider(create: (context) => UniverzitetiProvider()),
       ChangeNotifierProvider(create: (context) => NacinStudiranjaProvider()),
+      ChangeNotifierProvider(create: (context) => StatusPrijaveProvider()),
+      ChangeNotifierProvider(create: (context) => PrijaveStipendijaProvider()),
+      ChangeNotifierProvider(create: (context) => PrijavePraksaProvider()),
     ],
     child: const MyApp(),
   ));

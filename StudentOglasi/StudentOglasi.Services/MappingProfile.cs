@@ -41,6 +41,9 @@ namespace StudentOglasi.Services
             CreateMap<Model.Requests.StudentiInsertRequest, Database.Studenti>();
             CreateMap<Model.Requests.StudentiUpdateRequest, Database.Studenti>();
             CreateMap<Database.Univerziteti, Model.Univerziteti>();
+            CreateMap<Database.PrijaveStipendija, Model.PrijaveStipendija>();
+            CreateMap<Database.PrijavePraksa, Model.PrijavePraksa>();
+            CreateMap<Database.StatusPrijave, Model.StatusPrijave>();
         }
     }
 }
