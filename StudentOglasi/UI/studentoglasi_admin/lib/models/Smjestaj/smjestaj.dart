@@ -1,5 +1,6 @@
 import 'package:json_annotation/json_annotation.dart';
 import 'package:studentoglasi_admin/models/Grad/grad.dart';
+import 'package:studentoglasi_admin/models/Slike/slike.dart';
 import 'package:studentoglasi_admin/models/SmjestajnaJedinica/smjestajna_jedinica.dart';
 import 'package:studentoglasi_admin/models/TipSmjestaja/tip_smjestaja.dart';
 
@@ -20,6 +21,8 @@ class Smjestaj {
   Grad? grad;
   TipSmjestaja? tipSmjestaja;
   List<SmjestajnaJedinica>? smjestajnaJedinicas;
+  List<String>? slike;
+  List<Slike>? slikes;
 
   Smjestaj(
       this.id,
@@ -34,7 +37,9 @@ class Smjestaj {
       this.uslugePrijevoza,
       this.grad,
       this.tipSmjestaja,
-      this.smjestajnaJedinicas);
+      this.smjestajnaJedinicas,
+      this.slike,
+      this.slikes);
 
   factory Smjestaj.fromJson(Map<String, dynamic> json) =>
       _$SmjestajFromJson(json);

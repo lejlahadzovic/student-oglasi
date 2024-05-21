@@ -21,5 +21,10 @@ namespace StudentOglasi.Services.Services
         { 
             _fileService = fileService;
         }
+        public override IQueryable<Database.SmjestajnaJedinica> AddInclude(IQueryable<Database.SmjestajnaJedinica> query, BaseSearchObject? search = null)
+        {
+            query = query.Include(sj => sj.Slikes);
+            return base.AddInclude(query, search);
+        }
     }
 }

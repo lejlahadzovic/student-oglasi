@@ -43,6 +43,8 @@ public partial class StudentoglasiContext : DbContext
 
     public virtual DbSet<Rezervacije> Rezervacijes { get; set; }
 
+    public virtual DbSet<Slike> Slikes { get; set; }
+
     public virtual DbSet<Smjerovi> Smjerovis { get; set; }
 
     public virtual DbSet<SmjeroviFakulteti> SmjeroviFakultetis { get; set; }
@@ -408,6 +410,26 @@ public partial class StudentoglasiContext : DbContext
                 .HasForeignKey(d => d.StudentId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK__Rezervaci__Stude__2BFE89A6");
+        });
+
+        modelBuilder.Entity<Slike>(entity =>
+        {
+            entity.HasKey(e => e.SlikaId).HasName("PK__Slike__FFAE2D46D39CF4CB");
+
+            entity.ToTable("Slike");
+
+            entity.Property(e => e.SlikaId).HasColumnName("SlikaID");
+            entity.Property(e => e.Naziv).HasMaxLength(255);
+            entity.Property(e => e.SmjestajId).HasColumnName("SmjestajID");
+            entity.Property(e => e.SmjestajnaJedinicaId).HasColumnName("SmjestajnaJedinicaID");
+
+            entity.HasOne(d => d.Smjestaj).WithMany(p => p.Slikes)
+                .HasForeignKey(d => d.SmjestajId)
+                .HasConstraintName("FK_Slike_Smjestaji");
+
+            entity.HasOne(d => d.SmjestajnaJedinica).WithMany(p => p.Slikes)
+                .HasForeignKey(d => d.SmjestajnaJedinicaId)
+                .HasConstraintName("FK_Slike_SmjestajnaJedinica");
         });
 
         modelBuilder.Entity<Smjerovi>(entity =>

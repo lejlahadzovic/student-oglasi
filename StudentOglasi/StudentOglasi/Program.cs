@@ -27,6 +27,7 @@ builder.Services.AddTransient<ISmjestajiService, SmjestajiService>();
 builder.Services.AddTransient<ISmjestajanaJedinicaService, SmjestajnaJedinicaService>();
 builder.Services.AddTransient<IGradoviService, GradoviService>();
 builder.Services.AddTransient<ITipSmjestajaService, TipSmjestajaService>();
+builder.Services.AddTransient<ISlikeService, SlikeService>();
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

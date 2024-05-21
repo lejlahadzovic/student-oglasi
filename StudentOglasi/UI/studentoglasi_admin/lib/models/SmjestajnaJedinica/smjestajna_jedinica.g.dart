@@ -19,6 +19,10 @@ SmjestajnaJedinica _$SmjestajnaJedinicaFromJson(Map<String, dynamic> json) =>
       json['terasa'] as bool?,
       json['dodatneUsluge'] as String?,
       json['smjestajId'] as int?,
+      (json['slike'] as List<dynamic>?)?.map((e) => e as String).toList(),
+      (json['slikes'] as List<dynamic>?)
+          ?.map((e) => Slike.fromJson(e as Map<String, dynamic>))
+          .toList(),
     );
 
 Map<String, dynamic> _$SmjestajnaJedinicaToJson(SmjestajnaJedinica instance) =>
@@ -34,4 +38,6 @@ Map<String, dynamic> _$SmjestajnaJedinicaToJson(SmjestajnaJedinica instance) =>
       'terasa': instance.terasa,
       'dodatneUsluge': instance.dodatneUsluge,
       'smjestajId': instance.smjestajId,
+      'slike': instance.slike,
+      'slikes': instance.slikes,
     };

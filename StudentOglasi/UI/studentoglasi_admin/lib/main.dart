@@ -9,6 +9,7 @@ import 'package:studentoglasi_admin/providers/nacin_studiranja_provider.dart';
 import 'package:studentoglasi_admin/providers/objave_provider.dart';
 import 'package:studentoglasi_admin/providers/oglasi_provider.dart';
 import 'package:studentoglasi_admin/providers/organizacije_provider.dart';
+import 'package:studentoglasi_admin/providers/slike_provider.dart';
 import 'package:studentoglasi_admin/providers/smjestaji_provider.dart';
 import 'package:studentoglasi_admin/providers/statusoglasi_provider.dart';
 import 'package:studentoglasi_admin/providers/studenti_provider.dart';
@@ -35,6 +36,7 @@ void main() {
       ChangeNotifierProvider(create: (context) => SmjestajiProvider()),
       ChangeNotifierProvider(create: (context) => GradoviProvider()),
       ChangeNotifierProvider(create: (context) => TipSmjestajaProvider()),
+      ChangeNotifierProvider(create: (context) => SlikeProvider()),
     ],
     child: const MyApp(),
   ));

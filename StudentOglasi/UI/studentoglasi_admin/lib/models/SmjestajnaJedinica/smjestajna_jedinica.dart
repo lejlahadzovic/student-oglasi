@@ -1,4 +1,6 @@
+import 'package:file_picker/file_picker.dart';
 import 'package:json_annotation/json_annotation.dart';
+import 'package:studentoglasi_admin/models/Slike/slike.dart';
 
 part 'smjestajna_jedinica.g.dart';
 
@@ -15,6 +17,8 @@ class SmjestajnaJedinica {
   bool? terasa;
   String? dodatneUsluge;
   int? smjestajId;
+  List<String>? slike;
+  List<Slike>? slikes;
 
   SmjestajnaJedinica(
       this.id,
@@ -27,7 +31,9 @@ class SmjestajnaJedinica {
       this.klimaUredjaj,
       this.terasa,
       this.dodatneUsluge,
-      this.smjestajId);
+      this.smjestajId,
+      this.slike,
+      this.slikes);
 
   factory SmjestajnaJedinica.fromJson(Map<String, dynamic> json) =>
       _$SmjestajnaJedinicaFromJson(json);

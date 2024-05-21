@@ -32,6 +32,8 @@ namespace StudentOglasi.Model
 
         public virtual TipSmjestaja? TipSmjestaja { get; set; }
 
+        public virtual ICollection<Slike> Slikes { get; set; } = new List<Slike>();
+
         public virtual ICollection<SmjestajnaJedinica> SmjestajnaJedinicas { get; set; } = new List<SmjestajnaJedinica>();
     }
 }

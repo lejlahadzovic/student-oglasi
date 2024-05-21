@@ -49,6 +49,9 @@ namespace StudentOglasi.Services
             CreateMap<Model.Requests.SmjestajnaJedinicaUpdateRequest, Database.SmjestajnaJedinica>();
             CreateMap<Database.Grad, Model.Gradovi>();
             CreateMap<Database.TipSmjestaja, Model.TipSmjestaja>();
+            CreateMap<Database.Slike, Model.Slike>();
+            CreateMap<Model.Requests.SlikeInsertRequest, Database.Slike>()
+                .ForMember(dest => dest.Naziv, opt => opt.Ignore()); ;
         }
     }
 }

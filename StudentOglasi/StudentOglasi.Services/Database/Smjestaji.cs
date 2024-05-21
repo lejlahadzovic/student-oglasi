@@ -33,6 +33,8 @@ public partial class Smjestaji
 
     public virtual ICollection<Ocjene> Ocjenes { get; set; } = new List<Ocjene>();
 
+    public virtual ICollection<Slike> Slikes { get; set; } = new List<Slike>();
+
     public virtual ICollection<SmjestajnaJedinica> SmjestajnaJedinicas { get; set; } = new List<SmjestajnaJedinica>();
 
     public virtual TipSmjestaja? TipSmjestaja { get; set; }

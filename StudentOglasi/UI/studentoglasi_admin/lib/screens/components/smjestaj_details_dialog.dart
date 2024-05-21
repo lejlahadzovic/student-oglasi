@@ -1,15 +1,21 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
+import 'dart:io';
+
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:provider/provider.dart';
 import 'package:studentoglasi_admin/models/Grad/grad.dart';
+import 'package:studentoglasi_admin/models/Slike/slike.dart';
 import 'package:studentoglasi_admin/models/Smjestaj/smjestaj.dart';
 import 'package:studentoglasi_admin/models/SmjestajnaJedinica/smjestajna_jedinica.dart';
 import 'package:studentoglasi_admin/models/TipSmjestaja/tip_smjestaja.dart';
 import 'package:studentoglasi_admin/models/search_result.dart';
+import 'package:studentoglasi_admin/providers/slike_provider.dart';
 import 'package:studentoglasi_admin/providers/smjestaji_provider.dart';
 import 'package:studentoglasi_admin/providers/smjestajna_jedinica_provider.dart';
+import 'package:studentoglasi_admin/utils/util.dart';
 
 class SmjestajDetailsDialog extends StatefulWidget {
   SearchResult<Grad>? gradoviResult;
@@ -17,7 +23,11 @@ class SmjestajDetailsDialog extends StatefulWidget {
   Smjestaj? smjestaj;
   String? title;
   SmjestajDetailsDialog(
-      {Key? key, this.gradoviResult, this.tipoviSmjestajaResult, this.smjestaj, this.title})
+      {Key? key,
+      this.gradoviResult,
+      this.tipoviSmjestajaResult,
+      this.smjestaj,
+      this.title})
       : super(key: key);
 
   @override
@@ -27,15 +37,18 @@ class SmjestajDetailsDialog extends StatefulWidget {
 class _SmjestajDetailsDialogState extends State<SmjestajDetailsDialog> {
   final GlobalKey<FormBuilderState> _formKey = GlobalKey<FormBuilderState>();
   Map<String, dynamic> _initialValue = {};
-  Smjestaj _smjestaj = Smjestaj(
-      null, '', '', '', '', false, false, false, false, false, null, null, []);
+  Smjestaj _smjestaj = Smjestaj(null, '', '', '', '', false, false, false,
+      false, false, null, null, [], [], []);
   late SmjestajiProvider _smjestajiProvider;
+  late SlikeProvider _slikeProvider;
+  List<PlatformFile>? _imageFiles;
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     _smjestajiProvider = context.read<SmjestajiProvider>();
+    _slikeProvider = context.read<SlikeProvider>();
 
     if (widget.smjestaj != null) {
       _smjestaj = widget.smjestaj!;
@@ -73,6 +86,7 @@ class _SmjestajDetailsDialogState extends State<SmjestajDetailsDialog> {
         'tv': jedinica.tv ?? false,
         'klimaUredjaj': jedinica.klimaUredjaj ?? false,
         'dodatneUsluge': jedinica.dodatneUsluge,
+        'slike': jedinica.slike,
       };
       smjestajneJedinice.add(jedinicaData);
     }
@@ -82,7 +96,7 @@ class _SmjestajDetailsDialogState extends State<SmjestajDetailsDialog> {
   void _addSmjestajnaJedinica() {
     setState(() {
       _smjestaj.smjestajnaJedinicas!.add(SmjestajnaJedinica(
-          null, '', 0.0, 0, '', false, false, false, false, '', 0));
+          null, '', 0.0, 0, '', false, false, false, false, '', 0, [], []));
     });
     if (widget.smjestaj != null) {
       _updateSmjestajneJediniceInInitialValue();
@@ -104,6 +118,36 @@ class _SmjestajDetailsDialogState extends State<SmjestajDetailsDialog> {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
+                  InkWell(
+                    onTap: () async {
+                      FilePickerResult? result =
+                          await FilePicker.platform.pickFiles(
+                        allowMultiple: true,
+                        type: FileType.image,
+                      );
+
+                      if (result != null) {
+                        setState(() {
+                          // _imageFiles ??= [];
+                          // _imageFiles!.addAll(result.files);
+                          _smjestaj.slike ??= [];
+                          _smjestaj.slike!
+                              .addAll(result.files.map((file) => file.path!));
+                        });
+                      }
+                    },
+                    child: Container(
+                      width: 800,
+                      height: 400,
+                      padding: EdgeInsets.all(8.0),
+                      decoration: BoxDecoration(
+                        border: Border.all(color: Colors.grey),
+                        borderRadius: BorderRadius.circular(8.0),
+                      ),
+                      child: _buildImageGallery(_smjestaj.slikes ?? [],_smjestaj.slike ?? []),
+                    ),
+                  ),
+                  SizedBox(height: 20),
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -328,6 +372,37 @@ class _SmjestajDetailsDialogState extends State<SmjestajDetailsDialog> {
                       children: [
                         SizedBox(height: 20),
                         Divider(),
+                        SizedBox(height: 20),
+                        InkWell(
+                          onTap: () async {
+                            FilePickerResult? result =
+                                await FilePicker.platform.pickFiles(
+                              allowMultiple: true,
+                              type: FileType.image,
+                            );
+
+                            if (result != null) {
+                              setState(() {
+                                // _imageFiles ??= [];
+                                // _imageFiles!.addAll(result.files);
+                                _smjestaj.smjestajnaJedinicas![i].slike ??= [];
+                                _smjestaj.smjestajnaJedinicas![i].slike!.addAll(
+                                    result.files.map((file) => file.path!));
+                              });
+                            }
+                          },
+                          child: Container(
+                            width: 800,
+                            height: 400,
+                            padding: EdgeInsets.all(8.0),
+                            decoration: BoxDecoration(
+                              border: Border.all(color: Colors.grey),
+                              borderRadius: BorderRadius.circular(8.0),
+                            ),
+                            child: _buildImageGallery(_smjestaj.smjestajnaJedinicas![i].slikes ?? [],
+                                _smjestaj.smjestajnaJedinicas![i].slike ?? []),
+                          ),
+                        ),
                         SizedBox(height: 20),
                         Row(
                           children: [
@@ -582,7 +657,7 @@ class _SmjestajDetailsDialogState extends State<SmjestajDetailsDialog> {
     if (_formKey.currentState!.saveAndValidate()) {
       Map<String, dynamic> formData = _formKey.currentState!.value;
 
-      Map<String, dynamic> smjestaj = {
+      Map<String, dynamic> smjestajData = {
         'naziv': formData['naziv'],
         'adresa': formData['adresa'],
         'dodatneUsluge': formData['dodatneUsluge'],
@@ -597,15 +672,25 @@ class _SmjestajDetailsDialogState extends State<SmjestajDetailsDialog> {
       };
 
       try {
-        Smjestaj insertedSmjestaj = widget.smjestaj == null
-            ? await _smjestajiProvider.insert(smjestaj)
-            : await _smjestajiProvider.update(widget.smjestaj!.id!, smjestaj);
+        Smjestaj savedSmjestaj = widget.smjestaj == null
+            ? await _smjestajiProvider.insert(smjestajData)
+            : await _smjestajiProvider.update(
+                widget.smjestaj!.id!, smjestajData);
+
+        List<String> smjestajImages = _smjestaj.slike ?? [];
+        for (String imageFile in smjestajImages) {
+          Map<String, dynamic> slikeInsertRequest = {
+            'filePath': imageFile,
+            'smjestajId': savedSmjestaj.id
+          };
+          await _slikeProvider.insertWithImage(slikeInsertRequest);
+        }
 
         SmjestajnaJedinicaProvider jedinicaProvider =
             SmjestajnaJedinicaProvider();
 
         for (int i = 0; i < _smjestaj.smjestajnaJedinicas!.length; i++) {
-          Map<String, dynamic> smjestajnaJedinica = {
+          Map<String, dynamic> jedinicaData = {
             'naziv': formData['smjestajnaJedinica_$i.naziv'],
             'cijena': double.parse(formData['smjestajnaJedinica_$i.cijena']),
             'kapacitet': int.parse(formData['smjestajnaJedinica_$i.kapacitet']),
@@ -615,14 +700,23 @@ class _SmjestajDetailsDialogState extends State<SmjestajDetailsDialog> {
             'tv': _smjestaj.smjestajnaJedinicas![i].tv,
             'klimaUredjaj': _smjestaj.smjestajnaJedinicas![i].klimaUredjaj,
             'dodatneUsluge': formData['smjestajnaJedinica_$i.dodatneUsluge'],
-            'smjestajId': insertedSmjestaj.id
+            'smjestajId': savedSmjestaj.id
           };
 
-          if (_smjestaj.smjestajnaJedinicas![i].id == null) {
-            await jedinicaProvider.insert(smjestajnaJedinica);
-          } else {
-            await jedinicaProvider.update(
-                _smjestaj.smjestajnaJedinicas![i].id!, smjestajnaJedinica);
+          SmjestajnaJedinica savedJedinica =
+              _smjestaj.smjestajnaJedinicas![i].id == null
+                  ? await jedinicaProvider.insert(jedinicaData)
+                  : await jedinicaProvider.update(
+                      _smjestaj.smjestajnaJedinicas![i].id!, jedinicaData);
+
+          List<String> jedinicaImages =
+              _smjestaj.smjestajnaJedinicas![i].slike ?? [];
+          for (String imageFile in jedinicaImages) {
+            Map<String, dynamic> slikeInsertRequest = {
+              'filePath': imageFile,
+              'smjestajnaJedinicaId': savedJedinica.id
+            };
+            await _slikeProvider.insertWithImage(slikeInsertRequest);
           }
         }
 
@@ -631,5 +725,52 @@ class _SmjestajDetailsDialogState extends State<SmjestajDetailsDialog> {
         print('Greška prilikom spremanja podataka: $e');
       }
     }
+  }
+
+  Widget _buildImageGallery(List<Slike> savedImages, List<String> newImages) {
+    List<Widget> imageWidgets = [];
+
+    imageWidgets.addAll(savedImages.map((slika) {
+      final imageUrl = FilePathManager.constructUrl(slika!.naziv!);
+      return SizedBox(
+        width: 80,
+        height: 80,
+        child: Image.network(
+          imageUrl,
+          fit: BoxFit.cover,
+        ),
+      );
+    }));
+
+    imageWidgets.addAll(newImages.map((path) {
+      return SizedBox(
+        width: 80,
+        height: 80,
+        child: Image.file(
+          File(path),
+          fit: BoxFit.cover,
+        ),
+      );
+    }));
+
+    imageWidgets.add(SizedBox(
+      width: 80,
+      height: 80,
+      child: Container(
+          color: Colors.grey.withOpacity(0.5),
+          child: Icon(
+            Icons.add,
+            color: Colors.white,
+            size: 40,
+          ),
+        ),
+    ));
+
+    return GridView.count(
+      crossAxisCount: 5,
+      mainAxisSpacing: 8.0,
+      crossAxisSpacing: 8.0,
+      children: imageWidgets,
+    );
   }
 }

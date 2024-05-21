@@ -38,9 +38,11 @@ namespace StudentOglasi.Services.Services
         }
         public override IQueryable<Database.Smjestaji> AddInclude(IQueryable<Database.Smjestaji> query, SmjestajiSearchObject? search = null)
         {
-            query = query.Include(s => s.SmjestajnaJedinicas)
-                 .Include(s=> s.Grad)
-                 .Include(s=>s.TipSmjestaja);
+            query = query.Include(s=> s.Grad)
+                 .Include(s=>s.TipSmjestaja)
+                 .Include(s=>s.Slikes)
+                 .Include(s => s.SmjestajnaJedinicas)
+                    .ThenInclude(sj => sj.Slikes);
             return base.AddInclude(query, search);
         }
     }

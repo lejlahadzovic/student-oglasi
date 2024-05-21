@@ -26,5 +26,7 @@ namespace StudentOglasi.Model
         public bool? KlimaUredjaj { get; set; }
 
         public bool? Terasa { get; set; }
+
+        public virtual ICollection<Slike> Slikes { get; set; } = new List<Slike>();
     }
 }
