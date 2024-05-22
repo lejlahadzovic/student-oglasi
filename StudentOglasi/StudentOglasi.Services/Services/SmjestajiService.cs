@@ -15,8 +15,12 @@ namespace StudentOglasi.Services.Services
 {
     public class SmjestajiService : BaseCRUDService<Model.Smjestaji, Database.Smjestaji, SmjestajiSearchObject, SmjestajiInsertRequest, SmjestajiUpdateRequest>, ISmjestajiService
     {
-        public SmjestajiService(StudentoglasiContext context, IMapper mapper) : base(context, mapper)
+        private readonly SlikeService _slikeService;
+        private readonly SmjestajnaJedinicaService _smjestajneJediniceService;
+        public SmjestajiService(StudentoglasiContext context, IMapper mapper, SlikeService slikeService, SmjestajnaJedinicaService smjestajneJediniceService) : base(context, mapper)
         {
+            _slikeService = slikeService;
+            _smjestajneJediniceService = smjestajneJediniceService;
         }
         public override IQueryable<Database.Smjestaji> AddFilter(IQueryable<Database.Smjestaji> query, SmjestajiSearchObject? search = null)
         {
@@ -44,6 +48,32 @@ namespace StudentOglasi.Services.Services
                  .Include(s => s.SmjestajnaJedinicas)
                     .ThenInclude(sj => sj.Slikes);
             return base.AddInclude(query, search);
+        }
+        public override async Task BeforeDelete(Database.Smjestaji smjestaj)
+        {
+            var smjestajWithRelations = await _context.Smjestajis
+           .Include(s => s.Slikes)
+           .Include(s=>s.SmjestajnaJedinicas)
+           .ThenInclude(sj => sj.Slikes)
+           .FirstOrDefaultAsync(s => s.Id == smjestaj.Id);
+
+            if (smjestajWithRelations != null)
+            {
+                var slike = smjestajWithRelations.Slikes.ToList();
+
+                foreach (var slika in slike)
+                {
+                    await _slikeService.Delete(slika.SlikaId);
+                }
+
+                var smjestajneJedinice = smjestajWithRelations.SmjestajnaJedinicas.ToList();
+
+                // Obriši sve smještajne jedinice i njihove slike
+                foreach (var jedinica in smjestajneJedinice)
+                {
+                    await _smjestajneJediniceService.Delete(jedinica.Id);
+                }
+            }
         }
     }
 }

@@ -4,12 +4,12 @@ part 'slike.g.dart';
 
 @JsonSerializable()
 class Slike {
-  int? id;
+  int? slikaId;
   String? naziv;
   int? smjestajId;
   int? smjestajnaJedinicaId;
 
-  Slike(this.id, this.naziv, this.smjestajId, this.smjestajnaJedinicaId);
+  Slike(this.slikaId, this.naziv, this.smjestajId, this.smjestajnaJedinicaId);
 
   factory Slike.fromJson(Map<String, dynamic> json) => _$SlikeFromJson(json);
 

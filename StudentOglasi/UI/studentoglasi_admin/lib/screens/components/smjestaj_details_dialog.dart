@@ -144,7 +144,8 @@ class _SmjestajDetailsDialogState extends State<SmjestajDetailsDialog> {
                         border: Border.all(color: Colors.grey),
                         borderRadius: BorderRadius.circular(8.0),
                       ),
-                      child: _buildImageGallery(_smjestaj.slikes ?? [],_smjestaj.slike ?? []),
+                      child: _buildImageGallery(
+                          _smjestaj.slikes ?? [], _smjestaj.slike ?? []),
                     ),
                   ),
                   SizedBox(height: 20),
@@ -399,7 +400,8 @@ class _SmjestajDetailsDialogState extends State<SmjestajDetailsDialog> {
                               border: Border.all(color: Colors.grey),
                               borderRadius: BorderRadius.circular(8.0),
                             ),
-                            child: _buildImageGallery(_smjestaj.smjestajnaJedinicas![i].slikes ?? [],
+                            child: _buildImageGallery(
+                                _smjestaj.smjestajnaJedinicas![i].slikes ?? [],
                                 _smjestaj.smjestajnaJedinicas![i].slike ?? []),
                           ),
                         ),
@@ -731,13 +733,39 @@ class _SmjestajDetailsDialogState extends State<SmjestajDetailsDialog> {
     List<Widget> imageWidgets = [];
 
     imageWidgets.addAll(savedImages.map((slika) {
-      final imageUrl = FilePathManager.constructUrl(slika!.naziv!);
+      final imageUrl = FilePathManager.constructUrl(slika.naziv!);
       return SizedBox(
         width: 80,
         height: 80,
-        child: Image.network(
-          imageUrl,
-          fit: BoxFit.cover,
+        child: Stack(
+          children: [
+            AspectRatio(
+              aspectRatio: 1.0,
+              child: Image.network(
+                imageUrl,
+                fit: BoxFit.cover,
+              ),
+            ),
+            Positioned(
+              top: 4,
+              right: 4,
+              child: IconButton(
+                icon: Icon(
+                  Icons.delete,
+                  color: Colors.white,
+                ),
+                iconSize: 22,
+                onPressed: () async {
+                  bool success = await _slikeProvider.delete(slika.slikaId);
+                  if (success) {
+                    setState(() {
+                      savedImages.remove(slika);
+                    });
+                  }
+                },
+              ),
+            ),
+          ],
         ),
       );
     }));
@@ -746,9 +774,32 @@ class _SmjestajDetailsDialogState extends State<SmjestajDetailsDialog> {
       return SizedBox(
         width: 80,
         height: 80,
-        child: Image.file(
-          File(path),
-          fit: BoxFit.cover,
+        child: Stack(
+          children: [
+            AspectRatio(
+              aspectRatio: 1.0,
+              child: Image.file(
+                File(path),
+                fit: BoxFit.cover,
+              ),
+            ),
+            Positioned(
+              top: 4,
+              right: 4,
+              child: IconButton(
+                icon: Icon(
+                  Icons.delete,
+                  color: Colors.white,
+                ),
+                iconSize: 20,
+                onPressed: () {
+                  setState(() {
+                    newImages.remove(path);
+                  });
+                },
+              ),
+            ),
+          ],
         ),
       );
     }));
@@ -757,20 +808,41 @@ class _SmjestajDetailsDialogState extends State<SmjestajDetailsDialog> {
       width: 80,
       height: 80,
       child: Container(
-          color: Colors.grey.withOpacity(0.5),
-          child: Icon(
-            Icons.add,
-            color: Colors.white,
-            size: 40,
-          ),
+        color: Colors.grey.withOpacity(0.5),
+        child: Icon(
+          Icons.add,
+          color: Colors.white,
+          size: 40,
         ),
+      ),
     ));
 
-    return GridView.count(
-      crossAxisCount: 5,
-      mainAxisSpacing: 8.0,
-      crossAxisSpacing: 8.0,
-      children: imageWidgets,
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: const EdgeInsets.symmetric(vertical: 8.0),
+          child: Text(
+            'Slike',
+            style: TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ),
+        Expanded(
+          child: SingleChildScrollView(
+            child: GridView.count(
+              crossAxisCount: 5,
+              mainAxisSpacing: 8.0,
+              crossAxisSpacing: 8.0,
+              shrinkWrap: true,
+              physics: NeverScrollableScrollPhysics(),
+              children: imageWidgets,
+            ),
+          ),
+        ),
+      ],
     );
   }
 }
