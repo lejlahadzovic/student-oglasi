@@ -41,6 +41,17 @@ namespace StudentOglasi.Services
             CreateMap<Model.Requests.StudentiInsertRequest, Database.Studenti>();
             CreateMap<Model.Requests.StudentiUpdateRequest, Database.Studenti>();
             CreateMap<Database.Univerziteti, Model.Univerziteti>();
+            CreateMap<Database.Smjestaji, Model.Smjestaji>();
+            CreateMap<Model.Requests.SmjestajiInsertRequest, Database.Smjestaji>();
+            CreateMap<Model.Requests.SmjestajiUpdateRequest, Database.Smjestaji>();
+            CreateMap<Database.SmjestajnaJedinica, Model.SmjestajnaJedinica>();
+            CreateMap<Model.Requests.SmjestajnaJedinicaInsertRequest, Database.SmjestajnaJedinica>();
+            CreateMap<Model.Requests.SmjestajnaJedinicaUpdateRequest, Database.SmjestajnaJedinica>();
+            CreateMap<Database.Grad, Model.Gradovi>();
+            CreateMap<Database.TipSmjestaja, Model.TipSmjestaja>();
+            CreateMap<Database.Slike, Model.Slike>();
+            CreateMap<Model.Requests.SlikeInsertRequest, Database.Slike>()
+                .ForMember(dest => dest.Naziv, opt => opt.Ignore()); ;
         }
     }
 }

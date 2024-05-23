@@ -37,6 +37,13 @@ builder.Services.AddTransient<BaseStipendijeState>();
 builder.Services.AddTransient<InitialStipendijeState>();
 builder.Services.AddTransient<ActiveStipendijeState>();
 builder.Services.AddTransient<DraftStipendijeState>();
+builder.Services.AddTransient<ISmjestajiService, SmjestajiService>();
+builder.Services.AddTransient<ISmjestajanaJedinicaService, SmjestajnaJedinicaService>();
+builder.Services.AddTransient<IGradoviService, GradoviService>();
+builder.Services.AddTransient<ITipSmjestajaService, TipSmjestajaService>();
+builder.Services.AddTransient<ISlikeService, SlikeService>();
+builder.Services.AddTransient<SlikeService>();
+builder.Services.AddTransient<SmjestajnaJedinicaService>();
 
 builder.Services.AddControllers(x =>
 {

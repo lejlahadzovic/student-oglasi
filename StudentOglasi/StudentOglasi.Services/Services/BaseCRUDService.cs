@@ -52,9 +52,9 @@ namespace StudentOglasi.Services.Services
         {
             var set =  _context.Set<TDb>();
             var entity =await set.FindAsync(id);
-            await BeforeDelete(entity);
             if (entity != null)
             {
+                await BeforeDelete(entity);
                 set.Remove(entity);
                 await _context.SaveChangesAsync();
             }

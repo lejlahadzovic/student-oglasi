@@ -17,11 +17,11 @@ public partial class Ocjene
 
     public int? FirmaId { get; set; }
 
-    public int? SmjestajId { get; set; }
-
     public int? StipenditorId { get; set; }
 
     public int? UniverzitetId { get; set; }
+
+    public int? SmjestajId { get; set; }
 
     public virtual Fakulteti? Fakultet { get; set; }
 

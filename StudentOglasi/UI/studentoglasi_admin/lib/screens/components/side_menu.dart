@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:studentoglasi_admin/screens/login.dart';
 import 'package:studentoglasi_admin/screens/objave_list_screen.dart';
 import 'package:studentoglasi_admin/screens/prakse_list_screen.dart';
+import 'package:studentoglasi_admin/screens/smjestaji_list_screen.dart';
 import 'package:studentoglasi_admin/screens/stipendije_list_screen.dart';
 import 'package:studentoglasi_admin/screens/studetni_list_screen.dart';
 
@@ -109,6 +110,13 @@ class _SideMenuState extends State<SideMenu> {
         Navigator.of(context).push(
           MaterialPageRoute(
             builder: (context) => const ObjaveListScreen(),
+          ),
+        );
+        break;
+      case 2:
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (context) => const SmjestajiListScreen(),
           ),
         );
         break;

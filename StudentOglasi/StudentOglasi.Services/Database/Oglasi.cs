@@ -21,7 +21,5 @@ public partial class Oglasi
 
     public virtual Prakse? Prakse { get; set; }
 
-    public virtual Smjestaji? Smjestaji { get; set; }
-
     public virtual Stipendije? Stipendije { get; set; }
 }

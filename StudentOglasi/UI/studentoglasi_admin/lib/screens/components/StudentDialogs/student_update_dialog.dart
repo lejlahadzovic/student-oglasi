@@ -25,7 +25,7 @@ class StudentUpdateDialog extends StatefulWidget {
 
 class _StudentDetailsDialogState extends State<StudentUpdateDialog> {
   final _formKey = GlobalKey<FormBuilderState>();
-  Map<String, dynamic> _intialValue = {};
+  Map<String, dynamic> _initialValue = {};
   late StudentiProvider _studentProvider;
   String? _filePath;
   String? _imageUrl;
@@ -56,7 +56,7 @@ class _StudentDetailsDialogState extends State<StudentUpdateDialog> {
     }
   }
 
-    _intialValue = {
+    _initialValue = {
       'idNavigation.ime': widget.student?.idNavigation.ime,
       'idNavigation.prezime': widget.student?.idNavigation.prezime,
       'idNavigation.email': widget.student?.idNavigation.email,
@@ -79,7 +79,7 @@ class _StudentDetailsDialogState extends State<StudentUpdateDialog> {
           width: 700,
           child: FormBuilder(
             key: _formKey,
-            initialValue: _intialValue,
+            initialValue: _initialValue,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
