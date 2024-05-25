@@ -9,7 +9,7 @@ namespace StudentOglasi.Model.SearchObjects
     public class PrakseSearchObject:BaseSearchObject
     {
         public string? Naslov { get; set; }
-        public string? Organizacija { get; set; }
-        public string? Status { get; set; }
+        public int? Organizacija { get; set; }
+        public int? Status { get; set; }
     }
 }
