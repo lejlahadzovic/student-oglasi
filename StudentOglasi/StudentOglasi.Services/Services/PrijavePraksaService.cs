@@ -10,13 +10,18 @@ using System.Text;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
+using Azure.Storage.Blobs.Models;
+using StudentOglasi.Services.StateMachines.PrakseStateMachine;
+using StudentOglasi.Services.StateMachines.PrijavePrakseStateMachine;
 
 namespace StudentOglasi.Services.Services
 {
     public class PrijavePraksaService : BaseService<Model.PrijavePraksa, Database.PrijavePraksa, PrijavePraksaSearchObject>, IPrijavePraksaService
     {
-        public PrijavePraksaService(StudentoglasiContext context, IMapper mapper) : base(context, mapper)
+        public BasePrijavePrakseState _baseState { get; set; }
+        public PrijavePraksaService(StudentoglasiContext context, IMapper mapper, BasePrijavePrakseState baseState) : base(context, mapper)
         {
+            _baseState = baseState;
         }
         public override IQueryable<Database.PrijavePraksa> AddFilter(IQueryable<Database.PrijavePraksa> query, PrijavePraksaSearchObject? search = null)
         {
@@ -30,9 +35,9 @@ namespace StudentOglasi.Services.Services
             {
                 filteredQuery = filteredQuery.Where(x => x.Student.BrojIndeksa.Contains(search.BrojIndeksa));
             }
-            if (!string.IsNullOrWhiteSpace(search?.Status))
+            if (search?.Status != null)
             {
-                filteredQuery = filteredQuery.Where(x => x.Status.Naziv.Contains(search.Status));
+                filteredQuery = filteredQuery.Where(x => x.StatusId == search.Status);
             }
             return filteredQuery;
         }
@@ -64,6 +69,36 @@ namespace StudentOglasi.Services.Services
             var tmp = _mapper.Map<List<Model.PrijavePraksa>>(list);
             result.Result = tmp;
             return result;
+        }
+        public async Task<Model.PrijavePraksa> Cancel(int id)
+        {
+            var set = _context.Set<Database.PrijavePraksa>();
+
+            var entity = await set.FirstOrDefaultAsync(p => p.StudentId == id);
+            entity.Status = await _context.StatusPrijaves.FindAsync(entity.StatusId);
+            var state = _baseState.CreateState(entity.Status.Naziv);
+
+            return await state.Cancel(id);
+        }
+
+        public async Task<Model.PrijavePraksa> Approve(int id)
+        {
+            var set = _context.Set<Database.PrijavePraksa>();
+
+            var entity = await set.FirstOrDefaultAsync(p => p.StudentId == id);
+            entity.Status = await _context.StatusPrijaves.FindAsync(entity.StatusId);
+            var state = _baseState.CreateState(entity.Status.Naziv);
+
+            return await state.Approve(id);
+        }
+        public async Task<List<string>> AllowedActions(int id)
+        {
+            var set = _context.Set<Database.PrijavePraksa>();
+
+            var entity = await set.FirstOrDefaultAsync(p => p.StudentId == id);
+            entity.Status = await _context.StatusPrijaves.FindAsync(entity.StatusId);
+            var state = _baseState.CreateState(entity.Status.Naziv ?? "Na cekanju");
+            return await state.AllowedActions();
         }
     }
 }

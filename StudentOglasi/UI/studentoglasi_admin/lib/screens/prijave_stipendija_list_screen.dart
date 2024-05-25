@@ -7,6 +7,7 @@ import 'package:studentoglasi_admin/models/Student/student.dart';
 import 'package:studentoglasi_admin/providers/prijavestipendija_provider.dart';
 import 'package:studentoglasi_admin/providers/statusprijave_provider.dart';
 import 'package:studentoglasi_admin/providers/studenti_provider.dart';
+import 'package:studentoglasi_admin/screens/components/prijave_stipendija_details_dialog.dart';
 import 'package:studentoglasi_admin/widgets/master_screen.dart';
 
 import '../models/search_result.dart';
@@ -60,7 +61,7 @@ class _PrijaveStipendijaListScreen extends State<PrijaveStipendijaListScreen> {
     var data = await _prijaveStipendijaProvider.get(filter: {
       'ime': _imeController.text,
       'brojIndeksa': _brojIndeksaController.text,
-      'status': _statusController.text,
+      'status': selectedStatusPrijave?.id,
     });
     setState(() {
       result = data;
@@ -206,6 +207,15 @@ class _PrijaveStipendijaListScreen extends State<PrijaveStipendijaListScreen> {
                             ),
                           ),
                         ),
+                        const DataColumn(
+                          label: Expanded(
+                            child: Text(
+                              'Akcije',
+                              style: TextStyle(fontStyle: FontStyle.italic),
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+                        ),
                       ],
                       rows: result?.result
                               .map((PrijaveStipendija e) => DataRow(cells: [
@@ -224,17 +234,36 @@ class _PrijaveStipendijaListScreen extends State<PrijaveStipendijaListScreen> {
                                         child: Text(e.status?.naziv ?? ""))),
                                     DataCell(Center(
                                         child:
-                                            Text(e.prosjekOcjena.toString()))),
-                                    /* DataCell(
+                                            Text(e.prosjekOcjena.toString()))), DataCell(
                                      Row(
                                         mainAxisAlignment:
                                             MainAxisAlignment.center,
                                         children: [
-                                          
-                                          
+                                          IconButton(
+                                            icon: Icon(
+                                              Icons.edit,
+                                              color: Colors.blue,
+                                            ),
+                                            onPressed: () {
+                                              showDialog(
+                                                  context: context,
+                                                  builder: (BuildContext
+                                                          context) =>
+                                                      PrijavaStipendijaDetailsDialog(
+                                                          title:
+                                                              'Detalji prijava stipendije',
+                                                          prijaveStipendija: e,
+                                                          )).then(
+                                                  (value) {
+                                                if (value != null && value) {
+                                                  _fetchData();
+                                                }
+                                              });
+                                            },
+                                          ),
                                         ],
                                       ),
-                                    ),*/
+                                    ),
                                   ]))
                               .toList() ??
                           []),

@@ -1,22 +1,19 @@
-﻿using StudentOglasi.Model.Requests;
-using StudentOglasi.Model.SearchObjects;
+﻿using StudentOglasi.Model.SearchObjects;
 using StudentOglasi.Model;
 using StudentOglasi.Services.Database;
 using StudentOglasi.Services.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
+using StudentOglasi.Services.StateMachines.PrijaveStipendijaStateMachine;
 
 namespace StudentOglasi.Services.Services
 {
     public class PrijaveStipendijaService : BaseService<Model.PrijaveStipendija, Database.PrijaveStipendija, PrijaveStipendijaSearchObject>, IPrijaveStipendijaService
     {
-        public PrijaveStipendijaService(StudentoglasiContext context, IMapper mapper) : base(context, mapper)
+        public BasePrijaveStipendijaState _baseState { get; set; }
+        public PrijaveStipendijaService(StudentoglasiContext context, IMapper mapper, BasePrijaveStipendijaState baseState) : base(context, mapper)
         {
+            _baseState = baseState;
         }
         public override IQueryable<Database.PrijaveStipendija> AddFilter(IQueryable<Database.PrijaveStipendija> query, PrijaveStipendijaSearchObject? search = null)
         {
@@ -30,10 +27,11 @@ namespace StudentOglasi.Services.Services
             {
                 filteredQuery = filteredQuery.Where(x => x.Student.BrojIndeksa.Contains(search.BrojIndeksa));
             }
-            if (!string.IsNullOrWhiteSpace(search?.Status))
+            if (search?.Status != null)
             {
-                filteredQuery = filteredQuery.Where(x => x.Status.Naziv.Contains(search.Status));
+                filteredQuery = filteredQuery.Where(x => x.StatusId == search.Status);
             }
+
             return filteredQuery;
         }
         public override async Task<PagedResult<Model.PrijaveStipendija>> Get(PrijaveStipendijaSearchObject? search = null)
@@ -63,6 +61,36 @@ namespace StudentOglasi.Services.Services
             var tmp = _mapper.Map<List<Model.PrijaveStipendija>>(list);
             result.Result = tmp;
             return result;
+        }
+        public async Task<Model.PrijaveStipendija> Cancel(int id)
+        {
+            var set = _context.Set<Database.PrijaveStipendija>();
+
+            var entity = await set.FirstOrDefaultAsync(p => p.StudentId == id);
+            entity.Status = await _context.StatusPrijaves.FindAsync(entity.StatusId);
+            var state = _baseState.CreateState(entity.Status.Naziv);
+
+            return await state.Cancel(id);
+        }
+
+        public async Task<Model.PrijaveStipendija> Approve(int id)
+        {
+            var set = _context.Set<Database.PrijaveStipendija>();
+
+            var entity = await set.FirstOrDefaultAsync(p => p.StudentId == id);
+            entity.Status = await _context.StatusPrijaves.FindAsync(entity.StatusId);
+            var state = _baseState.CreateState(entity.Status.Naziv);
+
+            return await state.Approve(id);
+        }
+        public async Task<List<string>> AllowedActions(int id)
+        {
+            var set = _context.Set<Database.PrijaveStipendija>();
+
+            var entity = await set.FirstOrDefaultAsync(p => p.StudentId == id);
+            entity.Status = await _context.StatusPrijaves.FindAsync(entity.StatusId);
+            var state = _baseState.CreateState(entity.Status.Naziv ?? "Na cekanju");
+            return await state.AllowedActions();
         }
     }
 }

@@ -13,5 +13,22 @@ namespace StudentOglasi.Controllers
         {
 
         }
+        [HttpPut("{studentId}/approve")]
+        public virtual async Task<Model.PrijaveStipendija> Approve(int studentId)
+        {
+            return await (_service as IPrijaveStipendijaService).Approve(studentId);
+        }
+
+        [HttpPut("{studentId}/cancel")]
+        public virtual async Task<Model.PrijaveStipendija> Cancel(int studentId)
+        {
+            return await (_service as IPrijaveStipendijaService).Cancel(studentId);
+        }
+
+        [HttpGet("{studentId}/allowedActions")]
+        public async Task<List<string>> AllowedActions(int studentId)
+        {
+            return await (_service as IPrijaveStipendijaService).AllowedActions(studentId);
+        }
     }
 }

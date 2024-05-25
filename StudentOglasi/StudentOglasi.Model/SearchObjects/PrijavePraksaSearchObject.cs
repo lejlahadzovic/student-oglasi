@@ -10,6 +10,6 @@ namespace StudentOglasi.Model.SearchObjects
     {
         public string? Ime { get; set; }
         public string? BrojIndeksa { get; set; }
-        public string? Status { get; set; }
+        public int? Status { get; set; }
     }
 }
