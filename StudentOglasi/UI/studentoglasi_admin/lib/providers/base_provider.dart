@@ -72,6 +72,28 @@ abstract class BaseProvider<T> with ChangeNotifier {
     }
   }
 
+     Future<bool> cancel(int? id) async {
+    var url = Uri.parse('$_baseUrl$_endPoint/$id/cancel');
+    var headers=createHeaders();
+    final response =await http.put(url,headers: headers);
+    if (response.statusCode == 200) {
+     return true;
+    } else {
+      throw Exception('Failed to cancel');
+    }
+  }
+
+       Future<bool> approve(int? id) async {
+    var url = Uri.parse('$_baseUrl$_endPoint/$id/approve');
+    var headers=createHeaders();
+    final response =await http.put(url,headers: headers);
+    if (response.statusCode == 200) {
+     return true;
+    } else {
+      throw Exception('Failed to approve');
+    }
+  }
+
     Future<T> insert(dynamic request) async {
     var url = "$_baseUrl$_endPoint";
     var uri = Uri.parse(url);

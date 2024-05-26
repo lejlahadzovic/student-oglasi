@@ -10,6 +10,8 @@ using StudentOglasi.Services.Services;
 using StudentOglasi.Services.StateMachine.PrakseStateMaachine;
 using StudentOglasi.Services.StateMachine.StipendijeStateMachine;
 using StudentOglasi.Services.StateMachines.PrakseStateMachine;
+using StudentOglasi.Services.StateMachines.PrijavePrakseStateMachine;
+using StudentOglasi.Services.StateMachines.PrijaveStipendijaStateMachine;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -29,6 +31,9 @@ builder.Services.AddTransient<KorisniciService>();
 builder.Services.AddTransient<IFakultetiService, FakultetiService>();
 builder.Services.AddTransient<IUniverzitetiService, UniverzitetiService>();
 builder.Services.AddTransient<INacinStudiranjaService, NacinStudiranjaService>();
+builder.Services.AddTransient<IPrijaveStipendijaService, PrijaveStipendijaService>();
+builder.Services.AddTransient<IPrijavePraksaService, PrijavePraksaService>();
+builder.Services.AddTransient<IStatusPrijaveService, StatusPrijaveService>();
 builder.Services.AddTransient<BasePrakseState>();
 builder.Services.AddTransient<InitialPraksaState>();
 builder.Services.AddTransient<ActivePrakseState>();
@@ -36,6 +41,7 @@ builder.Services.AddTransient<DraftPrakseState>();
 builder.Services.AddTransient<BaseStipendijeState>();
 builder.Services.AddTransient<InitialStipendijeState>();
 builder.Services.AddTransient<ActiveStipendijeState>();
+builder.Services.AddTransient<BasePrijavePrakseState>();
 builder.Services.AddTransient<DraftStipendijeState>();
 builder.Services.AddTransient<ISmjestajiService, SmjestajiService>();
 builder.Services.AddTransient<ISmjestajanaJedinicaService, SmjestajnaJedinicaService>();
@@ -44,6 +50,16 @@ builder.Services.AddTransient<ITipSmjestajaService, TipSmjestajaService>();
 builder.Services.AddTransient<ISlikeService, SlikeService>();
 builder.Services.AddTransient<SlikeService>();
 builder.Services.AddTransient<SmjestajnaJedinicaService>();
+builder.Services.AddTransient<DraftPrijavePraksaState>();
+builder.Services.AddTransient<ApprovedPrijavePraksaState>();
+builder.Services.AddTransient<CanceledPrijavePraksaState>();
+builder.Services.AddTransient<InitialPrijavePraksaState>();
+builder.Services.AddTransient<BasePrijaveStipendijaState>();
+builder.Services.AddTransient<DraftPrijaveStipendijaState>();
+builder.Services.AddTransient<ApprovedPrijaveStipendijaState>();
+builder.Services.AddTransient<CanceledPrijaveStipendijaState>();
+builder.Services.AddTransient<InitialPrijaveStipendijaState>();
+
 
 builder.Services.AddControllers(x =>
 {

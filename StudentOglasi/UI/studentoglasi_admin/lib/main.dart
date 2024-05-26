@@ -11,7 +11,10 @@ import 'package:studentoglasi_admin/providers/oglasi_provider.dart';
 import 'package:studentoglasi_admin/providers/organizacije_provider.dart';
 import 'package:studentoglasi_admin/providers/slike_provider.dart';
 import 'package:studentoglasi_admin/providers/smjestaji_provider.dart';
+import 'package:studentoglasi_admin/providers/prijavepraksa_provider.dart';
+import 'package:studentoglasi_admin/providers/prijavestipendija_provider.dart';
 import 'package:studentoglasi_admin/providers/statusoglasi_provider.dart';
+import 'package:studentoglasi_admin/providers/statusprijave_provider.dart';
 import 'package:studentoglasi_admin/providers/stipenditori_provider.dart';
 import 'package:studentoglasi_admin/providers/studenti_provider.dart';
 import 'package:studentoglasi_admin/providers/tip_smjestaja_provider.dart';
@@ -31,6 +34,12 @@ void main() {
       ChangeNotifierProvider(create: (context) => StipendijeProvider()),
       ChangeNotifierProvider(create: (context) => OglasiProvider()),
       ChangeNotifierProvider(create: (context) => StipenditoriProvider()),
+    ChangeNotifierProvider(create: (context) => PraksaProvider()),
+    ChangeNotifierProvider(create: (_) => StatusOglasiProvider()),
+    ChangeNotifierProvider(create: (context) => OrganizacijeProvider()),
+    ChangeNotifierProvider(create: (context) => StipendijeProvider()),
+    ChangeNotifierProvider(create: (context) => OglasiProvider()),
+    ChangeNotifierProvider(create: (context) => StipenditoriProvider()),
       ChangeNotifierProvider(create: (context) => PraksaProvider()),
       ChangeNotifierProvider(create: (_) => StatusOglasiProvider()),
       ChangeNotifierProvider(create: (context) => OrganizacijeProvider()),
@@ -44,6 +53,9 @@ void main() {
       ChangeNotifierProvider(create: (context) => GradoviProvider()),
       ChangeNotifierProvider(create: (context) => TipSmjestajaProvider()),
       ChangeNotifierProvider(create: (context) => SlikeProvider()),
+      ChangeNotifierProvider(create: (context) => StatusPrijaveProvider()),
+      ChangeNotifierProvider(create: (context) => PrijaveStipendijaProvider()),
+      ChangeNotifierProvider(create: (context) => PrijavePraksaProvider()),
     ],
     child: const MyApp(),
   ));

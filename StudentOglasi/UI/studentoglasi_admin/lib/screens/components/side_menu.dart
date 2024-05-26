@@ -3,6 +3,8 @@ import 'package:studentoglasi_admin/screens/login.dart';
 import 'package:studentoglasi_admin/screens/objave_list_screen.dart';
 import 'package:studentoglasi_admin/screens/prakse_list_screen.dart';
 import 'package:studentoglasi_admin/screens/smjestaji_list_screen.dart';
+import 'package:studentoglasi_admin/screens/prijave_praksa_list_screen.dart';
+import 'package:studentoglasi_admin/screens/prijave_stipendija_list_screen.dart';
 import 'package:studentoglasi_admin/screens/stipendije_list_screen.dart';
 import 'package:studentoglasi_admin/screens/studetni_list_screen.dart';
 
@@ -131,6 +133,20 @@ class _SideMenuState extends State<SideMenu> {
         Navigator.of(context).push(
           MaterialPageRoute(
             builder: (context) => const StipendijeListScreen(),
+          ),
+        );
+        break;
+        case 6:
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (context) => const PrijavePraksaListScreen(),
+          ),
+        );
+        break;
+        case 7:
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (context) => const PrijaveStipendijaListScreen(),
           ),
         );
         break;
