@@ -393,23 +393,30 @@ public partial class StudentoglasiContext : DbContext
 
         modelBuilder.Entity<Rezervacije>(entity =>
         {
-            entity.HasKey(e => new { e.SmjestajId, e.StudentId }).HasName("PK__Rezervac__B2B650B01AE201A8");
+            entity.HasKey(e => new { e.SmjestajnaJedinicaId, e.StudentId }).HasName("PK__Rezervac__A59BA9A7F156796A");
 
             entity.ToTable("Rezervacije");
 
-            entity.Property(e => e.SmjestajId).HasColumnName("SmjestajID");
+            entity.Property(e => e.SmjestajnaJedinicaId).HasColumnName("SmjestajnaJedinicaID");
             entity.Property(e => e.StudentId).HasColumnName("StudentID");
-            entity.Property(e => e.Napomena).HasMaxLength(250);
+            entity.Property(e => e.Cijena).HasColumnType("decimal(10, 2)");
+            entity.Property(e => e.DatumOdjave).HasColumnType("datetime");
+            entity.Property(e => e.DatumPrijave).HasColumnType("datetime");
             entity.Property(e => e.StatusId).HasColumnName("StatusID");
+
+            entity.HasOne(d => d.SmjestajnaJedinica).WithMany(p => p.Rezervacijes)
+                .HasForeignKey(d => d.SmjestajnaJedinicaId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK__Rezervaci__Smjes__1209AD79");
 
             entity.HasOne(d => d.Status).WithMany(p => p.Rezervacijes)
                 .HasForeignKey(d => d.StatusId)
-                .HasConstraintName("FK__Rezervaci__Statu__2CF2ADDF");
+                .HasConstraintName("FK__Rezervaci__Statu__13F1F5EB");
 
             entity.HasOne(d => d.Student).WithMany(p => p.Rezervacijes)
                 .HasForeignKey(d => d.StudentId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__Rezervaci__Stude__2BFE89A6");
+                .HasConstraintName("FK__Rezervaci__Stude__12FDD1B2");
         });
 
         modelBuilder.Entity<Slike>(entity =>

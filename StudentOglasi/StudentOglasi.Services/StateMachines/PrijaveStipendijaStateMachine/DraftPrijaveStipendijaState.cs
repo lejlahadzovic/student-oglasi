@@ -14,11 +14,11 @@ namespace StudentOglasi.Services.StateMachines.PrijaveStipendijaStateMachine
         public DraftPrijaveStipendijaState(IServiceProvider serviceProvider, StudentoglasiContext context, IMapper mapper) : base(serviceProvider, context, mapper)
         {
         }
-        public override async Task<Model.PrijaveStipendija> Approve(int id)
+        public override async Task<Model.PrijaveStipendija> Approve(int studentId, int stipendijaId)
         {
             var set = _context.Set<Database.PrijaveStipendija>();
 
-            var entity = await set.FirstOrDefaultAsync(e => e.StudentId == id);
+            var entity = await set.FirstOrDefaultAsync(e => e.StudentId == studentId && e.StipendijaId == stipendijaId);
 
             entity.Status = await _context.StatusPrijaves.FirstOrDefaultAsync(e => e.Naziv.Contains("Odobrena"));
 
@@ -26,11 +26,11 @@ namespace StudentOglasi.Services.StateMachines.PrijaveStipendijaStateMachine
             return _mapper.Map<Model.PrijaveStipendija>(entity);
         }
 
-        public override async Task<Model.PrijaveStipendija> Cancel(int id)
+        public override async Task<Model.PrijaveStipendija> Cancel(int studentId, int stipendijaId)
         {
             var set = _context.Set<Database.PrijaveStipendija>();
 
-            var entity = await set.FirstOrDefaultAsync(e => e.StudentId == id);
+            var entity = await set.FirstOrDefaultAsync(e => e.StudentId == studentId && e.StipendijaId == stipendijaId);
 
             entity.Status = await _context.StatusPrijaves.FirstOrDefaultAsync(e => e.Naziv.Contains("Otkazana"));
 

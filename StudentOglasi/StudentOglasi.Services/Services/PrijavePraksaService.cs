@@ -70,32 +70,32 @@ namespace StudentOglasi.Services.Services
             result.Result = tmp;
             return result;
         }
-        public async Task<Model.PrijavePraksa> Cancel(int id)
+        public async Task<Model.PrijavePraksa> Cancel(int studentId, int praksaId)
         {
             var set = _context.Set<Database.PrijavePraksa>();
 
-            var entity = await set.FirstOrDefaultAsync(p => p.StudentId == id);
+            var entity = await set.FirstOrDefaultAsync(p => p.StudentId == studentId && p.PraksaId == praksaId);
             entity.Status = await _context.StatusPrijaves.FindAsync(entity.StatusId);
             var state = _baseState.CreateState(entity.Status.Naziv);
 
-            return await state.Cancel(id);
+            return await state.Cancel(studentId, praksaId);
         }
 
-        public async Task<Model.PrijavePraksa> Approve(int id)
+        public async Task<Model.PrijavePraksa> Approve(int studentId, int praksaId)
         {
             var set = _context.Set<Database.PrijavePraksa>();
 
-            var entity = await set.FirstOrDefaultAsync(p => p.StudentId == id);
+            var entity = await set.FirstOrDefaultAsync(p => p.StudentId == studentId && p.PraksaId == praksaId);
             entity.Status = await _context.StatusPrijaves.FindAsync(entity.StatusId);
             var state = _baseState.CreateState(entity.Status.Naziv);
 
-            return await state.Approve(id);
+            return await state.Approve(studentId, praksaId);
         }
-        public async Task<List<string>> AllowedActions(int id)
+        public async Task<List<string>> AllowedActions(int studentId, int praksaId)
         {
             var set = _context.Set<Database.PrijavePraksa>();
 
-            var entity = await set.FirstOrDefaultAsync(p => p.StudentId == id);
+            var entity = await set.FirstOrDefaultAsync(p => p.StudentId == studentId && p.PraksaId == praksaId);
             entity.Status = await _context.StatusPrijaves.FindAsync(entity.StatusId);
             var state = _baseState.CreateState(entity.Status.Naziv ?? "Na cekanju");
             return await state.AllowedActions();

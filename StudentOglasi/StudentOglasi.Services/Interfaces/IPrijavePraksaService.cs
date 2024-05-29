@@ -10,8 +10,8 @@ namespace StudentOglasi.Services.Interfaces
 {
     public interface IPrijavePraksaService : IService<PrijavePraksa, PrijavePraksaSearchObject>
     {
-        Task<Model.PrijavePraksa> Approve(int id);
-        Task<Model.PrijavePraksa> Cancel(int id);
-        Task<List<string>> AllowedActions(int id);
+        Task<Model.PrijavePraksa> Approve(int studentId, int praksaId);
+        Task<Model.PrijavePraksa> Cancel(int studentId, int praksaId);
+        Task<List<string>> AllowedActions(int studentId, int praksaId);
     }
 }

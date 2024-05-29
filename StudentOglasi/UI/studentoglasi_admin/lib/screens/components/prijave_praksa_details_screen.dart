@@ -271,12 +271,15 @@ class _PrijavaPraksaDetailsDialogState
               ElevatedButton(
                 onPressed: () async {
                   await _PrijavePraksaProvider.cancel(
-                      widget.prijavePraksa?.studentId);
+                      widget.prijavePraksa?.studentId,
+                      entityId: widget.prijavePraksa?.praksaId);
+                  Navigator.pop(context, true);
                 },
                 child: Text('Otkaži'),
-                style: ButtonStyle(backgroundColor:
-                MaterialStateProperty.all<Color>(Colors.red),
-            foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
+                style: ButtonStyle(
+                  backgroundColor: MaterialStateProperty.all<Color>(Colors.red),
+                  foregroundColor:
+                      MaterialStateProperty.all<Color>(Colors.white),
                   textStyle: MaterialStateProperty.all<TextStyle>(
                       TextStyle(fontWeight: FontWeight.bold)),
                 ),
@@ -285,7 +288,9 @@ class _PrijavaPraksaDetailsDialogState
         ElevatedButton(
           onPressed: () async {
             await _PrijavePraksaProvider.approve(
-                widget.prijavePraksa?.studentId);
+                widget.prijavePraksa?.studentId,
+                entityId: widget.prijavePraksa?.praksaId);
+            Navigator.pop(context, true);
           },
           child: Text('Odobri'),
           style: ButtonStyle(

@@ -42,6 +42,9 @@ namespace StudentOglasi.Services
             CreateMap<Model.Requests.StudentiUpdateRequest, Database.Studenti>();
             CreateMap<Database.Univerziteti, Model.Univerziteti>();
             CreateMap<Database.Smjestaji, Model.Smjestaji>();
+            CreateMap<Database.Smjestaji, Model.SmjestajiBasic>()
+                .ForMember(dest => dest.Grad, opt => opt.MapFrom(src => src.Grad.Naziv))
+                .ForMember(dest => dest.TipSmjestaja, opt => opt.MapFrom(src => src.TipSmjestaja != null ? src.TipSmjestaja.Naziv : null));
             CreateMap<Model.Requests.SmjestajiInsertRequest, Database.Smjestaji>();
             CreateMap<Model.Requests.SmjestajiUpdateRequest, Database.Smjestaji>();
             CreateMap<Database.SmjestajnaJedinica, Model.SmjestajnaJedinica>();
@@ -55,6 +58,8 @@ namespace StudentOglasi.Services
             CreateMap<Database.PrijaveStipendija, Model.PrijaveStipendija>();
             CreateMap<Database.PrijavePraksa, Model.PrijavePraksa>();
             CreateMap<Database.StatusPrijave, Model.StatusPrijave>();
+            CreateMap<Database.Rezervacije, Model.Rezervacije>()
+                .ForMember(dest => dest.Smjestaj, opt => opt.MapFrom(src => src.SmjestajnaJedinica.Smjestaj));
         }
     }
 }

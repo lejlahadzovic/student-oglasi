@@ -9,6 +9,7 @@ import 'package:studentoglasi_admin/providers/nacin_studiranja_provider.dart';
 import 'package:studentoglasi_admin/providers/objave_provider.dart';
 import 'package:studentoglasi_admin/providers/oglasi_provider.dart';
 import 'package:studentoglasi_admin/providers/organizacije_provider.dart';
+import 'package:studentoglasi_admin/providers/rezervacije_provider.dart';
 import 'package:studentoglasi_admin/providers/slike_provider.dart';
 import 'package:studentoglasi_admin/providers/smjestaji_provider.dart';
 import 'package:studentoglasi_admin/providers/prijavepraksa_provider.dart';
@@ -56,6 +57,7 @@ void main() {
       ChangeNotifierProvider(create: (context) => StatusPrijaveProvider()),
       ChangeNotifierProvider(create: (context) => PrijaveStipendijaProvider()),
       ChangeNotifierProvider(create: (context) => PrijavePraksaProvider()),
+      ChangeNotifierProvider(create: (context) => RezervacijeProvider()),
     ],
     child: const MyApp(),
   ));

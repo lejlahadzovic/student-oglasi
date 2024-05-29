@@ -61,46 +61,58 @@ abstract class BaseProvider<T> with ChangeNotifier {
       throw new Exception("Something bad happened please try again");
     }
   }
-   Future<bool> delete(int? id) async {
+
+  Future<bool> delete(int? id) async {
     var url = Uri.parse('$_baseUrl$_endPoint/$id');
-    var headers=createHeaders();
-    final response =await http.delete(url,headers: headers);
+    var headers = createHeaders();
+    final response = await http.delete(url, headers: headers);
     if (response.statusCode == 200) {
-     return true;
+      return true;
     } else {
       throw Exception('Failed to delete');
     }
   }
 
-     Future<bool> cancel(int? id) async {
-    var url = Uri.parse('$_baseUrl$_endPoint/$id/cancel');
-    var headers=createHeaders();
-    final response =await http.put(url,headers: headers);
+  Future<bool> cancel(int? id, {int? entityId}) async {
+    var url;
+    if (entityId != null) {
+      url = Uri.parse('$_baseUrl$_endPoint/$id/$entityId/cancel');
+    } else {
+      url = Uri.parse('$_baseUrl$_endPoint/$id/cancel');
+    }
+
+    var headers = createHeaders();
+    final response = await http.put(url, headers: headers);
     if (response.statusCode == 200) {
-     return true;
+      return true;
     } else {
       throw Exception('Failed to cancel');
     }
   }
 
-       Future<bool> approve(int? id) async {
-    var url = Uri.parse('$_baseUrl$_endPoint/$id/approve');
-    var headers=createHeaders();
-    final response =await http.put(url,headers: headers);
+  Future<bool> approve(int? id, {int? entityId}) async {
+    var url;
+    if (entityId != null) {
+      url = Uri.parse('$_baseUrl$_endPoint/$id/$entityId/approve');
+    } else {
+      url = Uri.parse('$_baseUrl$_endPoint/$id/approve');
+    }
+
+    var headers = createHeaders();
+    final response = await http.put(url, headers: headers);
     if (response.statusCode == 200) {
-     return true;
+      return true;
     } else {
       throw Exception('Failed to approve');
     }
   }
 
-    Future<T> insert(dynamic request) async {
+  Future<T> insert(dynamic request) async {
     var url = "$_baseUrl$_endPoint";
     var uri = Uri.parse(url);
     var headers = createHeaders();
 
-
-    var jsonRequest =jsonEncode(request, toEncodable: myDateSerializer);
+    var jsonRequest = jsonEncode(request, toEncodable: myDateSerializer);
     var response = await http.post(uri, headers: headers, body: jsonRequest);
 
     if (isValidResponse(response)) {
@@ -121,10 +133,10 @@ abstract class BaseProvider<T> with ChangeNotifier {
     request.headers.addAll(createHeaders());
 
     formData.forEach((key, value) async {
-      if (key == 'filePath'  && value != null) {
+      if (key == 'filePath' && value != null) {
         var filePath = value.toString();
-      var file = await http.MultipartFile.fromPath('slika', filePath);
-      request.files.add(file);
+        var file = await http.MultipartFile.fromPath('slika', filePath);
+        request.files.add(file);
       } else {
         request.fields[key] = value.toString();
       }
@@ -132,7 +144,6 @@ abstract class BaseProvider<T> with ChangeNotifier {
     var streamedResponse = await request.send();
     var response = await http.Response.fromStream(streamedResponse);
 
-   
     if (isValidResponse(response)) {
       var data = jsonDecode(response.body);
       return fromJson(data);
@@ -146,8 +157,7 @@ abstract class BaseProvider<T> with ChangeNotifier {
     var uri = Uri.parse(url);
     var headers = createHeaders();
 
-
-    var jsonRequest =jsonEncode(request, toEncodable: myDateSerializer);
+    var jsonRequest = jsonEncode(request, toEncodable: myDateSerializer);
     var response = await http.put(uri, headers: headers, body: jsonRequest);
 
     if (isValidResponse(response)) {
@@ -170,8 +180,8 @@ abstract class BaseProvider<T> with ChangeNotifier {
     formData.forEach((key, value) async {
       if (key == 'filePath' && value != null) {
         var filePath = value.toString();
-      var file = await http.MultipartFile.fromPath('slika', filePath);
-      request.files.add(file);
+        var file = await http.MultipartFile.fromPath('slika', filePath);
+        request.files.add(file);
       } else {
         request.fields[key] = value.toString();
       }
@@ -233,11 +243,11 @@ abstract class BaseProvider<T> with ChangeNotifier {
     });
     return query;
   }
-    dynamic myDateSerializer(dynamic object) {
+
+  dynamic myDateSerializer(dynamic object) {
     if (object is DateTime) {
       return object.toIso8601String();
     }
     return object;
   }
-
 }

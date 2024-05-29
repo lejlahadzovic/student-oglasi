@@ -14,11 +14,11 @@ namespace StudentOglasi.Services.StateMachines.PrijavePrakseStateMachine
         public CanceledPrijavePraksaState(IServiceProvider serviceProvider, StudentoglasiContext context, IMapper mapper) : base(serviceProvider, context, mapper)
         {
         }
-        public override async Task<Model.PrijavePraksa> Approve(int id)
+        public override async Task<Model.PrijavePraksa> Approve(int studentId, int praksaId)
         {
             var set = _context.Set<Database.PrijavePraksa>();
 
-            var entity = await set.FirstOrDefaultAsync(e => e.StudentId == id);
+            var entity = await set.FirstOrDefaultAsync(e => e.StudentId == studentId && e.PraksaId == praksaId);
 
             entity.Status = await _context.StatusPrijaves.FirstOrDefaultAsync(e => e.Naziv.Contains("Odobrena"));
 

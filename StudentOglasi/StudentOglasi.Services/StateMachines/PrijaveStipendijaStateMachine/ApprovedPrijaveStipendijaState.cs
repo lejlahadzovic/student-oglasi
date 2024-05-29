@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.EntityFrameworkCore;
+using StudentOglasi.Model;
 using StudentOglasi.Services.Database;
 using System;
 using System.Collections.Generic;
@@ -15,11 +16,11 @@ namespace StudentOglasi.Services.StateMachines.PrijaveStipendijaStateMachine
         {
         }
 
-        public override async Task<Model.PrijaveStipendija> Cancel(int id)
+        public override async Task<Model.PrijaveStipendija> Cancel(int studentId, int stipendijaId)
         {
             var set = _context.Set<Database.PrijaveStipendija>();
 
-            var entity = await set.FirstOrDefaultAsync(e => e.StudentId == id);
+            var entity = await set.FirstOrDefaultAsync(e => e.StudentId == studentId && e.StipendijaId == stipendijaId);
 
             entity.Status = await _context.StatusPrijaves.FirstOrDefaultAsync(e => e.Naziv.Contains("Otkazana"));
 

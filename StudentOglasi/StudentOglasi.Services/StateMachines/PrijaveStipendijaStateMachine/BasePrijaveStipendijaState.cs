@@ -19,11 +19,11 @@ namespace StudentOglasi.Services.StateMachines.PrijaveStipendijaStateMachine
             _serviceProvider = serviceProvider;
         }
 
-        public virtual Task<Model.PrijaveStipendija> Approve(int id)
+        public virtual Task<Model.PrijaveStipendija> Approve(int studentId, int stipendijaId)
         {
             throw new UserException("Action is not allowed!");
         }
-        public virtual Task<Model.PrijaveStipendija> Cancel(int id)
+        public virtual Task<Model.PrijaveStipendija> Cancel(int studentId, int stipendijaId)
         {
             throw new UserException("Action is not allowed!");
         }

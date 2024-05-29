@@ -5,45 +5,45 @@ using StudentOglasi.Model.Requests;
 using StudentOglasi.Services.Database;
 using StudentOglasi.Services.StateMachine.PrakseStateMaachine;
 
-namespace StudentOglasi.Services.StateMachines.PrijavePrakseStateMachine
+namespace StudentOglasi.Services.StateMachines.RezervacijeStateMachine
 {
-    public class BasePrijavePrakseState
+    public class BaseRezervacijaState
     {
         protected StudentoglasiContext _context;
         public IMapper _mapper { get; set; }
         protected IServiceProvider _serviceProvider { get; set; }
-        public BasePrijavePrakseState(IServiceProvider serviceProvider, StudentoglasiContext context, IMapper mapper)
+        public BaseRezervacijaState(IServiceProvider serviceProvider, StudentoglasiContext context, IMapper mapper)
         {
             _context = context;
             _mapper = mapper;
             _serviceProvider = serviceProvider;
         }
 
-        public virtual Task<Model.PrijavePraksa> Approve(int studentId, int praksaId)
+        public virtual Task<Model.Rezervacije> Approve(int studentId, int smjestajnaJedinicaId)
         {
             throw new UserException("Action is not allowed!");
         }
-        public virtual Task<Model.PrijavePraksa> Cancel(int studentId, int praksaId)
+        public virtual Task<Model.Rezervacije> Cancel(int studentId, int smjestajnaJedinicaId)
         {
             throw new UserException("Action is not allowed!");
         }
    
-        public BasePrijavePrakseState CreateState(string stateName)
+        public BaseRezervacijaState CreateState(string stateName)
         {
             switch (stateName)
             {
                 case "Initial":
                 case null:
-                    return _serviceProvider.GetService<InitialPrijavePraksaState>();
+                    return _serviceProvider.GetService<InitialRezervacijaState>();
                     break;
                 case "Na cekanju":
-                    return _serviceProvider.GetService<DraftPrijavePraksaState>();
+                    return _serviceProvider.GetService<DraftRezervacijaState>();
                     break;
                 case "Odobrena":
-                    return _serviceProvider.GetService<ApprovedPrijavePraksaState>();
+                    return _serviceProvider.GetService<ApprovedRezervacijaState>();
                     break;
                 case "Otkazana":
-                    return _serviceProvider.GetService<CanceledPrijavePraksaState>();
+                    return _serviceProvider.GetService<CanceledRezervacijaState>();
                     break;
                 default:
                     throw new UserException("Action is not allowed!");

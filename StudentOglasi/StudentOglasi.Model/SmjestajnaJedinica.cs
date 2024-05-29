@@ -19,6 +19,7 @@ namespace StudentOglasi.Model
         public string? Opis { get; set; }
 
         public string? DodatneUsluge { get; set; }
+
         public bool? Kuhinja { get; set; }
 
         public bool? Tv { get; set; }

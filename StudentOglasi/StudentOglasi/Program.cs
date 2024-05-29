@@ -12,6 +12,7 @@ using StudentOglasi.Services.StateMachine.StipendijeStateMachine;
 using StudentOglasi.Services.StateMachines.PrakseStateMachine;
 using StudentOglasi.Services.StateMachines.PrijavePrakseStateMachine;
 using StudentOglasi.Services.StateMachines.PrijaveStipendijaStateMachine;
+using StudentOglasi.Services.StateMachines.RezervacijeStateMachine;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -34,6 +35,7 @@ builder.Services.AddTransient<INacinStudiranjaService, NacinStudiranjaService>()
 builder.Services.AddTransient<IPrijaveStipendijaService, PrijaveStipendijaService>();
 builder.Services.AddTransient<IPrijavePraksaService, PrijavePraksaService>();
 builder.Services.AddTransient<IStatusPrijaveService, StatusPrijaveService>();
+builder.Services.AddTransient<IRezervacijeService, RezervacijeService>();
 builder.Services.AddTransient<BasePrakseState>();
 builder.Services.AddTransient<InitialPraksaState>();
 builder.Services.AddTransient<ActivePrakseState>();
@@ -59,7 +61,11 @@ builder.Services.AddTransient<DraftPrijaveStipendijaState>();
 builder.Services.AddTransient<ApprovedPrijaveStipendijaState>();
 builder.Services.AddTransient<CanceledPrijaveStipendijaState>();
 builder.Services.AddTransient<InitialPrijaveStipendijaState>();
-
+builder.Services.AddTransient<BaseRezervacijaState>();
+builder.Services.AddTransient<DraftRezervacijaState>();
+builder.Services.AddTransient<ApprovedRezervacijaState>();
+builder.Services.AddTransient<CanceledRezervacijaState>();
+builder.Services.AddTransient<InitialRezervacijaState>();
 
 builder.Services.AddControllers(x =>
 {

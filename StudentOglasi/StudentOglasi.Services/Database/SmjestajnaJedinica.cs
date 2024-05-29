@@ -27,6 +27,8 @@ public partial class SmjestajnaJedinica
 
     public int? SmjestajId { get; set; }
 
+    public virtual ICollection<Rezervacije> Rezervacijes { get; set; } = new List<Rezervacije>();
+
     public virtual ICollection<Slike> Slikes { get; set; } = new List<Slike>();
 
     public virtual Smjestaji? Smjestaj { get; set; }
