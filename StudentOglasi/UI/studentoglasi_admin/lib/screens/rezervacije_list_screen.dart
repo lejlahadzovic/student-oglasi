@@ -3,11 +3,15 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:studentoglasi_admin/models/Rezervacije/rezervacije.dart';
+import 'package:studentoglasi_admin/models/Smjestaj/smjestaj.dart';
+import 'package:studentoglasi_admin/models/SmjestajnaJedinica/smjestajna_jedinica.dart';
 import 'package:studentoglasi_admin/models/Student/student.dart';
 import 'package:studentoglasi_admin/providers/rezervacije_provider.dart';
+import 'package:studentoglasi_admin/providers/smjestaji_provider.dart';
 import 'package:studentoglasi_admin/providers/statusprijave_provider.dart';
 import 'package:studentoglasi_admin/providers/studenti_provider.dart';
 import 'package:studentoglasi_admin/screens/components/rezervacije_details_dialog.dart';
+import 'package:studentoglasi_admin/screens/components/rezervacije_report_dialog.dart';
 import 'package:studentoglasi_admin/widgets/master_screen.dart';
 
 import '../models/StatusPrijave/statusprijave.dart';
@@ -24,11 +28,12 @@ class _RezervacijeListScreen extends State<RezervacijeListScreen> {
   late RezervacijeProvider _rezervacijeProvider;
   late StatusPrijaveProvider _statusProvider;
   late StudentiProvider _studentProvider;
+  late SmjestajiProvider _smjestajiProvider;
   SearchResult<Rezervacije>? result;
   SearchResult<StatusPrijave>? statusResult;
   SearchResult<Student>? studentResult;
+  SearchResult<Smjestaj>? smjestajiResult;
   StatusPrijave? selectedStatusPrijave;
-  TextEditingController _statusController = new TextEditingController();
   TextEditingController _brojIndeksaController = new TextEditingController();
   TextEditingController _imeController = new TextEditingController();
   @override
@@ -38,15 +43,31 @@ class _RezervacijeListScreen extends State<RezervacijeListScreen> {
     _rezervacijeProvider = context.read<RezervacijeProvider>();
     _statusProvider = context.read<StatusPrijaveProvider>();
     _studentProvider = context.read<StudentiProvider>();
+    _smjestajiProvider = context.read<SmjestajiProvider>();
     _fetchData();
     _fetchStatusPrijave();
     _fetchStudenti();
+    _fetchSmjestaji();
   }
 
   @override
   Widget build(BuildContext context) {
     return MasterScreenWidget(
       title: "Rezervacije",
+      addButtonLabel: 'Generiši izvještaj',
+      addButtonIcon: Icons.description,
+      onAddButtonPressed: () async {
+        if (smjestajiResult != null) {
+          await showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return RezervacijeReportDialog(
+                smjestaji: smjestajiResult!.result,
+              );
+            },
+          );
+        }
+      },
       child: Container(
         child: Column(
           children: [_buildSearch(), _buildDataListView()],
@@ -77,6 +98,13 @@ class _RezervacijeListScreen extends State<RezervacijeListScreen> {
     var studentData = await _studentProvider.get();
     setState(() {
       studentResult = studentData;
+    });
+  }
+
+  void _fetchSmjestaji() async {
+    var smjestajiData = await _smjestajiProvider.get();
+    setState(() {
+      smjestajiResult = smjestajiData;
     });
   }
 

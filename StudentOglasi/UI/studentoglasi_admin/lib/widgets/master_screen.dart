@@ -12,6 +12,7 @@ class MasterScreenWidget extends StatefulWidget {
   Widget? title_widget;
   String? addButtonLabel;
   VoidCallback? onAddButtonPressed;
+  IconData? addButtonIcon;
 
   MasterScreenWidget(
       {this.child,
@@ -19,6 +20,7 @@ class MasterScreenWidget extends StatefulWidget {
       this.title_widget,
       this.addButtonLabel,
       this.onAddButtonPressed,
+      this.addButtonIcon,
       super.key});
 
   @override
@@ -80,7 +82,7 @@ class _MasterScreenWidgetState extends State<MasterScreenWidget> {
                     ElevatedButton.icon(
                       onPressed: widget.onAddButtonPressed,
                       label: Text(widget.addButtonLabel ?? ''),
-                      icon: Icon(Icons.add),
+                      icon: Icon(widget.addButtonIcon ?? Icons.add),
                       style: ButtonStyle(
                         backgroundColor: MaterialStateProperty.all<Color>(
                             Colors.blue.shade800),

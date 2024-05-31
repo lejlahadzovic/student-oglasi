@@ -11,5 +11,10 @@ namespace StudentOglasi.Model.SearchObjects
         public string? Ime { get; set; }
         public string? BrojIndeksa { get; set; }
         public int? Status { get; set; }
+
+        public int? SmjestajId { get; set; }
+        public int? SmjestajnaJedinicaId { get; set; }
+        public DateTime? PocetniDatum { get; set; }
+        public DateTime? KrajnjiDatum { get; set; }
     }
 }

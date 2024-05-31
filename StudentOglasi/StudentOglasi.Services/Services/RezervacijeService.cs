@@ -38,6 +38,25 @@ namespace StudentOglasi.Services.Services
             {
                 filteredQuery = filteredQuery.Where(x => x.StatusId == search.Status);
             }
+            if (search?.SmjestajId != null)
+            {
+                filteredQuery = filteredQuery.Where(x => x.SmjestajnaJedinica.SmjestajId == search.SmjestajId);
+            }
+
+            if (search?.SmjestajnaJedinicaId != null)
+            {
+                filteredQuery = filteredQuery.Where(x => x.SmjestajnaJedinicaId == search.SmjestajnaJedinicaId);
+            }
+
+            if (search?.PocetniDatum != null)
+            {
+                filteredQuery = filteredQuery.Where(x => x.DatumPrijave >= search.PocetniDatum);
+            }
+
+            if (search?.KrajnjiDatum != null)
+            {
+                filteredQuery = filteredQuery.Where(x => x.DatumPrijave <= search.KrajnjiDatum);
+            }
             return filteredQuery;
         }
         public override async Task<PagedResult<Model.Rezervacije>> Get(RezervacijeSearchObject? search = null)
