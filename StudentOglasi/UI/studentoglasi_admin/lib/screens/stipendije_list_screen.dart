@@ -2,6 +2,7 @@
 
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
+import 'package:number_paginator/number_paginator.dart';
 import 'package:provider/provider.dart';
 import 'package:studentoglasi_admin/models/Oglas/oglas.dart';
 import 'package:studentoglasi_admin/models/StatusOglasi/statusoglasi.dart';
@@ -11,6 +12,7 @@ import 'package:studentoglasi_admin/models/search_result.dart';
 import 'package:studentoglasi_admin/providers/oglasi_provider.dart';
 import 'package:studentoglasi_admin/providers/statusoglasi_provider.dart';
 import 'package:studentoglasi_admin/providers/stipendije_provider.dart';
+import 'package:studentoglasi_admin/screens/components/costum_paginator.dart';
 import 'package:studentoglasi_admin/utils/util.dart';
 import 'package:studentoglasi_admin/widgets/master_screen.dart';
 
@@ -35,7 +37,9 @@ class _StipendijeListScreenState extends State<StipendijeListScreen> {
   SearchResult<StatusOglasi>? statusResult;
   SearchResult<Oglas>? oglasiResult;
   TextEditingController _naslovController = new TextEditingController();
-
+  int _currentPage = 0;
+  int _totalItems = 0;
+  late NumberPaginatorController _pageController;
   @override
   void didChangeDependencies() {
     // TODO: implement didChangeDependencies
@@ -44,6 +48,7 @@ class _StipendijeListScreenState extends State<StipendijeListScreen> {
     _oglasiProvider=context.read<OglasiProvider>();
     _statusProvider=context.read<StatusOglasiProvider>();
     _stipenditorProvider=context.read<StipenditoriProvider>();
+    _pageController = NumberPaginatorController();
     _fetchData();
     _fetchOglasi();
     _fetchStatusOglasi();
@@ -73,6 +78,7 @@ class _StipendijeListScreenState extends State<StipendijeListScreen> {
 
   @override
   Widget build(BuildContext context) {
+    int numberPages = calculateNumberPages(_totalItems, 5);
     return MasterScreenWidget(
       title: "Stipendije",
       addButtonLabel: "Dodaj stipendiju",
@@ -91,7 +97,19 @@ class _StipendijeListScreenState extends State<StipendijeListScreen> {
       },
       child: Container(
         child: Column(
-          children: [_buildSearch(), _buildDataListView()],
+          children: [_buildSearch(), _buildDataListView(), if(_currentPage>=0 && numberPages-1>=_currentPage)
+           CustomPaginator(
+                      numberPages: numberPages,
+                      initialPage: _currentPage,
+                      onPageChange: (int index) {
+                        setState(() {
+                          _currentPage = index;
+                          _fetchData();
+                        });
+                      },
+                      pageController: _pageController,
+                      fetchData: _fetchData,
+                    ),],
         ),
       ),
     );
@@ -103,11 +121,28 @@ class _StipendijeListScreenState extends State<StipendijeListScreen> {
 
     var data = await _stipendijeProvider
         .get(filter: {'naslov': _naslovController.text,
-      'stipenditor': selectedStipenditor?.id,});
+      'stipenditor': selectedStipenditor?.id,
+      'page': _currentPage + 1, // pages are 1-indexed in the backend
+      'pageSize': 5,});
     setState(() {
       result = data;
+      _totalItems = data.count;
+      int numberPages = calculateNumberPages(_totalItems, 5);
+      if (_currentPage >= numberPages) {
+        _currentPage = numberPages - 1;
+      }
+      if (_currentPage < 0) {
+        _currentPage = 0;
+      }
+      print(
+          "Total items: $_totalItems, Number of pages: $numberPages, Current page after fetch: $_currentPage");
+    
     });
     print("data: ${data.result[0].id}");
+  }
+
+  int calculateNumberPages(int totalItems, int pageSize) {
+    return (totalItems / pageSize).ceil();
   }
 
   Widget _buildSearch() {

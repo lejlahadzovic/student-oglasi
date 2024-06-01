@@ -4,12 +4,14 @@ import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:number_paginator/number_paginator.dart';
 import 'package:provider/provider.dart';
 import 'package:studentoglasi_admin/models/Kategorija/kategorija.dart';
 import 'package:studentoglasi_admin/models/Objava/objava.dart';
 import 'package:studentoglasi_admin/models/search_result.dart';
 import 'package:studentoglasi_admin/providers/kategorije_provider.dart';
 import 'package:studentoglasi_admin/providers/objave_provider.dart';
+import 'package:studentoglasi_admin/screens/components/costum_paginator.dart';
 import 'package:studentoglasi_admin/screens/components/objave_details_dialog.dart';
 import 'package:studentoglasi_admin/widgets/master_screen.dart';
 import 'package:intl/intl.dart';
@@ -28,26 +30,26 @@ class _ObjaveListScreenState extends State<ObjaveListScreen> {
   SearchResult<Objava>? result;
   SearchResult<Kategorija>? kategorijeResult;
   TextEditingController _naslovController = new TextEditingController();
-
+ int _currentPage = 0;
+  int _totalItems = 0;
+  late NumberPaginatorController _pageController;
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     _objaveProvider = context.read<ObjaveProvider>();
     _kategorijeProvider = context.read<KategorijaProvider>();
+    _pageController = NumberPaginatorController();
     _fetchData();
     _fetchKategorije();
   }
-
-  // @override
-  // void didChangeDependencies() {
-  //   // TODO: implement didChangeDependencies
-  //   super.didChangeDependencies();
-  //   _objaveProvider = context.read<ObjaveProvider>();
-  // }
-
+  int calculateNumberPages(int totalItems, int pageSize) {
+    return (totalItems / pageSize).ceil();
+  }
   @override
   Widget build(BuildContext context) {
+    
+    int numberPages = calculateNumberPages(_totalItems, 5);
     return MasterScreenWidget(
       //title_widget: Text("Novosti"),
       title: "Novosti",
@@ -67,7 +69,19 @@ class _ObjaveListScreenState extends State<ObjaveListScreen> {
       },
       child: Container(
         child: Column(
-          children: [_buildSearch(), _buildDataListView()],
+          children: [_buildSearch(), _buildDataListView(), if(_currentPage>=0 && numberPages-1>=_currentPage)
+           CustomPaginator(
+                      numberPages: numberPages,
+                      initialPage: _currentPage,
+                      onPageChange: (int index) {
+                        setState(() {
+                          _currentPage = index;
+                          _fetchData();
+                        });
+                      },
+                      pageController: _pageController,
+                      fetchData: _fetchData,
+                    ),],
         ),
       ),
     );
@@ -76,10 +90,23 @@ class _ObjaveListScreenState extends State<ObjaveListScreen> {
   Future<void> _fetchData() async {
     var data = await _objaveProvider.get(filter: {
       'naslov': _naslovController.text,
-      'kategorijaID': selectedKategorija?.id
+      'kategorijaID': selectedKategorija?.id,
+      'page': _currentPage + 1, // pages are 1-indexed in the backend
+      'pageSize': 5,
     });
     setState(() {
       result = data;
+       _totalItems = data.count;
+      int numberPages = calculateNumberPages(_totalItems, 5);
+      if (_currentPage >= numberPages) {
+        _currentPage = numberPages - 1;
+      }
+      if (_currentPage < 0) {
+        _currentPage = 0;
+      }
+      print(
+          "Total items: $_totalItems, Number of pages: $numberPages, Current page after fetch: $_currentPage");
+   
     });
   }
 
