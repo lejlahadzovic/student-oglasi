@@ -723,6 +723,10 @@ class _SmjestajDetailsDialogState extends State<SmjestajDetailsDialog> {
         }
 
         Navigator.pop(context, true);
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text('Podaci su uspješno sačuvani!'),
+          backgroundColor: Colors.lightGreen,
+        ));
       } catch (e) {
         print('Greška prilikom spremanja podataka: $e');
       }

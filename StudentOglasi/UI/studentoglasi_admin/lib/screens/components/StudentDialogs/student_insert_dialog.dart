@@ -428,6 +428,10 @@ class _StudentDetailsDialogState extends State<StudentInsertDialog> {
             try {
               await _studentProvider.insertWithImage(request);
               Navigator.pop(context, true);
+              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                content: Text('Podaci su uspješno sačuvani!'),
+                backgroundColor: Colors.lightGreen,
+              ));
             } on Exception catch (e) {
               showDialog(
                   context: context,

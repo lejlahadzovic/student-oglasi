@@ -407,6 +407,10 @@ class _StipendijeDetailsDialogState extends State<StipendijeDetailsDialog> {
                   : await _StipendijaProvider.update(widget.stipendija!.id!, request);
 
               Navigator.pop(context, true);
+              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                content: Text('Podaci su uspješno sačuvani!'),
+                backgroundColor: Colors.lightGreen,
+              ));
             } on Exception catch (e) {
               showDialog(
                   context: context,

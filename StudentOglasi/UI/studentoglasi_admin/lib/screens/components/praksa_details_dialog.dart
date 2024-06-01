@@ -374,6 +374,10 @@ class _PraksaDetailsDialogState extends State<PraksaDetailsDialog> {
                   : await _PraksaProvider.update(widget.praksa!.id!, request);
 
               Navigator.pop(context, true);
+              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                content: Text('Podaci su uspješno sačuvani!'),
+                backgroundColor: Colors.lightGreen,
+              ));
             } on Exception catch (e) {
               showDialog(
                   context: context,

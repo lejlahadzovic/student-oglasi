@@ -214,6 +214,10 @@ class _ObjaveDetailsDialogState extends State<ObjaveDetailsDialog> {
                       widget.objava!.id!, request);
 
               Navigator.pop(context, true);
+              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                content: Text('Podaci su uspješno sačuvani!'),
+                backgroundColor: Colors.lightGreen,
+              ));
             } on Exception catch (e) {
               showDialog(
                   context: context,

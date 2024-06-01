@@ -17,7 +17,11 @@ class StudentUpdateDialog extends StatefulWidget {
   Student? student;
   SearchResult<Univerzitet>? univerzitetiResult;
   SearchResult<NacinStudiranja>? naciniStudiranjaResult;
-  StudentUpdateDialog({super.key, this.student, this.univerzitetiResult, this.naciniStudiranjaResult});
+  StudentUpdateDialog(
+      {super.key,
+      this.student,
+      this.univerzitetiResult,
+      this.naciniStudiranjaResult});
 
   @override
   State<StudentUpdateDialog> createState() => _StudentDetailsDialogState();
@@ -45,16 +49,18 @@ class _StudentDetailsDialogState extends State<StudentUpdateDialog> {
     _studentProvider = context.read<StudentiProvider>();
 
     if (widget.univerzitetiResult != null && widget.student != null) {
-    selectedUniverzitet = widget.univerzitetiResult!.result.firstWhere(
-      (univerzitet) => univerzitet.id == widget.student!.fakultet.univerzitetId,
-    );
-    selectedFakultet = selectedUniverzitet!.fakultetis?.firstWhere(
-      (fakultet) => fakultet.id == widget.student?.fakultet.id,
-    );
-    if (widget.student!.idNavigation.slika != null) {
-      _imageUrl = FilePathManager.constructUrl(widget.student!.idNavigation.slika!);
+      selectedUniverzitet = widget.univerzitetiResult!.result.firstWhere(
+        (univerzitet) =>
+            univerzitet.id == widget.student!.fakultet.univerzitetId,
+      );
+      selectedFakultet = selectedUniverzitet!.fakultetis?.firstWhere(
+        (fakultet) => fakultet.id == widget.student?.fakultet.id,
+      );
+      if (widget.student!.idNavigation.slika != null) {
+        _imageUrl =
+            FilePathManager.constructUrl(widget.student!.idNavigation.slika!);
+      }
     }
-  }
 
     _initialValue = {
       'idNavigation.ime': widget.student?.idNavigation.ime,
@@ -63,10 +69,10 @@ class _StudentDetailsDialogState extends State<StudentUpdateDialog> {
       'univerzitetId': widget.student?.fakultet.univerzitetId.toString(),
       'smjerId': widget.student?.smjer.id.toString(),
       'nacinStudiranjaId': widget.student?.nacinStudiranja.id.toString(),
-      'fakultetId':widget.student?.fakultet.id.toString(),
-      'godinaStudija':widget.student?.godinaStudija,
-      'status':widget.student?.status,
-      'prosjecnaOcjena':widget.student?.prosjecnaOcjena.toString()
+      'fakultetId': widget.student?.fakultet.id.toString(),
+      'godinaStudija': widget.student?.godinaStudija,
+      'status': widget.student?.status,
+      'prosjecnaOcjena': widget.student?.prosjecnaOcjena.toString()
     };
   }
 
@@ -236,7 +242,8 @@ class _StudentDetailsDialogState extends State<StudentUpdateDialog> {
                                 [],
                             onChanged: (selectedUniverzitetId) {
                               setState(() {
-                                selectedUniverzitet = widget.univerzitetiResult?.result
+                                selectedUniverzitet = widget
+                                    .univerzitetiResult?.result
                                     .firstWhere((univerzitet) =>
                                         univerzitet.id.toString() ==
                                         selectedUniverzitetId);
@@ -401,8 +408,13 @@ class _StudentDetailsDialogState extends State<StudentUpdateDialog> {
                 Map<String, dynamic>.from(_formKey.currentState!.value);
 
             try {
-              await _studentProvider.updateWithImage(widget.student!.id!, request);
+              await _studentProvider.updateWithImage(
+                  widget.student!.id!, request);
               Navigator.pop(context, true);
+              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                content: Text('Podaci su uspješno sačuvani!'),
+                backgroundColor: Colors.lightGreen,
+              ));
             } on Exception catch (e) {
               showDialog(
                   context: context,
