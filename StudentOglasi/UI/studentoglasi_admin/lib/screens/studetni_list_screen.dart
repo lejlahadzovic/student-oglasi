@@ -1,5 +1,6 @@
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
+import 'package:number_paginator/number_paginator.dart';
 import 'package:provider/provider.dart';
 import 'package:studentoglasi_admin/models/Fakultet/fakultet.dart';
 import 'package:studentoglasi_admin/models/NacinStudiranja/nacin_studiranja.dart';
@@ -33,7 +34,9 @@ class _StudentiListScreenState extends State<StudentiListScreen> {
   SearchResult<NacinStudiranja>? naciniStudiranjaResult;
   TextEditingController _brojIndeksaController = new TextEditingController();
   TextEditingController _imePrezimeController = new TextEditingController();
-
+  int _currentPage = 0;
+  int _totalItems = 0;
+  late NumberPaginatorController _pageController;
   final List<int> godine = [1, 2, 3, 4];
   int? selectedGodina;
 
@@ -45,6 +48,7 @@ class _StudentiListScreenState extends State<StudentiListScreen> {
     _fakultetiProvider = context.read<FakultetiProvider>();
     _univerzitetiProvider = context.read<UniverzitetiProvider>();
     _nacinStudiranjaProvider = context.read<NacinStudiranjaProvider>();
+    _pageController = NumberPaginatorController();
     _fetchData();
     _fetchFakulteti();
     _fetchUniverziteti();
@@ -57,10 +61,26 @@ class _StudentiListScreenState extends State<StudentiListScreen> {
       'imePrezime': _imePrezimeController.text,
       'fakultetID': selectedFakultet?.id,
       'godinaStudija': selectedGodina,
+      'page': _currentPage + 1, // pages are 1-indexed in the backend
+      'pageSize': 5,
     });
     setState(() {
       result = data;
+         _totalItems = data.count;
+      int numberPages = calculateNumberPages(_totalItems, 5);
+      if (_currentPage >= numberPages) {
+        _currentPage = numberPages - 1;
+      }
+      if (_currentPage < 0) {
+        _currentPage = 0;
+      }
+      print(
+          "Total items: $_totalItems, Number of pages: $numberPages, Current page after fetch: $_currentPage");
+   
     });
+  }
+  int calculateNumberPages(int totalItems, int pageSize) {
+    return (totalItems / pageSize).ceil();
   }
 
   void _fetchFakulteti() async {

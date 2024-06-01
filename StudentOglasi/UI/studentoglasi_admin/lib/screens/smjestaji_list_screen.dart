@@ -1,5 +1,6 @@
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
+import 'package:number_paginator/number_paginator.dart';
 import 'package:provider/provider.dart';
 import 'package:studentoglasi_admin/models/Grad/grad.dart';
 import 'package:studentoglasi_admin/models/Smjestaj/smjestaj.dart';
@@ -8,6 +9,7 @@ import 'package:studentoglasi_admin/models/search_result.dart';
 import 'package:studentoglasi_admin/providers/gradovi_provider.dart';
 import 'package:studentoglasi_admin/providers/smjestaji_provider.dart';
 import 'package:studentoglasi_admin/providers/tip_smjestaja_provider.dart';
+import 'package:studentoglasi_admin/screens/components/costum_paginator.dart';
 import 'package:studentoglasi_admin/screens/components/smjestaj_details_dialog.dart';
 import 'package:studentoglasi_admin/widgets/master_screen.dart';
 
@@ -28,6 +30,9 @@ class _SmjestajiListScreenState extends State<SmjestajiListScreen> {
   TextEditingController _nazivController = new TextEditingController();
   Grad? selectedGrad;
   TipSmjestaja? selectedTipSmjestaja;
+   int _currentPage = 0;
+  int _totalItems = 0;
+  late NumberPaginatorController _pageController;
 
   @override
   void initState() {
@@ -36,7 +41,7 @@ class _SmjestajiListScreenState extends State<SmjestajiListScreen> {
     _smjestajiProvider = context.read<SmjestajiProvider>();
     _gradoviProvider = context.read<GradoviProvider>();
     _tipSmjestajaProvider = context.read<TipSmjestajaProvider>();
-    _fetchData();
+    _pageController = NumberPaginatorController(); _fetchData();
     _fetchGradovi();
     _fetchTipoviSmjestaja();
   }
@@ -45,10 +50,23 @@ class _SmjestajiListScreenState extends State<SmjestajiListScreen> {
     var data = await _smjestajiProvider.get(filter: {
       'naziv': _nazivController.text,
       'gradID': selectedGrad?.id,
-      'tipSmjestajaID': selectedTipSmjestaja?.id
+      'tipSmjestajaID': selectedTipSmjestaja?.id,
+      'page': _currentPage + 1, // pages are 1-indexed in the backend
+      'pageSize': 5,
     });
     setState(() {
       result = data;
+       _totalItems = data.count;
+      int numberPages = calculateNumberPages(_totalItems, 5);
+      if (_currentPage >= numberPages) {
+        _currentPage = numberPages - 1;
+      }
+      if (_currentPage < 0) {
+        _currentPage = 0;
+      }
+      print(
+          "Total items: $_totalItems, Number of pages: $numberPages, Current page after fetch: $_currentPage");
+   
     });
   }
 
@@ -66,8 +84,13 @@ class _SmjestajiListScreenState extends State<SmjestajiListScreen> {
     });
   }
 
+  int calculateNumberPages(int totalItems, int pageSize) {
+    return (totalItems / pageSize).ceil();
+  }
+  
   @override
   Widget build(BuildContext context) {
+    int numberPages = calculateNumberPages(_totalItems, 5);
     return MasterScreenWidget(
       title: 'Smještaji',
       addButtonLabel: 'Dodaj smještaj',
@@ -86,7 +109,19 @@ class _SmjestajiListScreenState extends State<SmjestajiListScreen> {
       },
       child: Container(
         child: Column(
-          children: [_buildSearch(), _buildDataListView()],
+          children: [_buildSearch(), _buildDataListView(), if(_currentPage>=0 && numberPages-1>=_currentPage)
+           CustomPaginator(
+                      numberPages: numberPages,
+                      initialPage: _currentPage,
+                      onPageChange: (int index) {
+                        setState(() {
+                          _currentPage = index;
+                          _fetchData();
+                        });
+                      },
+                      pageController: _pageController,
+                      fetchData: _fetchData,
+                    ),],
         ),
       ),
     );

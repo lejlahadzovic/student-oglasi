@@ -13,8 +13,10 @@ import 'package:studentoglasi_admin/providers/oglasi_provider.dart';
 import 'package:studentoglasi_admin/providers/organizacije_provider.dart';
 import 'package:studentoglasi_admin/providers/prakse_provider.dart';
 import 'package:studentoglasi_admin/providers/statusoglasi_provider.dart';
+import 'package:studentoglasi_admin/screens/components/costum_paginator.dart';
 import 'package:studentoglasi_admin/screens/components/praksa_details_dialog.dart';
 import 'package:studentoglasi_admin/widgets/master_screen.dart';
+import 'package:number_paginator/number_paginator.dart';
 
 class PrakseListScreen extends StatefulWidget {
   const PrakseListScreen({super.key});
@@ -35,6 +37,9 @@ class _PrakseListScreenState extends State<PrakseListScreen> {
   SearchResult<Oglas>? oglasiResult;
   SearchResult<Praksa>? result;
   TextEditingController _naslovController = new TextEditingController();
+  int _currentPage = 0;
+  int _totalItems = 0;
+  late NumberPaginatorController _pageController;
 
   @override
   void initState() {
@@ -44,6 +49,7 @@ class _PrakseListScreenState extends State<PrakseListScreen> {
     _statusProvider = context.read<StatusOglasiProvider>();
     _organizacijeProvider = context.read<OrganizacijeProvider>();
     _oglasiProvider = context.read<OglasiProvider>();
+    _pageController = NumberPaginatorController();
     _fetchData();
     _fetchOglasi();
     _fetchStatusOglasi();
@@ -73,6 +79,15 @@ class _PrakseListScreenState extends State<PrakseListScreen> {
 
   @override
   Widget build(BuildContext context) {
+    int numberPages = calculateNumberPages(_totalItems, 5);
+/*
+    // Ensure current page is within bounds before building paginator
+    if (_currentPage >= numberPages) {
+      _currentPage = numberPages - 1;
+    }
+    if (_currentPage < 0) {
+      _currentPage = 0;
+    }*/
     return MasterScreenWidget(
       title: "Prakse",
       addButtonLabel: "Dodaj praksu",
@@ -92,7 +107,21 @@ class _PrakseListScreenState extends State<PrakseListScreen> {
       },
       child: Container(
         child: Column(
-          children: [_buildSearch(), _buildDataListView()],
+          children: [_buildSearch(), _buildDataListView(),
+          if(_currentPage>=0 && numberPages-1>=_currentPage)
+           CustomPaginator(
+                      numberPages: numberPages,
+                      initialPage: _currentPage,
+                      onPageChange: (int index) {
+                        setState(() {
+                          _currentPage = index;
+                          _fetchData();
+                        });
+                      },
+                      pageController: _pageController,
+                      fetchData: _fetchData,
+                    ),
+          ],
         ),
       ),
     );
@@ -106,11 +135,28 @@ class _PrakseListScreenState extends State<PrakseListScreen> {
       'naslov': _naslovController.text,
       'organizacija': selectedOrganizacije?.id,
       'status': selectedStatusOglasi?.id,
+      'page': _currentPage + 1, // pages are 1-indexed in the backend
+      'pageSize': 5,
     });
     setState(() {
       result = data;
+      _totalItems = data.count;
+      int numberPages = calculateNumberPages(_totalItems, 5);
+      if (_currentPage >= numberPages) {
+        _currentPage = numberPages - 1;
+      }
+      if (_currentPage < 0) {
+        _currentPage = 0;
+      }
+      print(
+          "Total items: $_totalItems, Number of pages: $numberPages, Current page after fetch: $_currentPage");
     });
+
     print("data: ${data.result[0].idNavigation?.naslov}");
+  }
+
+  int calculateNumberPages(int totalItems, int pageSize) {
+    return (totalItems / pageSize).ceil();
   }
 
   Widget _buildSearch() {
