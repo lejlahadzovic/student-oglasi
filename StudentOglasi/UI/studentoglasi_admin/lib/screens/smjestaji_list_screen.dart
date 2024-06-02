@@ -41,7 +41,8 @@ class _SmjestajiListScreenState extends State<SmjestajiListScreen> {
     _smjestajiProvider = context.read<SmjestajiProvider>();
     _gradoviProvider = context.read<GradoviProvider>();
     _tipSmjestajaProvider = context.read<TipSmjestajaProvider>();
-    _pageController = NumberPaginatorController(); _fetchData();
+    _pageController = NumberPaginatorController(); 
+    _fetchData();
     _fetchGradovi();
     _fetchTipoviSmjestaja();
   }

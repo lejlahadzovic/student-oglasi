@@ -1,6 +1,7 @@
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:number_paginator/number_paginator.dart';
 import 'package:provider/provider.dart';
 import 'package:studentoglasi_admin/models/Rezervacije/rezervacije.dart';
 import 'package:studentoglasi_admin/models/Smjestaj/smjestaj.dart';
@@ -16,6 +17,7 @@ import 'package:studentoglasi_admin/widgets/master_screen.dart';
 
 import '../models/StatusPrijave/statusprijave.dart';
 import '../models/search_result.dart';
+import 'components/costum_paginator.dart';
 
 class RezervacijeListScreen extends StatefulWidget {
   const RezervacijeListScreen({super.key});
@@ -36,6 +38,10 @@ class _RezervacijeListScreen extends State<RezervacijeListScreen> {
   StatusPrijave? selectedStatusPrijave;
   TextEditingController _brojIndeksaController = new TextEditingController();
   TextEditingController _imeController = new TextEditingController();
+  int _currentPage = 0;
+  int _totalItems = 0;
+  late NumberPaginatorController _pageController;
+
   @override
   void initState() {
     // TODO: implement initState
@@ -44,14 +50,20 @@ class _RezervacijeListScreen extends State<RezervacijeListScreen> {
     _statusProvider = context.read<StatusPrijaveProvider>();
     _studentProvider = context.read<StudentiProvider>();
     _smjestajiProvider = context.read<SmjestajiProvider>();
+    _pageController = NumberPaginatorController();
     _fetchData();
     _fetchStatusPrijave();
     _fetchStudenti();
     _fetchSmjestaji();
   }
 
+  int calculateNumberPages(int totalItems, int pageSize) {
+    return (totalItems / pageSize).ceil();
+  }
+
   @override
   Widget build(BuildContext context) {
+    int numberPages = calculateNumberPages(_totalItems, 5);
     return MasterScreenWidget(
       title: "Rezervacije",
       addButtonLabel: 'Generiši izvještaj',
@@ -70,7 +82,23 @@ class _RezervacijeListScreen extends State<RezervacijeListScreen> {
       },
       child: Container(
         child: Column(
-          children: [_buildSearch(), _buildDataListView()],
+          children: [
+            _buildSearch(),
+            _buildDataListView(),
+            if (_currentPage >= 0 && numberPages - 1 >= _currentPage)
+              CustomPaginator(
+                numberPages: numberPages,
+                initialPage: _currentPage,
+                onPageChange: (int index) {
+                  setState(() {
+                    _currentPage = index;
+                    _fetchData();
+                  });
+                },
+                pageController: _pageController,
+                fetchData: _fetchData,
+              ),
+          ],
         ),
       ),
     );
@@ -81,9 +109,22 @@ class _RezervacijeListScreen extends State<RezervacijeListScreen> {
       'ime': _imeController.text,
       'brojIndeksa': _brojIndeksaController.text,
       'status': selectedStatusPrijave?.id,
+      'page': _currentPage + 1,
+      'pageSize': 5,
     });
     setState(() {
       result = data;
+       _totalItems = data.count;
+      int numberPages = calculateNumberPages(_totalItems, 5);
+      if (_currentPage >= numberPages) {
+        _currentPage = numberPages - 1;
+      }
+      if (_currentPage < 0) {
+        _currentPage = 0;
+      }
+      print(
+          "Total items: $_totalItems, Number of pages: $numberPages, Current page after fetch: $_currentPage");
+   
     });
   }
 

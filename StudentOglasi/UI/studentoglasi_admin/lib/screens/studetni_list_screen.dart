@@ -15,6 +15,8 @@ import 'package:studentoglasi_admin/screens/components/StudentDialogs/student_in
 import 'package:studentoglasi_admin/screens/components/StudentDialogs/student_update_dialog.dart';
 import 'package:studentoglasi_admin/widgets/master_screen.dart';
 
+import 'components/costum_paginator.dart';
+
 class StudentiListScreen extends StatefulWidget {
   const StudentiListScreen({super.key});
 
@@ -61,7 +63,7 @@ class _StudentiListScreenState extends State<StudentiListScreen> {
       'imePrezime': _imePrezimeController.text,
       'fakultetID': selectedFakultet?.id,
       'godinaStudija': selectedGodina,
-      'page': _currentPage + 1, // pages are 1-indexed in the backend
+      'page': _currentPage + 1, 
       'pageSize': 5,
     });
     setState(() {
@@ -106,6 +108,7 @@ class _StudentiListScreenState extends State<StudentiListScreen> {
 
   @override
   Widget build(BuildContext context) {
+    int numberPages = calculateNumberPages(_totalItems, 5);
     return MasterScreenWidget(
       title: "Studenti",
       addButtonLabel: "Dodaj studenta",
@@ -124,7 +127,19 @@ class _StudentiListScreenState extends State<StudentiListScreen> {
       },
       child: Container(
         child: Column(
-          children: [_buildSearch(), _buildDataListView()],
+          children: [_buildSearch(), _buildDataListView(),if(_currentPage>=0 && numberPages-1>=_currentPage)
+           CustomPaginator(
+                      numberPages: numberPages,
+                      initialPage: _currentPage,
+                      onPageChange: (int index) {
+                        setState(() {
+                          _currentPage = index;
+                          _fetchData();
+                        });
+                      },
+                      pageController: _pageController,
+                      fetchData: _fetchData,
+                    ),],
         ),
       ),
     );
