@@ -1,14 +1,17 @@
-  import 'package:dropdown_button2/dropdown_button2.dart';
+import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:number_paginator/number_paginator.dart';
 import 'package:provider/provider.dart';
+import 'package:studentoglasi_admin/models/Praksa/praksa.dart';
 import 'package:studentoglasi_admin/models/PrijavePraksa/prijave_praksa.dart';
 import 'package:studentoglasi_admin/models/Student/student.dart';
+import 'package:studentoglasi_admin/providers/prakse_provider.dart';
 import 'package:studentoglasi_admin/providers/prijavepraksa_provider.dart';
 import 'package:studentoglasi_admin/providers/statusprijave_provider.dart';
 import 'package:studentoglasi_admin/providers/studenti_provider.dart';
 import 'package:studentoglasi_admin/screens/components/costum_paginator.dart';
 import 'package:studentoglasi_admin/screens/components/prijave_praksa_details_screen.dart';
+import 'package:studentoglasi_admin/screens/components/prijave_prakse_report_dialog.dart';
 import 'package:studentoglasi_admin/widgets/master_screen.dart';
 
 import '../models/StatusPrijave/statusprijave.dart';
@@ -25,57 +28,80 @@ class _PrijavePraksaListScreen extends State<PrijavePraksaListScreen> {
   late PrijavePraksaProvider _prijavePraksaProvider;
   late StatusPrijaveProvider _statusProvider;
   late StudentiProvider _studentProvider;
-    SearchResult<PrijavePraksa>? result;
+  late PraksaProvider _prakseProvider;
+  SearchResult<PrijavePraksa>? result;
   SearchResult<StatusPrijave>? statusResult;
+  SearchResult<Praksa>? prakseResult;
   SearchResult<Student>? studentResult;
   StatusPrijave? selectedStatusPrijave;
   TextEditingController _statusController = new TextEditingController();
   TextEditingController _brojIndeksaController = new TextEditingController();
   TextEditingController _imeController = new TextEditingController();
- int _currentPage = 0;
+  int _currentPage = 0;
   int _totalItems = 0;
   late NumberPaginatorController _pageController;
-@override
+  @override
   void initState() {
     // TODO: implement initState
     super.initState();
     _prijavePraksaProvider = context.read<PrijavePraksaProvider>();
     _statusProvider = context.read<StatusPrijaveProvider>();
     _studentProvider = context.read<StudentiProvider>();
+    _prakseProvider = context.read<PraksaProvider>();
     _pageController = NumberPaginatorController();
-       _fetchData();
+    _fetchData();
     _fetchStatusPrijave();
     _fetchStudenti();
+    _fetchPrakse();
   }
 
-   @override
+  @override
   Widget build(BuildContext context) {
-    
     int numberPages = calculateNumberPages(_totalItems, 5);
     return MasterScreenWidget(
       title: "Prijave praksa",
+      addButtonLabel: 'Generiši izvještaj',
+      addButtonIcon: Icons.description,
+      onAddButtonPressed: () async {
+        if (prakseResult != null) {
+          await showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return PrijavePrakseReportDialog(
+                prakse: prakseResult!.result,
+              );
+            },
+          );
+        }
+      },
       child: Container(
         child: Column(
-          children: [ _buildSearch(),_buildDataListView(),  if(_currentPage>=0 && numberPages-1>=_currentPage)
-           CustomPaginator(
-                      numberPages: numberPages,
-                      initialPage: _currentPage,
-                      onPageChange: (int index) {
-                        setState(() {
-                          _currentPage = index;
-                          _fetchData();
-                        });
-                      },
-                      pageController: _pageController,
-                      fetchData: _fetchData,
-                    ),],
+          children: [
+            _buildSearch(),
+            _buildDataListView(),
+            if (_currentPage >= 0 && numberPages - 1 >= _currentPage)
+              CustomPaginator(
+                numberPages: numberPages,
+                initialPage: _currentPage,
+                onPageChange: (int index) {
+                  setState(() {
+                    _currentPage = index;
+                    _fetchData();
+                  });
+                },
+                pageController: _pageController,
+                fetchData: _fetchData,
+              ),
+          ],
         ),
       ),
     );
   }
+
   int calculateNumberPages(int totalItems, int pageSize) {
     return (totalItems / pageSize).ceil();
   }
+
   Future<void> _fetchData() async {
     print("login proceed");
     // Navigator.of(context).pop();
@@ -89,7 +115,7 @@ class _PrijavePraksaListScreen extends State<PrijavePraksaListScreen> {
     });
     setState(() {
       result = data;
-       _totalItems = data.count;
+      _totalItems = data.count;
       int numberPages = calculateNumberPages(_totalItems, 5);
       if (_currentPage >= numberPages) {
         _currentPage = numberPages - 1;
@@ -99,7 +125,6 @@ class _PrijavePraksaListScreen extends State<PrijavePraksaListScreen> {
       }
       print(
           "Total items: $_totalItems, Number of pages: $numberPages, Current page after fetch: $_currentPage");
-   
     });
   }
 
@@ -110,7 +135,14 @@ class _PrijavePraksaListScreen extends State<PrijavePraksaListScreen> {
     });
   }
 
-    void _fetchStudenti() async {
+  void _fetchPrakse() async {
+    var prakseData = await _prakseProvider.get();
+    setState(() {
+      prakseResult = prakseData;
+    });
+  }
+
+  void _fetchStudenti() async {
     var studentData = await _studentProvider.get();
     setState(() {
       studentResult = studentData;
@@ -248,20 +280,22 @@ class _PrijavePraksaListScreen extends State<PrijavePraksaListScreen> {
                               .map((PrijavePraksa e) => DataRow(cells: [
                                     DataCell(Center(
                                         child: Text(
-                                            "${e.student?.idNavigation.ime?? ""}  ${e.student?.idNavigation.prezime?? ""}",
+                                            "${e.student?.idNavigation.ime ?? ""}  ${e.student?.idNavigation.prezime ?? ""}",
                                             style: TextStyle(
                                                 fontWeight: FontWeight.bold)))),
                                     DataCell(Center(
-                                        child: Text(e.student?.brojIndeksa?? ""))),
+                                        child: Text(
+                                            e.student?.brojIndeksa ?? ""))),
                                     DataCell(Center(
                                         child: Text(e.certifikati ?? ""))),
                                     DataCell(Center(
                                         child: Text(e.status?.naziv ?? ""))),
                                     DataCell(Center(
-                                        child:
-                                            Text(e.praksa?.idNavigation?.naslov?? ""))),
-                                     DataCell(
-                                     Row(
+                                        child: Text(
+                                            e.praksa?.idNavigation?.naslov ??
+                                                ""))),
+                                    DataCell(
+                                      Row(
                                         mainAxisAlignment:
                                             MainAxisAlignment.center,
                                         children: [
@@ -276,18 +310,17 @@ class _PrijavePraksaListScreen extends State<PrijavePraksaListScreen> {
                                                   builder: (BuildContext
                                                           context) =>
                                                       PrijavaPraksaDetailsDialog(
-                                                          title:
-                                                              'Detalji prijava prakse',
-                                                          prijavePraksa: e,
-                                                          )).then(
-                                                  (value) {
+                                                        title:
+                                                            'Detalji prijava prakse',
+                                                        prijavePraksa: e,
+                                                      )).then((value) {
                                                 if (value != null && value) {
                                                   _fetchData();
                                                 }
                                               });
                                             },
                                           ),
-                                         /* IconButton(
+                                          /* IconButton(
                                             icon: Icon(
                                               Icons.delete,
                                               color: Colors.red,

@@ -4,12 +4,16 @@ import 'package:number_paginator/number_paginator.dart';
 import 'package:provider/provider.dart';
 import 'package:studentoglasi_admin/models/PrijaveStipendija/prijave_stipendija.dart';
 import 'package:studentoglasi_admin/models/StatusPrijave/statusprijave.dart';
+import 'package:studentoglasi_admin/models/Stipendija/stipendija.dart';
 import 'package:studentoglasi_admin/models/Student/student.dart';
 import 'package:studentoglasi_admin/providers/prijavestipendija_provider.dart';
 import 'package:studentoglasi_admin/providers/statusprijave_provider.dart';
+import 'package:studentoglasi_admin/providers/stipendije_provider.dart';
 import 'package:studentoglasi_admin/providers/studenti_provider.dart';
 import 'package:studentoglasi_admin/screens/components/costum_paginator.dart';
+import 'package:studentoglasi_admin/screens/components/prijave_prakse_report_dialog.dart';
 import 'package:studentoglasi_admin/screens/components/prijave_stipendija_details_dialog.dart';
+import 'package:studentoglasi_admin/screens/components/prijave_stipendije_report_dialog.dart';
 import 'package:studentoglasi_admin/widgets/master_screen.dart';
 
 import '../models/search_result.dart';
@@ -25,9 +29,11 @@ class _PrijaveStipendijaListScreen extends State<PrijaveStipendijaListScreen> {
   late PrijaveStipendijaProvider _prijaveStipendijaProvider;
   late StatusPrijaveProvider _statusProvider;
   late StudentiProvider _studentProvider;
+   late StipendijeProvider _stipendijaProvider;
     SearchResult<PrijaveStipendija>? result;
   SearchResult<StatusPrijave>? statusResult;
   SearchResult<Student>? studentResult;
+  SearchResult<Stipendije>? stipendijaResult;
   StatusPrijave? selectedStatusPrijave;
   TextEditingController _statusController = new TextEditingController();
   TextEditingController _brojIndeksaController = new TextEditingController();
@@ -43,10 +49,12 @@ class _PrijaveStipendijaListScreen extends State<PrijaveStipendijaListScreen> {
     _prijaveStipendijaProvider = context.read<PrijaveStipendijaProvider>();
     _statusProvider = context.read<StatusPrijaveProvider>();
     _studentProvider = context.read<StudentiProvider>();
+    _stipendijaProvider = context.read<StipendijeProvider>();
     _pageController = NumberPaginatorController();
        _fetchData();
     _fetchStatusPrijave();
     _fetchStudenti();
+    _fetchStipendije();
   }
 
    @override
@@ -55,6 +63,20 @@ class _PrijaveStipendijaListScreen extends State<PrijaveStipendijaListScreen> {
     int numberPages = calculateNumberPages(_totalItems, 5);
     return MasterScreenWidget(
       title: "Prijave stipendija",
+      addButtonLabel: 'Generiši izvještaj',
+      addButtonIcon: Icons.description,
+      onAddButtonPressed: () async {
+        if (stipendijaResult != null) {
+          await showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return PrijaveStipendijeReportDialog(
+                stipendije: stipendijaResult!.result,
+              );
+            },
+          );
+        }
+      },
       child: Container(
         child: Column(
           children: [_buildSearch(), _buildDataListView(), if(_currentPage>=0 && numberPages-1>=_currentPage)
@@ -101,13 +123,22 @@ class _PrijaveStipendijaListScreen extends State<PrijaveStipendijaListScreen> {
    
     });
   }
+
   int calculateNumberPages(int totalItems, int pageSize) {
     return (totalItems / pageSize).ceil();
   }
+
   void _fetchStatusPrijave() async {
     var statusData = await _statusProvider.get();
     setState(() {
       statusResult = statusData;
+    });
+  }
+
+  void _fetchStipendije() async {
+    var stipendijeData = await _stipendijaProvider.get();
+    setState(() {
+      stipendijaResult = stipendijeData;
     });
   }
 

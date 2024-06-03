@@ -52,7 +52,7 @@ class _SmjestajiListScreenState extends State<SmjestajiListScreen> {
       'naziv': _nazivController.text,
       'gradID': selectedGrad?.id,
       'tipSmjestajaID': selectedTipSmjestaja?.id,
-      'page': _currentPage + 1, // pages are 1-indexed in the backend
+      'page': _currentPage + 1, 
       'pageSize': 5,
     });
     setState(() {

@@ -39,6 +39,11 @@ namespace StudentOglasi.Services.Services
             {
                 filteredQuery = filteredQuery.Where(x => x.StatusId == search.Status);
             }
+            if (search?.Praksa != null)
+            {
+                filteredQuery = filteredQuery.Where(x => x.PraksaId == search.Praksa);
+            }
+
             return filteredQuery;
         }
         public override async Task<PagedResult<Model.PrijavePraksa>> Get(PrijavePraksaSearchObject? search = null)
