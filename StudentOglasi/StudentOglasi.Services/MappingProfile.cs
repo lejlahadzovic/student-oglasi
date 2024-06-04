@@ -24,6 +24,7 @@ namespace StudentOglasi.Services
             CreateMap<PrakseUpdateRequest, Database.Prakse>();
             CreateMap<Database.Oglasi, Model.Oglasi>();
             CreateMap<Model.Oglasi, Database.Oglasi>();
+            CreateMap<OglasiRequest, Database.Oglasi>();
             CreateMap<Database.Stipendije, Model.Stipendije>();
             CreateMap<StipendijeInsertRequest, Database.Stipendije>();
             CreateMap<StipendijeUpdateRequest, Database.Stipendije>();

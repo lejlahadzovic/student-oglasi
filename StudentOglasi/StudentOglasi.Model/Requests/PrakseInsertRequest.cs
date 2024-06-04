@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Http;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -22,7 +23,9 @@ namespace StudentOglasi.Model.Requests
 
         public bool Placena { get; set; }
 
-        public Model.Oglasi? IdNavigation { get; set; }
+        public IFormFile Slika { get; set; } = null!;
+
+        public OglasiRequest IdNavigation { get; set; } = null!;
 
         public int OrganizacijaId { get; set; }
     }

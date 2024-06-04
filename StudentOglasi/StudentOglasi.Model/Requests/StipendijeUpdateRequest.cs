@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Http;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -22,7 +23,9 @@ namespace StudentOglasi.Model.Requests
 
         public int BrojStipendisata { get; set; }
 
-        public Model.Oglasi? IdNavigation { get; set; }
+        public IFormFile? Slika { get; set; }
+
+        public OglasiRequest IdNavigation { get; set; } = null!;
 
         public int StipenditorId { get; set; }
     }

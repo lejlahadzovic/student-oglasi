@@ -1,5 +1,8 @@
 // ignore_for_file: prefer_const_constructors
 
+import 'dart:io';
+
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:intl/intl.dart';
@@ -9,6 +12,7 @@ import 'package:studentoglasi_admin/models/Organizacije/organizacije.dart';
 import 'package:studentoglasi_admin/models/Praksa/praksa.dart';
 import 'package:studentoglasi_admin/models/StatusOglasi/statusoglasi.dart';
 import 'package:studentoglasi_admin/providers/prakse_provider.dart';
+import 'package:studentoglasi_admin/utils/util.dart';
 
 import '../../models/search_result.dart';
 
@@ -35,12 +39,19 @@ class _PraksaDetailsDialogState extends State<PraksaDetailsDialog> {
   final _formKey = GlobalKey<FormBuilderState>();
   Map<String, dynamic> _initialValue = {};
   late PraksaProvider _PraksaProvider;
+  String? _filePath;
+  String? _imageUrl;
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     _PraksaProvider = context.read<PraksaProvider>();
+
+    if (widget.praksa != null && widget.praksa!.idNavigation?.slika != null) {
+      _imageUrl =
+          FilePathManager.constructUrl(widget.praksa!.idNavigation!.slika!);
+    }
 
     _initialValue = {
       'pocetakPrakse': widget.praksa?.pocetakPrakse,
@@ -76,6 +87,91 @@ class _PraksaDetailsDialogState extends State<PraksaDetailsDialog> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              SizedBox(height: 10),
+              FormBuilderField(
+                name: 'filePath',
+                builder: (FormFieldState<dynamic> field) {
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      InputDecorator(
+                        decoration: InputDecoration(
+                          labelText: 'Slika',
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.all(Radius.circular(10)),
+                          ),
+                          errorText: field.errorText,
+                        ),
+                        child: Center(
+                          child: _filePath != null
+                              ? Image.file(
+                                  File(_filePath!),
+                                  fit: BoxFit.cover,
+                                  width: 800,
+                                  height: 450,
+                                )
+                              : _imageUrl != null
+                                  ? Image.network(
+                                      _imageUrl!,
+                                      fit: BoxFit.cover,
+                                      width: 800,
+                                      height: 450,
+                                    )
+                                  : SizedBox(
+                                      width: 800,
+                                      height: 450,
+                                      child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Icon(
+                                            Icons.image,
+                                            size: 200,
+                                            color: Colors.grey,
+                                          ),
+                                          SizedBox(height: 20),
+                                          Text(
+                                            'Nema dostupne slike',
+                                            style: TextStyle(
+                                                fontSize: 24,
+                                                color: Colors.grey),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                        ),
+                      ),
+                      SizedBox(height: 10),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: Text(
+                              _filePath != null ? _filePath! : '',
+                              style: TextStyle(fontSize: 16),
+                            ),
+                          ),
+                          ElevatedButton(
+                            onPressed: () async {
+                              FilePickerResult? result = await FilePicker
+                                  .platform
+                                  .pickFiles(type: FileType.image);
+
+                              if (result != null) {
+                                setState(() {
+                                  _filePath = result.files.single.path;
+                                });
+                                field.didChange(_filePath);
+                              }
+                            },
+                            child: Text('Odaberite sliku'),
+                          ),
+                        ],
+                      ),
+                    ],
+                  );
+                },
+              ),
+              SizedBox(height: 10),
               Row(
                 children: [
                   Expanded(
@@ -300,21 +396,6 @@ class _PraksaDetailsDialogState extends State<PraksaDetailsDialog> {
                     child: Container(
                       width: 400,
                       child: FormBuilderTextField(
-                        name: 'idNavigation.slika',
-                        decoration: InputDecoration(
-                          labelText: 'Slika',
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.all(Radius.circular(10)),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                  SizedBox(width: 20),
-                  Expanded(
-                    child: Container(
-                      width: 400,
-                      child: FormBuilderTextField(
                           name: 'idNavigation.opis',
                           maxLines: 5,
                           decoration: InputDecoration(
@@ -352,26 +433,13 @@ class _PraksaDetailsDialogState extends State<PraksaDetailsDialog> {
         ElevatedButton(
           onPressed: () async {
             _formKey.currentState?.saveAndValidate();
-            var request = Map.from(_formKey.currentState!.value);
-
-            request['idNavigation'] = {
-              'id': widget.praksa?.idNavigation?.id ?? 0,
-              'naslov': request['idNavigation.naslov'],
-              'opis': request['idNavigation.opis'],
-              'rokPrijave': request['idNavigation.rokPrijave'],
-              'vrijemeObjave': request['idNavigation.vrijemeObjave'],
-              'slika': request['idNavigation.slika'],
-            };
-            request.remove('idNavigation.naslov');
-            request.remove('idNavigation.opis');
-            request.remove('idNavigation.rokPrijave');
-            request.remove('idNavigation.vrijemeObjave');
-            request.remove('idNavigation.slika');
+            var request =
+                Map<String, dynamic>.from(_formKey.currentState!.value);
 
             try {
               widget.praksa == null
-                  ? await _PraksaProvider.insert(request)
-                  : await _PraksaProvider.update(widget.praksa!.id!, request);
+                  ? await _PraksaProvider.insertWithImage(request)
+                  : await _PraksaProvider.updateWithImage(widget.praksa!.id!, request);
 
               Navigator.pop(context, true);
               ScaffoldMessenger.of(context).showSnackBar(SnackBar(

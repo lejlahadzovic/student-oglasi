@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
+
 import 'dart:io';
 
 import 'package:file_picker/file_picker.dart';
@@ -72,37 +74,66 @@ class _ObjaveDetailsDialogState extends State<ObjaveDetailsDialog> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              SizedBox(height: 10),
               FormBuilderField(
                 name: 'filePath',
                 builder: (FormFieldState<dynamic> field) {
                   return Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Center(
-                        child: _filePath != null
-                            ? Image.file(
-                                File(_filePath!),
-                                fit: BoxFit.cover,
-                                width: 800,
-                              )
-                            : _imageUrl != null
-                                ? Image.network(
-                                    _imageUrl!,
-                                    fit: BoxFit.cover,
-                                    width: 800,
-                                  )
-                                : Text(''),
+                      InputDecorator(
+                        decoration: InputDecoration(
+                          labelText: 'Slika',
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.all(Radius.circular(10)),
+                          ),
+                          errorText: field.errorText,
+                        ),
+                        child: Center(
+                          child: _filePath != null
+                              ? Image.file(
+                                  File(_filePath!),
+                                  fit: BoxFit.cover,
+                                  width: 800,
+                                  height: 450,
+                                )
+                              : _imageUrl != null
+                                  ? Image.network(
+                                      _imageUrl!,
+                                      fit: BoxFit.cover,
+                                      width: 800,
+                                      height: 450,
+                                    )
+                                  : SizedBox(
+                                      width: 800,
+                                      height: 450,
+                                      child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Icon(
+                                            Icons.image,
+                                            size: 200,
+                                            color: Colors.grey,
+                                          ),
+                                          SizedBox(height: 20),
+                                          Text(
+                                            'Nema dostupne slike',
+                                            style: TextStyle(
+                                                fontSize: 24,
+                                                color: Colors.grey),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                        ),
                       ),
                       SizedBox(height: 10),
                       Row(
                         children: [
                           Expanded(
                             child: Text(
-                              _filePath != null
-                                  ? _filePath!
-                                  : (_imageUrl != null
-                                      ? ''
-                                      : 'Nema odabrane slike'),
+                              _filePath != null ? _filePath! : '',
                               style: TextStyle(fontSize: 16),
                             ),
                           ),
@@ -123,11 +154,6 @@ class _ObjaveDetailsDialogState extends State<ObjaveDetailsDialog> {
                           ),
                         ],
                       ),
-                      if (field.errorText != null)
-                        Text(
-                          field.errorText!,
-                          style: TextStyle(color: Colors.red),
-                        ),
                     ],
                   );
                 },

@@ -11,9 +11,11 @@ namespace StudentOglasi.Services.Services
 {
     public class PrakseService : BaseCRUDService<Model.Prakse, Database.Prakse, PrakseSearchObject, PrakseInsertRequest, PrakseUpdateRequest>, IPrakseService
     {
+        public readonly FileService _fileService;
         public BasePrakseState _baseState { get; set; }
-        public PrakseService(StudentoglasiContext context, IMapper mapper, BasePrakseState baseState) : base(context, mapper)
+        public PrakseService(StudentoglasiContext context, IMapper mapper, FileService fileService, BasePrakseState baseState) : base(context, mapper)
         {
+            _fileService = fileService;
             _baseState = baseState;
         }
         public override Task<Model.Prakse> Insert(PrakseInsertRequest insert)
@@ -59,6 +61,31 @@ namespace StudentOglasi.Services.Services
             var tmp = _mapper.Map<List<Model.Prakse>>(list);
             result.Result = tmp;
             return result;
+        }
+        public override async Task Delete(int id)
+        {
+            var query = _context.Set<Database.Prakse>().Include(p => p.IdNavigation);
+            var entity = await query.FirstOrDefaultAsync(p => p.Id == id);
+
+            if (entity == null)
+                throw new Exception("Objekat nije pronađen");
+
+
+            if (entity.IdNavigation.Slika != null)
+            {
+                try
+                {
+                    await _fileService.DeleteAsync(entity.IdNavigation.Slika);
+                }
+                catch (Exception ex)
+                {
+                    throw new Exception("Greška pri brisanju slike.", ex);
+                }
+            }
+            _context.Oglasis.Remove(entity.IdNavigation);
+
+            _context.Prakses.Remove(entity);
+            await _context.SaveChangesAsync();
         }
         public override async Task<Model.Prakse> Update(int id, PrakseUpdateRequest update)
         {

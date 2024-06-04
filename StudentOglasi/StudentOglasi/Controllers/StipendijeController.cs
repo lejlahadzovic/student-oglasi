@@ -18,6 +18,15 @@ namespace StudentOglasi.Controllers
 
         }
 
+        public override Task<IActionResult> Insert([FromForm] StipendijeInsertRequest insert)
+        {
+            return base.Insert(insert);
+        }
+        public override Task<IActionResult> Update(int id, [FromForm] StipendijeUpdateRequest update)
+        {
+            return base.Update(id, update);
+        }
+
         [HttpPut("{id}/activate")]
         public virtual async Task<Model.Stipendije> Activate(int id)
         {

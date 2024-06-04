@@ -11,9 +11,11 @@ namespace StudentOglasi.Services.Services
 {
     public class StipendijeService : BaseCRUDService<Model.Stipendije, Database.Stipendije, StipendijeSearchObject, StipendijeInsertRequest, StipendijeUpdateRequest>, IStipendijeService
     {
+        public readonly FileService _fileService;
         public BaseStipendijeState _baseState { get; set; }
-        public StipendijeService(StudentoglasiContext context, IMapper mapper, BaseStipendijeState baseState) : base(context, mapper)
+        public StipendijeService(StudentoglasiContext context, IMapper mapper, FileService fileService, BaseStipendijeState baseState) : base(context, mapper)
         {
+            _fileService = fileService;
             _baseState = baseState;
         }
         public override Task<Model.Stipendije> Insert(StipendijeInsertRequest insert)
@@ -65,6 +67,31 @@ namespace StudentOglasi.Services.Services
             var state = _baseState.CreateState(entity.Status.Naziv);
 
             return await state.Update(id, update);
+        }
+        public override async Task Delete(int id)
+        {
+            var query = _context.Set<Database.Stipendije>().Include(s => s.IdNavigation);
+            var entity = await query.FirstOrDefaultAsync(s => s.Id == id);
+
+            if (entity == null)
+                throw new Exception("Objekat nije pronađen");
+
+
+            if (entity.IdNavigation.Slika != null)
+            {
+                try
+                {
+                    await _fileService.DeleteAsync(entity.IdNavigation.Slika);
+                }
+                catch (Exception ex)
+                {
+                    throw new Exception("Greška pri brisanju slike.", ex);
+                }
+            }
+            _context.Oglasis.Remove(entity.IdNavigation);
+
+            _context.Stipendijes.Remove(entity);
+            await _context.SaveChangesAsync();
         }
         public async Task<Model.Stipendije> Activate(int id)
         {
