@@ -31,6 +31,10 @@ namespace StudentOglasi.Services.Services
             {
                 filteredQuery = filteredQuery.Where(x => x.StatusId == search.Status);
             }
+            if (search?.Stipendija != null)
+            {
+                filteredQuery = filteredQuery.Where(x => x.StipendijaId == search.Stipendija);
+            }
 
             return filteredQuery;
         }
