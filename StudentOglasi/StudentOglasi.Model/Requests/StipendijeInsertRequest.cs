@@ -23,7 +23,7 @@ namespace StudentOglasi.Model.Requests
 
         public int BrojStipendisata { get; set; }
 
-        public IFormFile Slika { get; set; } = null!;
+        public IFormFile? Slika { get; set; }
 
         public OglasiRequest IdNavigation { get; set; } = null!;
 

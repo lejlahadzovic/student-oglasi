@@ -12,11 +12,11 @@ namespace StudentOglasi.Model
 
         public int PraksaId { get; set; }
 
-        public string PropratnoPismo { get; set; } = null!;
+        public string? PropratnoPismo { get; set; }
 
         public string Cv { get; set; } = null!;
 
-        public string Certifikati { get; set; } = null!;
+        public string? Certifikati { get; set; }
 
         public int StatusId { get; set; }
 

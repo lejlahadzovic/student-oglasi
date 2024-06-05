@@ -23,14 +23,17 @@ namespace StudentOglasi.Services.Services
         public override async Task BeforeInsert(Database.Objave entity, ObjaveInsertRequest insert)
         {
             entity.VrijemeObjave = DateTime.Now;
-            var uploadResponse = await _fileService.UploadAsync(insert.Slika);
-            if (!uploadResponse.Error)
+            if (insert.Slika != null)
             {
-                entity.Slika = uploadResponse.Blob.Name;
-            }
-            else
-            {
-                throw new Exception("Greška pri uploadu slike");
+                var uploadResponse = await _fileService.UploadAsync(insert.Slika);
+                if (!uploadResponse.Error)
+                {
+                    entity.Slika = uploadResponse.Blob.Name;
+                }
+                else
+                {
+                    throw new Exception("Greška pri uploadu slike");
+                }
             }
         }
         public override async Task BeforeDelete(Database.Objave entity)

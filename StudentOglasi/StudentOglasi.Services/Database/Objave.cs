@@ -13,7 +13,7 @@ public partial class Objave
 
     public DateTime VrijemeObjave { get; set; }
 
-    public string Slika { get; set; } = null!;
+    public string? Slika { get; set; }
 
     public int KategorijaId { get; set; }
 

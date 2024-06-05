@@ -11,7 +11,7 @@ public partial class PrijaveStipendija
 
     public string Dokumentacija { get; set; } = null!;
 
-    public string Cv { get; set; } = null!;
+    public string? Cv { get; set; }
 
     public decimal ProsjekOcjena { get; set; }
 

@@ -15,7 +15,7 @@ public partial class Oglasi
 
     public DateTime VrijemeObjave { get; set; }
 
-    public string Slika { get; set; } = null!;
+    public string? Slika { get; set; }
 
     public virtual ICollection<Komentari> Komentaris { get; set; } = new List<Komentari>();
 

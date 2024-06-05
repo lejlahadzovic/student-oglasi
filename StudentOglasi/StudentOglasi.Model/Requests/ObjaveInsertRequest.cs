@@ -14,7 +14,7 @@ namespace StudentOglasi.Model.Requests
 
         public string Sadrzaj { get; set; } = null!;
 
-        public IFormFile Slika { get; set; } = null!;
+        public IFormFile? Slika { get; set; }
 
         public int KategorijaId { get; set; }
     }
