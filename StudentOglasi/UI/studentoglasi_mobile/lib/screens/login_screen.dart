@@ -1,0 +1,91 @@
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:http/http.dart' as http;
+import 'package:studentoglasi_mobile/providers/objave_provider.dart';
+import 'package:studentoglasi_mobile/screens/objave_screen.dart';
+import 'dart:convert';
+
+import '../utils/util.dart';
+//import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+
+class LoginScreen extends StatefulWidget {
+  @override
+  _LoginScreenState createState() => _LoginScreenState();
+}
+
+class _LoginScreenState extends State<LoginScreen> {
+  final TextEditingController _usernameController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  late ObjaveProvider _objaveProvider;
+ 
+
+  Future<void> _login() async {
+    var username = _usernameController.text;
+    var password = _passwordController.text;
+
+    Authorization.username = username;
+    Authorization.password = password;
+
+    try {
+      await _objaveProvider.get();
+
+      Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (context) => ObjavaListScreen(),
+        ),
+      );
+    } on Exception catch (e) {
+      String error = "Pogrešno korisničko ime ili lozinka";
+      showDialog(
+          context: context,
+          builder: (BuildContext context) => AlertDialog(
+                title: Text("Greška"),
+                content: Text(error),
+                actions: [
+                  TextButton(
+                      onPressed: () => Navigator.pop(context),
+                      child: Text("OK"))
+                ],
+              ));
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    _objaveProvider = context.read<ObjaveProvider>();
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Login'),
+        automaticallyImplyLeading: false,
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          children: <Widget>[
+            TextField(
+              controller: _usernameController,
+              decoration: InputDecoration(labelText: 'Username'),
+            ),
+            TextField(
+              controller: _passwordController,
+              decoration: InputDecoration(labelText: 'Password'),
+              obscureText: true,
+            ),
+            SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: _login,
+              child: Text('Login'),
+            ),
+              SizedBox(height: 20),
+            TextButton(
+              onPressed: () {
+                
+              },
+              child: Text('Don\'t have an account? Sign Up'),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}

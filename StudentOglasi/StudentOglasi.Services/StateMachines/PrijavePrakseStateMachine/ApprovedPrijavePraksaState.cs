@@ -17,7 +17,7 @@ namespace StudentOglasi.Services.StateMachines.PrijavePrakseStateMachine
         }
 
         public override async Task<Model.PrijavePraksa> Cancel(int studentId, int praksaId)
-        {
+        { 
             var set = _context.Set<Database.PrijavePraksa>();
 
             var entity = await set.FirstOrDefaultAsync(e => e.StudentId == studentId && e.PraksaId == praksaId);
