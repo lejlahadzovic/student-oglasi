@@ -5,6 +5,9 @@ import 'providers/kategorije_provider.dart';
 import 'providers/objave_provider.dart';
 import 'screens/objave_screen.dart';
 import 'widgets/menu.dart';
+import 'package:studentoglasi_mobile/providers/nacin_studiranja_provider.dart';
+import 'package:studentoglasi_mobile/providers/studenti_provider.dart';
+import 'package:studentoglasi_mobile/providers/univerziteti_provider.dart';
 
 void main() {
   runApp(
@@ -12,6 +15,9 @@ void main() {
       providers: [
         ChangeNotifierProvider(create: (_) => ObjaveProvider()),
         ChangeNotifierProvider(create: (_) => KategorijaProvider()),
+        ChangeNotifierProvider(create: (context) => UniverzitetiProvider()),
+        ChangeNotifierProvider(create: (context) => NacinStudiranjaProvider()),
+        ChangeNotifierProvider(create: (context) => StudentiProvider()),
       ],
       child: MyApp(),
     ),
@@ -32,8 +38,8 @@ class MyApp extends StatelessWidget {
       routes: {
         '/': (context) => LoginScreen(),
         '/home': (context) => ObjavaListScreen(),
-        '/profile':(context) => ProfileScreen(),
-        '/logout':(context) => LoginScreen(),
+        '/profile': (context) => ProfileScreen(),
+        '/logout': (context) => LoginScreen(),
       },
     );
   }

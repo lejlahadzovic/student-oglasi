@@ -1,30 +1,28 @@
 import 'dart:convert';
 import 'dart:io';
-import 'package:http/http.dart';
-import 'package:http/io_client.dart';
 import 'package:flutter/material.dart';
-
-import '../search_result.dart';
+import 'package:http/http.dart' as http;
+import 'package:http/io_client.dart';
+import '../models/search_result.dart';
 import '../utils/util.dart';
 
 abstract class BaseProvider<T> with ChangeNotifier {
   static String? _baseUrl;
   String _endPoint = "";
-
-HttpClient client = new HttpClient();
-  IOClient? http;
+  late IOClient _ioClient;
 
   BaseProvider(String endPoint) {
     _endPoint = endPoint;
     _baseUrl = const String.fromEnvironment("baseUrl",
         defaultValue: "https://10.0.2.2:7198/");
+    _ioClient = IOClient(createHttpClient());
+  }
 
-            if (_baseUrl!.endsWith("/") == false) {
-      _baseUrl = _baseUrl! + "/";
-    }
-
-    client.badCertificateCallback = (cert, host, port) => true;
-    http = IOClient(client);
+  HttpClient createHttpClient() {
+    final HttpClient httpClient = HttpClient()
+      ..badCertificateCallback =
+          (X509Certificate cert, String host, int port) => true;
+    return httpClient;
   }
 
   Future<SearchResult<T>> get({dynamic filter}) async {
@@ -36,15 +34,13 @@ HttpClient client = new HttpClient();
     }
 
     var uri = Uri.parse(url);
-    var headers = createHeaders();
 
-    var response = await http!.get(uri, headers: headers);
+    var response = await _ioClient.get(uri, headers: createHeaders());
 
     if (isValidResponse(response)) {
       var data = jsonDecode(response.body);
 
       var result = SearchResult<T>();
-
       result.count = data['count'];
 
       for (var item in data['result']) {
@@ -53,78 +49,32 @@ HttpClient client = new HttpClient();
 
       return result;
     } else {
-      throw new Exception("Unknown error");
+      throw Exception("Unknown error");
     }
-    // print("response: ${response.request} ${response.statusCode}, ${response.body}");
   }
 
   T fromJson(data) {
     throw Exception("Method not implemented");
   }
 
-  bool isValidResponse(Response response) {
+  bool isValidResponse(http.Response response) {
     if (response.statusCode < 299) {
       return true;
     } else if (response.statusCode == 401) {
       throw new Exception("Unauthorized");
     } else {
       print(response.body);
-      throw new Exception("Something bad happened please try again");
+      throw new Exception("Something bad happened, please try again");
     }
   }
 
-  Future<bool> delete(int? id) async {
-    var url = Uri.parse('$_baseUrl$_endPoint/$id');
-    var headers = createHeaders();
-    final response = await http!.delete(url, headers: headers);
-    if (response.statusCode == 200) {
-      return true;
-    } else {
-      throw Exception('Failed to delete');
-    }
-  }
-
-  Future<bool> cancel(int? id, {int? entityId}) async {
-    var url;
-    if (entityId != null) {
-      url = Uri.parse('$_baseUrl$_endPoint/$id/$entityId/cancel');
-    } else {
-      url = Uri.parse('$_baseUrl$_endPoint/$id/cancel');
-    }
-
-    var headers = createHeaders();
-    final response = await http!.put(url, headers: headers);
-    if (response.statusCode == 200) {
-      return true;
-    } else {
-      throw Exception('Failed to cancel');
-    }
-  }
-
-  Future<bool> approve(int? id, {int? entityId}) async {
-    var url;
-    if (entityId != null) {
-      url = Uri.parse('$_baseUrl$_endPoint/$id/$entityId/approve');
-    } else {
-      url = Uri.parse('$_baseUrl$_endPoint/$id/approve');
-    }
-
-    var headers = createHeaders();
-    final response = await http!.put(url, headers: headers);
-    if (response.statusCode == 200) {
-      return true;
-    } else {
-      throw Exception('Failed to approve');
-    }
-  }
-
-  Future<T> insert(dynamic request) async {
+  Future<T> insertJsonData(dynamic request) async {
     var url = "$_baseUrl$_endPoint";
     var uri = Uri.parse(url);
     var headers = createHeaders();
 
     var jsonRequest = jsonEncode(request, toEncodable: myDateSerializer);
-    var response = await http!.post(uri, headers: headers, body: jsonRequest);
+    var response = await _ioClient.post(uri, headers: headers, body: jsonRequest);
 
     if (isValidResponse(response)) {
       var data = jsonDecode(response.body);
@@ -133,6 +83,40 @@ HttpClient client = new HttpClient();
       throw new Exception("Unknown error");
     }
   }
+
+  Future<T> insertMultipartData(Map<String, dynamic> formData) async {
+    var url = "$_baseUrl$_endPoint";
+    var request = http.MultipartRequest(
+      'POST',
+      Uri.parse(url),
+    );
+
+    request.headers.addAll(createHeaders());
+
+    formData.forEach((key, value) async {
+      if (key == 'filePath' && value != null) {
+        var filePath = value.toString();
+        var file = await http.MultipartFile.fromPath('slika', filePath);
+        request.files.add(file);
+      } else {
+        request.fields[key] = value.toString();
+      }
+    });
+    var response = await _ioClient.send(request);
+
+    if (response.statusCode < 299) {
+    var responseBody = await response.stream.bytesToString();
+    var data = jsonDecode(responseBody);
+    return fromJson(data);
+  } else if (response.statusCode == 401) {
+    throw Exception("Unauthorized");
+  } else {
+    var responseBody = await response.stream.bytesToString();
+    print(responseBody);
+    throw Exception("Something bad happened, please try again");
+  }
+  }
+
 
   Future<T> update(int id, [dynamic request]) async {
     var url = "$_baseUrl$_endPoint/$id";
@@ -140,7 +124,7 @@ HttpClient client = new HttpClient();
     var headers = createHeaders();
 
     var jsonRequest = jsonEncode(request, toEncodable: myDateSerializer);
-    var response = await http!.put(uri, headers: headers, body: jsonRequest);
+    var response = await _ioClient.put(uri, headers: headers, body: jsonRequest);
 
     if (isValidResponse(response)) {
       var data = jsonDecode(response.body);
@@ -149,7 +133,37 @@ HttpClient client = new HttpClient();
       throw new Exception("Unknown error");
     }
   }
-  
+
+  Future<T> updateWithImage(int id, Map<String, dynamic> formData) async {
+    var url = "$_baseUrl$_endPoint/$id";
+    var request = http.MultipartRequest(
+      'PUT',
+      Uri.parse(url),
+    );
+
+    request.headers.addAll(createHeaders());
+
+    formData.forEach((key, value) async {
+      if (key == 'filePath' && value != null) {
+        var filePath = value.toString();
+        var file = await http.MultipartFile.fromPath('slika', filePath);
+        request.files.add(file);
+      } else {
+        request.fields[key] = value.toString();
+      }
+    });
+
+    var streamedResponse = await request.send();
+    var response = await http.Response.fromStream(streamedResponse);
+
+    if (isValidResponse(response)) {
+      var data = jsonDecode(response.body);
+      return fromJson(data);
+    } else {
+      throw new Exception("Unknown error");
+    }
+  }
+
   Map<String, String> createHeaders() {
     String username = Authorization.username ?? '';
     String password = Authorization.password ?? '';

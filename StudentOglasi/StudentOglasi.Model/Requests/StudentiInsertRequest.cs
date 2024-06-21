@@ -13,7 +13,7 @@ namespace StudentOglasi.Model.Requests
         public string BrojIndeksa { get; set; } = null!;
         public int GodinaStudija { get; set; }
         public decimal? ProsjecnaOcjena { get; set; }
-        public bool Status { get; set; }
+        public bool Status { get; set; } = true;
         public int FakultetId { get; set; }
         public int SmjerId { get; set; }
         public int NacinStudiranjaId { get; set; }

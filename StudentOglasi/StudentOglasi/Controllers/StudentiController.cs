@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using StudentOglasi.Model;
 using StudentOglasi.Model.Requests;
 using StudentOglasi.Model.SearchObjects;
@@ -8,6 +9,7 @@ namespace StudentOglasi.Controllers
 {
     [Route("[controller]")]
     [ApiController]
+    [AllowAnonymous]
     public class StudentiController : BaseCRUDController<Studenti, StudentiSearchObject, StudentiInsertRequest,StudentiUpdateRequest>
     {
         public StudentiController(ILogger<BaseCRUDController<Studenti, StudentiSearchObject, StudentiInsertRequest, StudentiUpdateRequest>> logger, IStudentiService service):base(logger, service) 
