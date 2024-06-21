@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:http/http.dart' as http;
 import 'package:studentoglasi_mobile/providers/objave_provider.dart';
 import 'package:studentoglasi_mobile/screens/objave_screen.dart';
+import 'package:studentoglasi_mobile/screens/registration_form.dart';
 import 'dart:convert';
 
 import '../utils/util.dart';
@@ -79,7 +80,11 @@ class _LoginScreenState extends State<LoginScreen> {
               SizedBox(height: 20),
             TextButton(
               onPressed: () {
-                
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => RegistrationForm(),
+                  ),
+                );
               },
               child: Text('Don\'t have an account? Sign Up'),
             ),

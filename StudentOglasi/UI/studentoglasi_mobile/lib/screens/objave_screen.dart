@@ -4,7 +4,7 @@ import 'package:studentoglasi_mobile/providers/objave_provider.dart';
 import '../models/Kategorija/kategorija.dart';
 import '../models/Objava/objava.dart';
 import '../providers/kategorije_provider.dart';
-import '../search_result.dart';
+import '../models/search_result.dart';
 import '../widgets/menu.dart';
 
 class ObjavaListScreen extends StatefulWidget {

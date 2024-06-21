@@ -10,6 +10,8 @@ import 'package:studentoglasi_mobile/models/search_result.dart';
 import 'package:studentoglasi_mobile/providers/nacin_studiranja_provider.dart';
 import 'package:studentoglasi_mobile/providers/studenti_provider.dart';
 import 'package:studentoglasi_mobile/providers/univerziteti_provider.dart';
+import 'package:studentoglasi_mobile/screens/objave_screen.dart';
+import 'package:studentoglasi_mobile/utils/util.dart';
 
 class RegistrationForm extends StatefulWidget {
   const RegistrationForm({super.key});
@@ -133,7 +135,6 @@ class _RegistrationFormState extends State<RegistrationForm> {
                   'idNavigation.password': _userFormData['password'],
                   'idNavigation.passwordPotvrda':
                       _userFormData['passwordPotvrda'],
-
                   'brojIndeksa': _studentFormData['brojIndeksa'],
                   'godinaStudija': _studentFormData['godinaStudija'],
                   'prosjecnaOcjena': double.tryParse(
@@ -356,6 +357,15 @@ class _RegistrationFormState extends State<RegistrationForm> {
     print('Sending data to API: $formData');
     try {
       await _studentiProvider.insertMultipartData(formData);
+
+      Authorization.username = formData['idNavigation.korisnickoIme'];
+      Authorization.password = formData['idNavigation.password'];
+
+      Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (context) => ObjavaListScreen(),
+        ),
+      );
     } catch (e) {
       print('Error inserting student: $e');
     }
