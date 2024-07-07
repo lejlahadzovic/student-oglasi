@@ -1,9 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:studentoglasi_mobile/providers/oglasi_provider.dart';
+import 'package:studentoglasi_mobile/providers/organizacije_provider.dart';
+import 'package:studentoglasi_mobile/providers/prakse_provider.dart';
+import 'package:studentoglasi_mobile/providers/statusoglasi_provider.dart';
+import 'package:studentoglasi_mobile/providers/stipendije_provider.dart';
+import 'package:studentoglasi_mobile/providers/stipenditori_provider.dart';
 import 'package:studentoglasi_mobile/screens/login_screen.dart';
 import 'providers/kategorije_provider.dart';
 import 'providers/objave_provider.dart';
-import 'screens/objave_screen.dart';
+import 'screens/main_screen.dart';
 import 'widgets/menu.dart';
 import 'package:studentoglasi_mobile/providers/nacin_studiranja_provider.dart';
 import 'package:studentoglasi_mobile/providers/studenti_provider.dart';
@@ -18,6 +24,12 @@ void main() {
         ChangeNotifierProvider(create: (context) => UniverzitetiProvider()),
         ChangeNotifierProvider(create: (context) => NacinStudiranjaProvider()),
         ChangeNotifierProvider(create: (context) => StudentiProvider()),
+        ChangeNotifierProvider(create: (context) => StipendijeProvider()),
+        ChangeNotifierProvider(create: (context) => OglasiProvider()),
+        ChangeNotifierProvider(create: (context) => StatusOglasiProvider()),
+        ChangeNotifierProvider(create: (context) => StipenditoriProvider()),
+         ChangeNotifierProvider(create: (context) => PraksaProvider()),
+        ChangeNotifierProvider(create: (context) => OrganizacijeProvider()),
       ],
       child: MyApp(),
     ),

@@ -34,7 +34,6 @@ class _PrijavePraksaListScreen extends State<PrijavePraksaListScreen> {
   SearchResult<Praksa>? prakseResult;
   SearchResult<Student>? studentResult;
   StatusPrijave? selectedStatusPrijave;
-  TextEditingController _statusController = new TextEditingController();
   TextEditingController _brojIndeksaController = new TextEditingController();
   TextEditingController _imeController = new TextEditingController();
   int _currentPage = 0;

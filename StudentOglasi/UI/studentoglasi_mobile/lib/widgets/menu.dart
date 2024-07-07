@@ -7,37 +7,40 @@ class DrawerMenu extends StatelessWidget {
       child: ListView(
         padding: EdgeInsets.zero,
         children: <Widget>[
-          DrawerHeader(
-            decoration: BoxDecoration(
-              color: Colors.blue,
-            ),
+          Container(
+            height: 100, // Set the height as per your requirement
+            child: DrawerHeader(
+              decoration: BoxDecoration(
+                color: Colors.purple[900],
+              ),
             child: Text(
-              'Menu',
+              'StudentOglasi',
               style: TextStyle(
                 color: Colors.white,
                 fontSize: 24,
               ),
             ),
           ),
+          ),
           ListTile(
-            leading: Icon(Icons.home),
-            title: Text('Home'),
+            leading: Icon(Icons.home, color: Colors.purple[900]),
+            title: Text('Početna'),
             onTap: () {
               Navigator.pop(context);
               Navigator.pushNamed(context, '/home');
             },
           ),
           ListTile(
-            leading: Icon(Icons.account_circle),
-            title: Text('Profile'),
+            leading: Icon(Icons.account_circle, color: Colors.purple[900]),
+            title: Text('Moj profil'),
             onTap: () {
               Navigator.pop(context);
               Navigator.pushNamed(context, '/profile');
             },
           ),
           ListTile(
-            leading: Icon(Icons.logout),
-            title: Text('Logout'),
+            leading: Icon(Icons.logout, color: Colors.purple[900]),
+            title: Text('Odjavi se'),
             onTap: () {
               Navigator.pop(context);
               Navigator.pushNamed(context, '/logout');

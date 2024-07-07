@@ -11,7 +11,6 @@ import 'package:studentoglasi_admin/providers/statusprijave_provider.dart';
 import 'package:studentoglasi_admin/providers/stipendije_provider.dart';
 import 'package:studentoglasi_admin/providers/studenti_provider.dart';
 import 'package:studentoglasi_admin/screens/components/costum_paginator.dart';
-import 'package:studentoglasi_admin/screens/components/prijave_prakse_report_dialog.dart';
 import 'package:studentoglasi_admin/screens/components/prijave_stipendija_details_dialog.dart';
 import 'package:studentoglasi_admin/screens/components/prijave_stipendije_report_dialog.dart';
 import 'package:studentoglasi_admin/widgets/master_screen.dart';
@@ -35,7 +34,6 @@ class _PrijaveStipendijaListScreen extends State<PrijaveStipendijaListScreen> {
   SearchResult<Student>? studentResult;
   SearchResult<Stipendije>? stipendijaResult;
   StatusPrijave? selectedStatusPrijave;
-  TextEditingController _statusController = new TextEditingController();
   TextEditingController _brojIndeksaController = new TextEditingController();
   TextEditingController _imeController = new TextEditingController();
  int _currentPage = 0;

@@ -10,7 +10,7 @@ import 'package:studentoglasi_mobile/models/search_result.dart';
 import 'package:studentoglasi_mobile/providers/nacin_studiranja_provider.dart';
 import 'package:studentoglasi_mobile/providers/studenti_provider.dart';
 import 'package:studentoglasi_mobile/providers/univerziteti_provider.dart';
-import 'package:studentoglasi_mobile/screens/objave_screen.dart';
+import 'package:studentoglasi_mobile/screens/main_screen.dart';
 import 'package:studentoglasi_mobile/utils/util.dart';
 
 class RegistrationForm extends StatefulWidget {

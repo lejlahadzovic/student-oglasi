@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:http/http.dart' as http;
 import 'package:studentoglasi_mobile/providers/objave_provider.dart';
-import 'package:studentoglasi_mobile/screens/objave_screen.dart';
+import 'package:studentoglasi_mobile/screens/main_screen.dart';
 import 'package:studentoglasi_mobile/screens/registration_form.dart';
-import 'dart:convert';
 
 import '../utils/util.dart';
 //import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -18,7 +16,6 @@ class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   late ObjaveProvider _objaveProvider;
- 
 
   Future<void> _login() async {
     var username = _usernameController.text;
@@ -35,19 +32,21 @@ class _LoginScreenState extends State<LoginScreen> {
           builder: (context) => ObjavaListScreen(),
         ),
       );
-    } on Exception catch (e) {
+    } on Exception {
       String error = "Pogrešno korisničko ime ili lozinka";
       showDialog(
-          context: context,
-          builder: (BuildContext context) => AlertDialog(
-                title: Text("Greška"),
-                content: Text(error),
-                actions: [
-                  TextButton(
-                      onPressed: () => Navigator.pop(context),
-                      child: Text("OK"))
-                ],
-              ));
+        context: context,
+        builder: (BuildContext context) => AlertDialog(
+          title: Text("Greška"),
+          content: Text(error),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: Text("OK"),
+            ),
+          ],
+        ),
+      );
     }
   }
 
@@ -77,7 +76,7 @@ class _LoginScreenState extends State<LoginScreen> {
               onPressed: _login,
               child: Text('Login'),
             ),
-              SizedBox(height: 20),
+            SizedBox(height: 20),
             TextButton(
               onPressed: () {
                 Navigator.of(context).push(
