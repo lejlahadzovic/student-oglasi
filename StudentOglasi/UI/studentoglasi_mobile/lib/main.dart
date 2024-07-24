@@ -7,10 +7,10 @@ import 'package:studentoglasi_mobile/providers/statusoglasi_provider.dart';
 import 'package:studentoglasi_mobile/providers/stipendije_provider.dart';
 import 'package:studentoglasi_mobile/providers/stipenditori_provider.dart';
 import 'package:studentoglasi_mobile/screens/login_screen.dart';
+import 'package:studentoglasi_mobile/screens/profile_screen.dart';
 import 'providers/kategorije_provider.dart';
 import 'providers/objave_provider.dart';
 import 'screens/main_screen.dart';
-import 'widgets/menu.dart';
 import 'package:studentoglasi_mobile/providers/nacin_studiranja_provider.dart';
 import 'package:studentoglasi_mobile/providers/studenti_provider.dart';
 import 'package:studentoglasi_mobile/providers/univerziteti_provider.dart';
@@ -53,21 +53,6 @@ class MyApp extends StatelessWidget {
         '/profile': (context) => ProfileScreen(),
         '/logout': (context) => LoginScreen(),
       },
-    );
-  }
-}
-
-class ProfileScreen extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Profile'),
-      ),
-      drawer: DrawerMenu(),
-      body: Center(
-        child: Text('Welcome to the Profile Screen'),
-      ),
     );
   }
 }

@@ -39,7 +39,62 @@ namespace StudentOglasi.Services.Services
             _context.Entry(entity).Reference(e => e.NacinStudiranja).Load();
             _context.Entry(entity).Reference(e => e.Smjer).Load();
         }
+        public override async Task<Model.Studenti> GetById(int id)
+        {
+            var query = _context.Set<Database.Studenti>().Where(e => e.Id == id);
+            var baseQuery = AddInclude(query);
+            var entity = await baseQuery.FirstOrDefaultAsync();
 
+            return _mapper.Map<Model.Studenti>(entity);
+        }
+        public async Task<Model.Studenti> GetStudentByUsername(string username)
+        {
+            if (string.IsNullOrEmpty(username))
+            {
+                throw new Exception("User is not authorized");
+            }
+
+            var student = await _context.Studentis
+                .Include(s => s.IdNavigation)
+                .Include(s => s.NacinStudiranja)
+                .Include(s => s.Fakultet)
+                .Include(s => s.Smjer)
+                .FirstOrDefaultAsync(s => s.IdNavigation.KorisnickoIme == username);
+
+            if (student == null)
+            {
+                throw new Exception("Student not found");
+            }
+
+            return _mapper.Map<Model.Studenti>(student);
+        }
+        public async Task<bool> ChangePassword(int id, ChangePasswordRequest request)
+        {
+            var student = await _context.Studentis
+                .Include(s => s.IdNavigation)
+                .FirstOrDefaultAsync(s => s.Id == id);
+
+            if (student == null)
+            {
+                throw new Exception("Student not found.");
+            }
+
+            if (!_korisniciService.VerifyPassword(request.CurrentPassword, student.IdNavigation.LozinkaHash, student.IdNavigation.LozinkaSalt))
+            {
+                return false;
+            }
+
+            if (request.NewPassword != request.ConfirmPassword)
+            {
+                throw new Exception("New password and confirmation do not match.");
+            }
+
+            student.IdNavigation.LozinkaSalt = KorisniciService.GenerateSalt();
+            student.IdNavigation.LozinkaHash = KorisniciService.GenerateHash(student.IdNavigation.LozinkaSalt, request.NewPassword);
+            await _context.SaveChangesAsync();
+
+            return true;
+        }
         public override async Task BeforeInsert(Database.Studenti entity, StudentiInsertRequest insert)
         {
             await LoadReferences(entity);

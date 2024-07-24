@@ -18,5 +18,7 @@ namespace StudentOglasi.Model.Requests
         [Required]
         [EmailAddress]
         public string? Email { get; set; }
+        [Required]
+        public string KorisnickoIme { get; set; } = null!;
     }
 }

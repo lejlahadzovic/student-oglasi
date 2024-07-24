@@ -11,6 +11,7 @@ namespace StudentOglasi.Model.Requests
     {
         public virtual KorisniciUpdateRequest IdNavigation { get; set; } = null!;
         public int GodinaStudija { get; set; }
+        public string? BrojIndeksa { get; set; }
         public decimal? ProsjecnaOcjena { get; set; }
         public bool Status { get; set; }
         public int FakultetId { get; set; }

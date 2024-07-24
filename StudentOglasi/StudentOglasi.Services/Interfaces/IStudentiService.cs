@@ -11,5 +11,7 @@ namespace StudentOglasi.Services.Interfaces
 {
     public interface IStudentiService : ICRUDService<Studenti,StudentiSearchObject,StudentiInsertRequest,StudentiUpdateRequest>
     {
+        Task<Studenti> GetStudentByUsername(string username);
+        Task<bool> ChangePassword(int id, ChangePasswordRequest request);
     }
 }

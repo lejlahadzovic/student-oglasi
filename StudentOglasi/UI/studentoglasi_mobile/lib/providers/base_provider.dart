@@ -18,6 +18,10 @@ abstract class BaseProvider<T> with ChangeNotifier {
     _ioClient = IOClient(createHttpClient());
   }
 
+  static String? get baseUrl => _baseUrl;
+  String get endPoint => _endPoint;
+  IOClient get ioClient => _ioClient;
+
   HttpClient createHttpClient() {
     final HttpClient httpClient = HttpClient()
       ..badCertificateCallback =
@@ -74,7 +78,8 @@ abstract class BaseProvider<T> with ChangeNotifier {
     var headers = createHeaders();
 
     var jsonRequest = jsonEncode(request, toEncodable: myDateSerializer);
-    var response = await _ioClient.post(uri, headers: headers, body: jsonRequest);
+    var response =
+        await _ioClient.post(uri, headers: headers, body: jsonRequest);
 
     if (isValidResponse(response)) {
       var data = jsonDecode(response.body);
@@ -105,18 +110,17 @@ abstract class BaseProvider<T> with ChangeNotifier {
     var response = await _ioClient.send(request);
 
     if (response.statusCode < 299) {
-    var responseBody = await response.stream.bytesToString();
-    var data = jsonDecode(responseBody);
-    return fromJson(data);
-  } else if (response.statusCode == 401) {
-    throw Exception("Unauthorized");
-  } else {
-    var responseBody = await response.stream.bytesToString();
-    print(responseBody);
-    throw Exception("Something bad happened, please try again");
+      var responseBody = await response.stream.bytesToString();
+      var data = jsonDecode(responseBody);
+      return fromJson(data);
+    } else if (response.statusCode == 401) {
+      throw Exception("Unauthorized");
+    } else {
+      var responseBody = await response.stream.bytesToString();
+      print(responseBody);
+      throw Exception("Something bad happened, please try again");
+    }
   }
-  }
-
 
   Future<T> update(int id, [dynamic request]) async {
     var url = "$_baseUrl$_endPoint/$id";
@@ -124,7 +128,8 @@ abstract class BaseProvider<T> with ChangeNotifier {
     var headers = createHeaders();
 
     var jsonRequest = jsonEncode(request, toEncodable: myDateSerializer);
-    var response = await _ioClient.put(uri, headers: headers, body: jsonRequest);
+    var response =
+        await _ioClient.put(uri, headers: headers, body: jsonRequest);
 
     if (isValidResponse(response)) {
       var data = jsonDecode(response.body);
@@ -134,7 +139,7 @@ abstract class BaseProvider<T> with ChangeNotifier {
     }
   }
 
-  Future<T> updateWithImage(int id, Map<String, dynamic> formData) async {
+  Future<T> updateMultipartData(int id, Map<String, dynamic> formData) async {
     var url = "$_baseUrl$_endPoint/$id";
     var request = http.MultipartRequest(
       'PUT',
@@ -153,14 +158,18 @@ abstract class BaseProvider<T> with ChangeNotifier {
       }
     });
 
-    var streamedResponse = await request.send();
-    var response = await http.Response.fromStream(streamedResponse);
+    var response = await _ioClient.send(request);
 
-    if (isValidResponse(response)) {
-      var data = jsonDecode(response.body);
+    if (response.statusCode < 299) {
+      var responseBody = await response.stream.bytesToString();
+      var data = jsonDecode(responseBody);
       return fromJson(data);
+    } else if (response.statusCode == 401) {
+      throw Exception("Unauthorized");
     } else {
-      throw new Exception("Unknown error");
+      var responseBody = await response.stream.bytesToString();
+      print(responseBody);
+      throw Exception("Something bad happened, please try again");
     }
   }
 

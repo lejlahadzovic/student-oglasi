@@ -79,5 +79,10 @@ namespace StudentOglasi.Services.Services
             }
             return _mapper.Map<Korisnik>(entity);
         }
+        public bool VerifyPassword(string inputPassword, string storedHash, string storedSalt)
+        {
+            var hash = GenerateHash(storedSalt, inputPassword);
+            return hash == storedHash;
+        }
     }
 }
