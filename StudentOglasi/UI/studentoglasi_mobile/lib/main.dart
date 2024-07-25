@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:studentoglasi_mobile/providers/oglasi_provider.dart';
 import 'package:studentoglasi_mobile/providers/organizacije_provider.dart';
 import 'package:studentoglasi_mobile/providers/prakse_provider.dart';
+import 'package:studentoglasi_mobile/providers/smjestaji_provider.dart';
 import 'package:studentoglasi_mobile/providers/statusoglasi_provider.dart';
 import 'package:studentoglasi_mobile/providers/stipendije_provider.dart';
 import 'package:studentoglasi_mobile/providers/stipenditori_provider.dart';
@@ -28,8 +29,9 @@ void main() {
         ChangeNotifierProvider(create: (context) => OglasiProvider()),
         ChangeNotifierProvider(create: (context) => StatusOglasiProvider()),
         ChangeNotifierProvider(create: (context) => StipenditoriProvider()),
-         ChangeNotifierProvider(create: (context) => PraksaProvider()),
+        ChangeNotifierProvider(create: (context) => PraksaProvider()),
         ChangeNotifierProvider(create: (context) => OrganizacijeProvider()),
+        ChangeNotifierProvider(create: (context) => SmjestajiProvider()),
       ],
       child: MyApp(),
     ),

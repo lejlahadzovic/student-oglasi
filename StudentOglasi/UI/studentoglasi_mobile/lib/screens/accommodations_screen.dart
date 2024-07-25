@@ -1,87 +1,50 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:studentoglasi_mobile/models/Oglas/oglas.dart';
-import 'package:studentoglasi_mobile/models/StatusOglas/statusoglasi.dart';
-import 'package:studentoglasi_mobile/models/Stipendija/stipendija.dart';
-import 'package:studentoglasi_mobile/models/Stipenditor/stipenditor.dart';
-import 'package:studentoglasi_mobile/providers/oglasi_provider.dart';
-import 'package:studentoglasi_mobile/providers/statusoglasi_provider.dart';
-import 'package:studentoglasi_mobile/providers/stipendije_provider.dart';
-import 'package:studentoglasi_mobile/providers/stipenditori_provider.dart';
-import 'package:studentoglasi_mobile/screens/accommodations_screen.dart';
+import 'package:studentoglasi_mobile/models/Smjestaj/smjestaj.dart';
+import 'package:studentoglasi_mobile/models/search_result.dart';
+import 'package:studentoglasi_mobile/providers/smjestaji_provider.dart';
+import 'package:studentoglasi_mobile/screens/accommodation_details_screen.dart';
 import 'package:studentoglasi_mobile/screens/internships_screen.dart';
 import 'package:studentoglasi_mobile/screens/main_screen.dart';
-import 'package:studentoglasi_mobile/screens/scholarship_details_screen.dart';
 import 'package:studentoglasi_mobile/utils/util.dart';
-import '../models/search_result.dart';
-import '../widgets/menu.dart';
+import 'package:studentoglasi_mobile/widgets/menu.dart';
 
-class ScholarshipsScreen extends StatefulWidget {
+class AccommodationsScreen extends StatefulWidget {
+  const AccommodationsScreen({super.key});
+
   @override
-  _ScholarshipsScreenState createState() => _ScholarshipsScreenState();
+  State<AccommodationsScreen> createState() => _AccommodationsScreenState();
 }
 
-class _ScholarshipsScreenState extends State<ScholarshipsScreen> {
-  late StipendijeProvider _stipendijeProvider;
-  late StatusOglasiProvider _statusProvider;
-  late StipenditoriProvider _stipenditorProvider;
-  late OglasiProvider _oglasiProvider;
-  bool _isLoading = true;
+class _AccommodationsScreenState extends State<AccommodationsScreen> {
+  late SmjestajiProvider _smjestajiProvider;
+  SearchResult<Smjestaj>? result;
+  TextEditingController _nazivController = TextEditingController();
+  bool _isLoading = false;
   bool _hasError = false;
-  Stipenditor? selectedStipenditor;
-  SearchResult<Stipendije>? _stipendije;
-  SearchResult<Stipenditor>? stipenditoriResult;
-  SearchResult<StatusOglasi>? statusResult;
-  SearchResult<Oglas>? oglasiResult;
-  TextEditingController _naslovController = new TextEditingController();
+
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
-    _stipendijeProvider = context.read<StipendijeProvider>();
-    _statusProvider = context.read<StatusOglasiProvider>();
-    _stipenditorProvider = context.read<StipenditoriProvider>();
-    _oglasiProvider = context.read<OglasiProvider>();
+    _smjestajiProvider = context.read<SmjestajiProvider>();
     _fetchData();
-    _fetchOglasi();
-    _fetchStatusOglasi();
-    _fetchStipenditori();
-  }
-
-  void _fetchStatusOglasi() async {
-    var statusData = await _statusProvider.get();
-    setState(() {
-      statusResult = statusData;
-    });
-  }
-
-  void _fetchOglasi() async {
-    var oglasData = await _oglasiProvider.get();
-    setState(() {
-      oglasiResult = oglasData;
-    });
-  }
-
-  void _fetchStipenditori() async {
-    var stipenditoriData = await _stipenditorProvider.get();
-    setState(() {
-      stipenditoriResult = stipenditoriData;
-    });
   }
 
   Future<void> _fetchData() async {
+    setState(() {
+      _isLoading = true;
+      _hasError = false;
+    });
+
     try {
-      var data = await _stipendijeProvider.get(filter: {
-        'naslov': _naslovController.text,
-        'stipenditor': selectedStipenditor?.id,
+      var data = await _smjestajiProvider.get(filter: {
+        'naziv': _nazivController.text,
       });
       setState(() {
-        _stipendije = data;
+        result = data;
         _isLoading = false;
       });
-      print("Data fetched successfully: ${_stipendije?.count} items.");
-    } catch (error) {
-      print("Error fetching data");
+    } catch (e) {
       setState(() {
         _isLoading = false;
         _hasError = true;
@@ -90,9 +53,6 @@ class _ScholarshipsScreenState extends State<ScholarshipsScreen> {
   }
 
   void _onSearchChanged() {
-    setState(() {
-      _isLoading = true;
-    });
     _fetchData();
   }
 
@@ -104,7 +64,7 @@ class _ScholarshipsScreenState extends State<ScholarshipsScreen> {
           children: [
             Expanded(
               child: TextField(
-                controller: _naslovController,
+                controller: _nazivController,
                 decoration: InputDecoration(
                   hintText: 'Pretraži...',
                   border: InputBorder.none,
@@ -113,7 +73,7 @@ class _ScholarshipsScreenState extends State<ScholarshipsScreen> {
               ),
             ),
             IconButton(
-              icon: Icon(Icons.search, color: Colors.purple[900]),
+              icon: Icon(Icons.search, color: Colors.white),
               onPressed: _onSearchChanged,
             ),
           ],
@@ -148,14 +108,7 @@ class _ScholarshipsScreenState extends State<ScholarshipsScreen> {
                 child: Text('Prakse'),
               ),
               ElevatedButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => AccommodationsScreen(),
-                    ),
-                  );
-                },
+                onPressed: () => null,
                 child: Text('Smještaj'),
               ),
             ],
@@ -166,13 +119,15 @@ class _ScholarshipsScreenState extends State<ScholarshipsScreen> {
                 : _hasError
                     ? Center(
                         child: Text(
-                            'Failed to load data. Please try again later.'))
-                    : _stipendije?.count == 0
-                        ? Center(child: Text('No data available.'))
+                          'Neuspješno učitavanje podataka.',
+                        ),
+                      )
+                    : result?.count == 0
+                        ? Center(child: Text('Nema dostupnih podataka.'))
                         : ListView.builder(
-                            itemCount: _stipendije?.count,
+                            itemCount: result?.count ?? 0,
                             itemBuilder: (context, index) {
-                              final stipendije = _stipendije!.result[index];
+                              final smjestaj = result!.result[index];
                               return Padding(
                                 padding: const EdgeInsets.symmetric(
                                     horizontal: 8.0, vertical: 4.0),
@@ -183,10 +138,8 @@ class _ScholarshipsScreenState extends State<ScholarshipsScreen> {
                                         context,
                                         MaterialPageRoute(
                                           builder: (context) =>
-                                              ScholarshipDetailsScreen(
-                                            scholarship:
-                                                stipendije.idNavigation!,
-                                          ),
+                                              AccommodationDetailsScreen(
+                                                  smjestaj: smjestaj),
                                         ),
                                       );
                                     },
@@ -196,18 +149,25 @@ class _ScholarshipsScreenState extends State<ScholarshipsScreen> {
                                         crossAxisAlignment:
                                             CrossAxisAlignment.start,
                                         children: [
-                                          stipendije.idNavigation?.slika != null
+                                          smjestaj.slikes != null &&
+                                                  smjestaj.slikes!.isNotEmpty
                                               ? Image.network(
                                                   FilePathManager.constructUrl(
-                                                      stipendije.idNavigation!
-                                                          .slika!),
+                                                      smjestaj.slikes!.first
+                                                          .naziv!),
                                                   height: 200,
                                                   width: double.infinity,
                                                   fit: BoxFit.cover,
                                                 )
-                                              : SizedBox(
-                                                  width: 800,
-                                                  height: 450,
+                                              : Container(
+                                                  width: double.infinity,
+                                                  height: 200,
+                                                  decoration: BoxDecoration(
+                                                    color: Colors.grey[200],
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            10),
+                                                  ),
                                                   child: Column(
                                                     mainAxisAlignment:
                                                         MainAxisAlignment
@@ -215,14 +175,14 @@ class _ScholarshipsScreenState extends State<ScholarshipsScreen> {
                                                     children: [
                                                       Icon(
                                                         Icons.image,
-                                                        size: 200,
+                                                        size: 100,
                                                         color: Colors.grey,
                                                       ),
                                                       SizedBox(height: 20),
                                                       Text(
                                                         'Nema dostupne slike',
                                                         style: TextStyle(
-                                                            fontSize: 24,
+                                                            fontSize: 18,
                                                             color: Colors.grey),
                                                       ),
                                                     ],
@@ -230,23 +190,26 @@ class _ScholarshipsScreenState extends State<ScholarshipsScreen> {
                                                 ),
                                           SizedBox(height: 8),
                                           Text(
-                                            stipendije.idNavigation?.naslov ??
-                                                'No title',
+                                            smjestaj.naziv ?? 'Bez naslova',
                                             style: TextStyle(
                                                 fontSize: 18,
                                                 fontWeight: FontWeight.bold),
                                           ),
                                           SizedBox(height: 8),
                                           Text(
-                                            stipendije.idNavigation?.opis ??
-                                                'Nema sadržaja',
+                                            smjestaj.grad?.naziv ??
+                                                'Podaci o lokaciji nisu dostupni',
+                                            style: TextStyle(fontSize: 16),
+                                          ),
+                                          SizedBox(height: 8),
+                                          Text(
+                                            smjestaj.opis ?? 'Nema sadržaja',
                                             style: TextStyle(fontSize: 16),
                                             maxLines: 2,
                                             overflow: TextOverflow.ellipsis,
                                             softWrap: true,
                                           ),
-                                          SizedBox(height: 8),
-                                          SizedBox(height: 8),
+                                          SizedBox(height: 16),
                                           Row(
                                             children: [
                                               Icon(Icons.comment,

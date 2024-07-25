@@ -8,6 +8,7 @@ import 'package:studentoglasi_mobile/providers/oglasi_provider.dart';
 import 'package:studentoglasi_mobile/providers/organizacije_provider.dart';
 import 'package:studentoglasi_mobile/providers/prakse_provider.dart';
 import 'package:studentoglasi_mobile/providers/statusoglasi_provider.dart';
+import 'package:studentoglasi_mobile/screens/accommodations_screen.dart';
 import 'package:studentoglasi_mobile/screens/internship_details_screen.dart';
 import 'package:studentoglasi_mobile/screens/main_screen.dart';
 import 'package:studentoglasi_mobile/screens/scholarships_screen.dart';
@@ -147,8 +148,15 @@ class _InternshipsScreenState extends State<InternshipsScreen> {
                 child: Text('Stipendije'),
               ),
               ElevatedButton(
-                onPressed: () => (),
-                child: Text('Smjestaj'),
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => AccommodationsScreen(),
+                    ),
+                  );
+                },
+                child: Text('Smještaj'),
               ),
             ],
           ),

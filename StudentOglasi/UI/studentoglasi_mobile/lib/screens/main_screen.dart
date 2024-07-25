@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:studentoglasi_mobile/providers/objave_provider.dart';
+import 'package:studentoglasi_mobile/screens/accommodations_screen.dart';
 import 'package:studentoglasi_mobile/screens/internships_screen.dart';
 import 'package:studentoglasi_mobile/screens/news_details_screen.dart';
 import 'package:studentoglasi_mobile/screens/scholarships_screen.dart';
@@ -121,8 +122,15 @@ class _ObjavaListScreenState extends State<ObjavaListScreen> {
                 child: Text('Prakse'),
               ),
               ElevatedButton(
-                onPressed: () => (),
-                child: Text('Smjestaj'),
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => AccommodationsScreen(),
+                    ),
+                  );
+                },
+                child: Text('Smještaj'),
               ),
             ],
           ),
