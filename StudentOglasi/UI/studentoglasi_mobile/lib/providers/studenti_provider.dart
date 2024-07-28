@@ -5,6 +5,9 @@ import 'package:studentoglasi_mobile/providers/base_provider.dart';
 class StudentiProvider extends BaseProvider<Student> {
   StudentiProvider() : super('Studenti');
 
+  Student? _currentStudent;
+  Student? get currentStudent => _currentStudent;
+
   @override
   Student fromJson(data) {
     // TODO: implement fromJson
@@ -19,7 +22,8 @@ class StudentiProvider extends BaseProvider<Student> {
 
     if (isValidResponse(response)) {
       var data = jsonDecode(response.body);
-      return fromJson(data);
+      _currentStudent = fromJson(data);
+      return _currentStudent!;
     } else {
       throw Exception("Unknown error");
     }

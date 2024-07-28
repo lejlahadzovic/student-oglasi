@@ -61,6 +61,8 @@ namespace StudentOglasi.Services
             CreateMap<Database.StatusPrijave, Model.StatusPrijave>();
             CreateMap<Database.Rezervacije, Model.Rezervacije>()
                 .ForMember(dest => dest.Smjestaj, opt => opt.MapFrom(src => src.SmjestajnaJedinica.Smjestaj));
+            CreateMap<Model.Like, Database.Like>();
+            CreateMap<Database.Like, Model.Like>();
         }
     }
 }

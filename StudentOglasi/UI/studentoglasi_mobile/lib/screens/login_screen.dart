@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:studentoglasi_mobile/providers/objave_provider.dart';
+import 'package:studentoglasi_mobile/providers/studenti_provider.dart';
 import 'package:studentoglasi_mobile/screens/main_screen.dart';
 import 'package:studentoglasi_mobile/screens/registration_form.dart';
 
@@ -15,7 +15,7 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  late ObjaveProvider _objaveProvider;
+  late StudentiProvider _studentProvider;
 
   Future<void> _login() async {
     var username = _usernameController.text;
@@ -25,7 +25,7 @@ class _LoginScreenState extends State<LoginScreen> {
     Authorization.password = password;
 
     try {
-      await _objaveProvider.get();
+       await _studentProvider.getCurrentStudent(); 
 
       Navigator.of(context).push(
         MaterialPageRoute(
@@ -52,7 +52,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
-    _objaveProvider = context.read<ObjaveProvider>();
+    _studentProvider = context.read<StudentiProvider>();
     return Scaffold(
       appBar: AppBar(
         title: Text('Login'),

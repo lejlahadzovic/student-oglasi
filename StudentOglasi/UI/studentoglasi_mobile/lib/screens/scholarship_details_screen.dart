@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:studentoglasi_mobile/models/Oglas/oglas.dart';
+import 'package:studentoglasi_mobile/screens/components/like_button.dart';
+import 'package:studentoglasi_mobile/utils/item_type.dart';
 import 'package:studentoglasi_mobile/utils/util.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 
 class ScholarshipDetailsScreen extends StatelessWidget {
   final Oglas scholarship;
 
-  const ScholarshipDetailsScreen({Key? key, required this.scholarship}) : super(key: key);
+  const ScholarshipDetailsScreen({Key? key, required this.scholarship})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -32,7 +35,7 @@ class ScholarshipDetailsScreen extends StatelessWidget {
                       child: Text('No Image Available'),
                     ),
                   ),
-                     SizedBox(height: 8),
+            SizedBox(height: 8),
             Row(
               children: [
                 IconButton(
@@ -42,14 +45,11 @@ class ScholarshipDetailsScreen extends StatelessWidget {
                   },
                 ),
                 SizedBox(width: 8),
-                IconButton(
-                  icon: Icon(Icons.favorite_border),
-                  onPressed: () {
-                    // Handle like button press
-                  },
+                LikeButton(
+                  itemId: scholarship.id!,
+                  itemType: ItemType.scholarship,
                 ),
                 SizedBox(width: 8),
-                
               ],
             ),
             SizedBox(height: 16),
@@ -62,36 +62,34 @@ class ScholarshipDetailsScreen extends StatelessWidget {
               scholarship.opis ?? 'No Description',
               style: TextStyle(fontSize: 16),
             ),
-              Spacer(),
-              Row(
-                children: [
-                  Expanded(
-                  child: RatingBar.builder(
-                    initialRating: 0,
-                    minRating: 1,
-                    direction: Axis.horizontal,
-                    allowHalfRating: true,
-                    itemCount: 5,
-                    itemBuilder: (context, _) => Icon(
-                      Icons.star,
-                      color: Colors.amber,
-                    ),
-                    onRatingUpdate: (rating) {
-                      // Handle rating update
-                    },
+            Spacer(),
+            Row(children: [
+              Expanded(
+                child: RatingBar.builder(
+                  initialRating: 0,
+                  minRating: 1,
+                  direction: Axis.horizontal,
+                  allowHalfRating: true,
+                  itemCount: 5,
+                  itemBuilder: (context, _) => Icon(
+                    Icons.star,
+                    color: Colors.amber,
                   ),
+                  onRatingUpdate: (rating) {
+                    // Handle rating update
+                  },
                 ),
-                Align(
-              alignment: Alignment.bottomRight,
-              child: ElevatedButton(
-                onPressed: () {
-                  // Handle apply button press
-                },
-                child: Text('Prijavi se'),
               ),
-            ),
+              Align(
+                alignment: Alignment.bottomRight,
+                child: ElevatedButton(
+                  onPressed: () {
+                    // Handle apply button press
+                  },
+                  child: Text('Prijavi se'),
+                ),
+              ),
             ])
-            
           ],
         ),
       ),

@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:studentoglasi_mobile/models/Smjestaj/smjestaj.dart';
 import 'package:studentoglasi_mobile/models/SmjestajnaJedinica/smjestajna_jedinica.dart';
 import 'package:studentoglasi_mobile/screens/components/image_gallery.dart';
+import 'package:studentoglasi_mobile/screens/components/like_button.dart';
+import 'package:studentoglasi_mobile/utils/item_type.dart';
 
 class AccommodationDetailsScreen extends StatelessWidget {
   final Smjestaj smjestaj;
@@ -43,9 +45,25 @@ class AccommodationDetailsScreen extends StatelessWidget {
                       ),
                     ),
               SizedBox(height: 16),
-              Text(
-                smjestaj.naziv ?? 'Naziv nije dostupan',
-                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Expanded(
+                    child: Text(
+                      smjestaj.naziv ?? 'Naziv nije dostupan',
+                      style:
+                          TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                  IconButton(
+                    icon: Icon(Icons.comment),
+                    onPressed: () {},
+                  ),
+                  LikeButton(
+                    itemId: smjestaj.id!,
+                    itemType: ItemType.accommodation,
+                  ),
+                ],
               ),
               SizedBox(height: 8),
               Text(
@@ -58,7 +76,7 @@ class AccommodationDetailsScreen extends StatelessWidget {
                 style: TextStyle(fontSize: 16),
               ),
               SizedBox(height: 16),
-                Row(
+              Row(
                 children: [
                   Text(
                     'WiFi: ',
@@ -90,7 +108,9 @@ class AccommodationDetailsScreen extends StatelessWidget {
                   ),
                   Icon(
                     smjestaj.fitnessCentar == true ? Icons.check : Icons.close,
-                    color: smjestaj.fitnessCentar == true ? Colors.green : Colors.red,
+                    color: smjestaj.fitnessCentar == true
+                        ? Colors.green
+                        : Colors.red,
                   ),
                 ],
               ),
@@ -102,7 +122,8 @@ class AccommodationDetailsScreen extends StatelessWidget {
                   ),
                   Icon(
                     smjestaj.restoran == true ? Icons.check : Icons.close,
-                    color: smjestaj.restoran == true ? Colors.green : Colors.red,
+                    color:
+                        smjestaj.restoran == true ? Colors.green : Colors.red,
                   ),
                 ],
               ),
@@ -113,8 +134,12 @@ class AccommodationDetailsScreen extends StatelessWidget {
                     style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                   ),
                   Icon(
-                    smjestaj.uslugePrijevoza == true ? Icons.check : Icons.close,
-                    color: smjestaj.uslugePrijevoza == true ? Colors.green : Colors.red,
+                    smjestaj.uslugePrijevoza == true
+                        ? Icons.check
+                        : Icons.close,
+                    color: smjestaj.uslugePrijevoza == true
+                        ? Colors.green
+                        : Colors.red,
                   ),
                 ],
               ),
@@ -211,12 +236,28 @@ class AccommodationUnitCard extends StatelessWidget {
                       ),
                     ),
               SizedBox(height: 8),
-              Text(
-                '${jedinica.cijena?.toStringAsFixed(2) ?? 'N/A'} BAM',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Expanded(
+                    child: Text(
+                      '${jedinica.cijena?.toStringAsFixed(2) ?? 'N/A'} BAM',
+                      style:
+                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                  IconButton(
+                    icon: Icon(Icons.comment),
+                    onPressed: () {},
+                  ),
+                  LikeButton(
+                    itemId: jedinica.id!,
+                    itemType: ItemType.accommodationUnit,
+                  ),
+                ],
               ),
               SizedBox(height: 8),
-               Row(
+              Row(
                 children: [
                   Icon(Icons.people),
                   SizedBox(width: 4),
@@ -274,7 +315,9 @@ class AccommodationUnitCard extends StatelessWidget {
                   ),
                   Icon(
                     jedinica.klimaUredjaj == true ? Icons.check : Icons.close,
-                    color: jedinica.klimaUredjaj == true ? Colors.green : Colors.red,
+                    color: jedinica.klimaUredjaj == true
+                        ? Colors.green
+                        : Colors.red,
                   ),
                 ],
               ),

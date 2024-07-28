@@ -9,9 +9,11 @@ import 'package:studentoglasi_mobile/providers/organizacije_provider.dart';
 import 'package:studentoglasi_mobile/providers/prakse_provider.dart';
 import 'package:studentoglasi_mobile/providers/statusoglasi_provider.dart';
 import 'package:studentoglasi_mobile/screens/accommodations_screen.dart';
+import 'package:studentoglasi_mobile/screens/components/like_button.dart';
 import 'package:studentoglasi_mobile/screens/internship_details_screen.dart';
 import 'package:studentoglasi_mobile/screens/main_screen.dart';
 import 'package:studentoglasi_mobile/screens/scholarships_screen.dart';
+import 'package:studentoglasi_mobile/utils/item_type.dart';
 import 'package:studentoglasi_mobile/utils/util.dart';
 import '../models/search_result.dart';
 import '../widgets/menu.dart';
@@ -252,8 +254,11 @@ class _InternshipsScreenState extends State<InternshipsScreen> {
                                               SizedBox(width: 8),
                                               Text('Komentari'),
                                               SizedBox(width: 16),
-                                              Icon(Icons.favorite,
-                                                  color: Colors.purple[900]),
+                                              SizedBox(width: 8),
+                                              LikeButton(
+                                                itemId: praksa.id!,
+                                                itemType: ItemType.internship,
+                                              ),
                                               SizedBox(width: 8),
                                               Text('Sviđa mi se'),
                                             ],

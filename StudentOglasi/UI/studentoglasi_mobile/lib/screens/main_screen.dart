@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:studentoglasi_mobile/providers/like_provider.dart';
 import 'package:studentoglasi_mobile/providers/objave_provider.dart';
 import 'package:studentoglasi_mobile/screens/accommodations_screen.dart';
+import 'package:studentoglasi_mobile/screens/components/like_button.dart';
 import 'package:studentoglasi_mobile/screens/internships_screen.dart';
 import 'package:studentoglasi_mobile/screens/news_details_screen.dart';
 import 'package:studentoglasi_mobile/screens/scholarships_screen.dart';
+import 'package:studentoglasi_mobile/utils/item_type.dart';
 import 'package:studentoglasi_mobile/utils/util.dart';
 import '../models/Kategorija/kategorija.dart';
 import '../models/Objava/objava.dart';
@@ -20,6 +23,7 @@ class ObjavaListScreen extends StatefulWidget {
 class _ObjavaListScreenState extends State<ObjavaListScreen> {
   late ObjaveProvider _objaveProvider;
   late KategorijaProvider _kategorijeProvider;
+  late LikeProvider _likeProvider;
   Kategorija? selectedKategorija;
   bool _isLoading = true;
   bool _hasError = false;
@@ -32,8 +36,10 @@ class _ObjavaListScreenState extends State<ObjavaListScreen> {
     super.initState();
     _objaveProvider = context.read<ObjaveProvider>();
     _kategorijeProvider = context.read<KategorijaProvider>();
+    _likeProvider = context.read<LikeProvider>();
     _fetchData();
     _fetchKategorije();
+    _fetchLikes();
   }
 
   Future<void> _fetchData() async {
@@ -61,6 +67,11 @@ class _ObjavaListScreenState extends State<ObjavaListScreen> {
     setState(() {
       kategorijeResult = kategorijeData;
     });
+  }
+
+  Future<void> _fetchLikes() async {
+    await _likeProvider.getUserLikes();
+    await _likeProvider.getAllLikesCount();
   }
 
   void _onSearchChanged() {
@@ -222,8 +233,10 @@ class _ObjavaListScreenState extends State<ObjavaListScreen> {
                                               SizedBox(width: 8),
                                               Text('Komentari'),
                                               SizedBox(width: 16),
-                                              Icon(Icons.favorite,
-                                                  color: Colors.purple[900]),
+                                              LikeButton(
+                                                itemId: objava.id!,
+                                                itemType: ItemType.news,
+                                              ),
                                               SizedBox(width: 8),
                                               Text('Sviđa mi se'),
                                             ],

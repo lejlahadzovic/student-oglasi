@@ -9,9 +9,11 @@ import 'package:studentoglasi_mobile/providers/statusoglasi_provider.dart';
 import 'package:studentoglasi_mobile/providers/stipendije_provider.dart';
 import 'package:studentoglasi_mobile/providers/stipenditori_provider.dart';
 import 'package:studentoglasi_mobile/screens/accommodations_screen.dart';
+import 'package:studentoglasi_mobile/screens/components/like_button.dart';
 import 'package:studentoglasi_mobile/screens/internships_screen.dart';
 import 'package:studentoglasi_mobile/screens/main_screen.dart';
 import 'package:studentoglasi_mobile/screens/scholarship_details_screen.dart';
+import 'package:studentoglasi_mobile/utils/item_type.dart';
 import 'package:studentoglasi_mobile/utils/util.dart';
 import '../models/search_result.dart';
 import '../widgets/menu.dart';
@@ -254,8 +256,10 @@ class _ScholarshipsScreenState extends State<ScholarshipsScreen> {
                                               SizedBox(width: 8),
                                               Text('Komentari'),
                                               SizedBox(width: 16),
-                                              Icon(Icons.favorite,
-                                                  color: Colors.purple[900]),
+                                              LikeButton(
+                                                itemId: stipendije.id!,
+                                                itemType: ItemType.scholarship,
+                                              ),
                                               SizedBox(width: 8),
                                               Text('Sviđa mi se'),
                                             ],

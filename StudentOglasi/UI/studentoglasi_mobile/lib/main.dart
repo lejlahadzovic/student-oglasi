@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:studentoglasi_mobile/providers/like_provider.dart';
 import 'package:studentoglasi_mobile/providers/oglasi_provider.dart';
 import 'package:studentoglasi_mobile/providers/organizacije_provider.dart';
 import 'package:studentoglasi_mobile/providers/prakse_provider.dart';
@@ -32,6 +33,7 @@ void main() {
         ChangeNotifierProvider(create: (context) => PraksaProvider()),
         ChangeNotifierProvider(create: (context) => OrganizacijeProvider()),
         ChangeNotifierProvider(create: (context) => SmjestajiProvider()),
+        ChangeNotifierProvider(create: (context) => LikeProvider()),
       ],
       child: MyApp(),
     ),

@@ -69,6 +69,8 @@ public partial class StudentoglasiContext : DbContext
 
     public virtual DbSet<Univerziteti> Univerzitetis { get; set; }
 
+    public virtual DbSet<Like> Likes { get; set; }
+
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
         => optionsBuilder.UseSqlServer("Data Source=localhost;Initial Catalog=Studentoglasi;Trusted_Connection=True;TrustServerCertificate=True");
@@ -701,6 +703,26 @@ public partial class StudentoglasiContext : DbContext
             entity.HasOne(d => d.Grad).WithMany(p => p.Univerzitetis)
                 .HasForeignKey(d => d.GradId)
                 .HasConstraintName("FK_Univerzitet_Grad_GradID");
+        });
+
+        modelBuilder.Entity<Like>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK_Like");
+
+            entity.ToTable("Like");
+
+            entity.Property(e => e.Id)
+                .ValueGeneratedOnAdd()
+                .HasColumnName("ID");
+
+            entity.Property(e => e.KorisnikId).HasColumnName("KorisnikID");
+            entity.Property(e => e.ItemId).HasColumnName("ItemID");
+            entity.Property(e => e.ItemType).HasMaxLength(100);
+
+            entity.HasOne(e => e.Korisnik)
+                .WithMany(k => k.Likes)
+                .HasForeignKey(e => e.KorisnikId)
+                .HasConstraintName("FK_Like_Korisnik_KorisnikID");
         });
 
         OnModelCreatingPartial(modelBuilder);

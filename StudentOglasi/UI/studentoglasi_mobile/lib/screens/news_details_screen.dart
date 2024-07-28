@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:studentoglasi_mobile/models/Objava/objava.dart';
+import 'package:studentoglasi_mobile/screens/components/like_button.dart';
+import 'package:studentoglasi_mobile/utils/item_type.dart';
 import 'package:studentoglasi_mobile/utils/util.dart';
 
 class ObjavaDetailsScreen extends StatelessWidget {
@@ -41,12 +43,10 @@ class ObjavaDetailsScreen extends StatelessWidget {
                   },
                 ),
                 SizedBox(width: 8),
-                IconButton(
-                  icon: Icon(Icons.favorite_border),
-                  onPressed: () {
-                    // Handle like button press
-                  },
-                ),
+                  LikeButton(
+                    itemId: objava.id!,
+                    itemType: ItemType.news,
+                  ),
                 SizedBox(width: 8),
                 
               ],

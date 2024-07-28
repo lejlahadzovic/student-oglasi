@@ -27,6 +27,8 @@ public partial class Korisnici
 
     public virtual ICollection<Komentari> Komentaris { get; set; } = new List<Komentari>();
 
+    public virtual ICollection<Like> Likes { get; set; } = new List<Like>();
+
     public virtual Studenti? Studenti { get; set; }
 
     public virtual Uloge Uloga { get; set; } = null!;

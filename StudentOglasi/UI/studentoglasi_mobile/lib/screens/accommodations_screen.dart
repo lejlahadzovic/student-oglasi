@@ -4,8 +4,10 @@ import 'package:studentoglasi_mobile/models/Smjestaj/smjestaj.dart';
 import 'package:studentoglasi_mobile/models/search_result.dart';
 import 'package:studentoglasi_mobile/providers/smjestaji_provider.dart';
 import 'package:studentoglasi_mobile/screens/accommodation_details_screen.dart';
+import 'package:studentoglasi_mobile/screens/components/like_button.dart';
 import 'package:studentoglasi_mobile/screens/internships_screen.dart';
 import 'package:studentoglasi_mobile/screens/main_screen.dart';
+import 'package:studentoglasi_mobile/utils/item_type.dart';
 import 'package:studentoglasi_mobile/utils/util.dart';
 import 'package:studentoglasi_mobile/widgets/menu.dart';
 
@@ -217,8 +219,10 @@ class _AccommodationsScreenState extends State<AccommodationsScreen> {
                                               SizedBox(width: 8),
                                               Text('Komentari'),
                                               SizedBox(width: 16),
-                                              Icon(Icons.favorite,
-                                                  color: Colors.purple[900]),
+                                              LikeButton(
+                                                itemId: smjestaj.id!,
+                                                itemType: ItemType.accommodation,
+                                              ),
                                               SizedBox(width: 8),
                                               Text('Sviđa mi se'),
                                             ],
