@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:studentoglasi_mobile/models/Smjestaj/smjestaj.dart';
 import 'package:studentoglasi_mobile/models/SmjestajnaJedinica/smjestajna_jedinica.dart';
+import 'package:studentoglasi_mobile/screens/components/comments_screen.dart';
 import 'package:studentoglasi_mobile/screens/components/image_gallery.dart';
 import 'package:studentoglasi_mobile/screens/components/like_button.dart';
 import 'package:studentoglasi_mobile/utils/item_type.dart';
@@ -56,9 +57,19 @@ class AccommodationDetailsScreen extends StatelessWidget {
                     ),
                   ),
                   IconButton(
-                    icon: Icon(Icons.comment),
-                    onPressed: () {},
-                  ),
+                  icon: Icon(Icons.comment, color: Colors.purple[900]),
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => CommentsScreen(
+                          postId: smjestaj.id!,
+                          postType: ItemType.accommodation,
+                        ),
+                      ),
+                    );
+                  },
+                ),
                   LikeButton(
                     itemId: smjestaj.id!,
                     itemType: ItemType.accommodation,
@@ -247,9 +258,19 @@ class AccommodationUnitCard extends StatelessWidget {
                     ),
                   ),
                   IconButton(
-                    icon: Icon(Icons.comment),
-                    onPressed: () {},
-                  ),
+                  icon: Icon(Icons.comment, color: Colors.purple[900]),
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => CommentsScreen(
+                          postId: jedinica.id!,
+                          postType: ItemType.accommodationUnit,
+                        ),
+                      ),
+                    );
+                  },
+                ),
                   LikeButton(
                     itemId: jedinica.id!,
                     itemType: ItemType.accommodationUnit,

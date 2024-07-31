@@ -4,6 +4,7 @@ import 'package:studentoglasi_mobile/models/Smjestaj/smjestaj.dart';
 import 'package:studentoglasi_mobile/models/search_result.dart';
 import 'package:studentoglasi_mobile/providers/smjestaji_provider.dart';
 import 'package:studentoglasi_mobile/screens/accommodation_details_screen.dart';
+import 'package:studentoglasi_mobile/screens/components/comments_screen.dart';
 import 'package:studentoglasi_mobile/screens/components/like_button.dart';
 import 'package:studentoglasi_mobile/screens/internships_screen.dart';
 import 'package:studentoglasi_mobile/screens/main_screen.dart';
@@ -214,10 +215,30 @@ class _AccommodationsScreenState extends State<AccommodationsScreen> {
                                           SizedBox(height: 16),
                                           Row(
                                             children: [
-                                              Icon(Icons.comment,
-                                                  color: Colors.purple[900]),
-                                              SizedBox(width: 8),
-                                              Text('Komentari'),
+                                              InkWell(
+                                                onTap: () {
+                                                  Navigator.push(
+                                                    context,
+                                                    MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          CommentsScreen(
+                                                        postId: smjestaj.id!,
+                                                        postType: ItemType.accommodation,
+                                                      ),
+                                                    ),
+                                                  );
+                                                },
+                                                child: Row(
+                                                  children: [
+                                                    Icon(
+                                                      Icons.comment,
+                                                      color: Colors.purple[900],
+                                                    ),
+                                                    SizedBox(width: 8),
+                                                    Text('Komentari'),
+                                                  ],
+                                                ),
+                                              ),
                                               SizedBox(width: 16),
                                               LikeButton(
                                                 itemId: smjestaj.id!,

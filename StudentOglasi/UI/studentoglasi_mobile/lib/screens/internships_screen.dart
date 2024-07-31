@@ -9,6 +9,7 @@ import 'package:studentoglasi_mobile/providers/organizacije_provider.dart';
 import 'package:studentoglasi_mobile/providers/prakse_provider.dart';
 import 'package:studentoglasi_mobile/providers/statusoglasi_provider.dart';
 import 'package:studentoglasi_mobile/screens/accommodations_screen.dart';
+import 'package:studentoglasi_mobile/screens/components/comments_screen.dart';
 import 'package:studentoglasi_mobile/screens/components/like_button.dart';
 import 'package:studentoglasi_mobile/screens/internship_details_screen.dart';
 import 'package:studentoglasi_mobile/screens/main_screen.dart';
@@ -249,12 +250,31 @@ class _InternshipsScreenState extends State<InternshipsScreen> {
                                           SizedBox(height: 8),
                                           Row(
                                             children: [
-                                              Icon(Icons.comment,
-                                                  color: Colors.purple[900]),
-                                              SizedBox(width: 8),
-                                              Text('Komentari'),
+                                              InkWell(
+                                                onTap: () {
+                                                  Navigator.push(
+                                                    context,
+                                                    MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          CommentsScreen(
+                                                        postId: praksa.id!,
+                                                        postType: ItemType.internship,
+                                                      ),
+                                                    ),
+                                                  );
+                                                },
+                                                child: Row(
+                                                  children: [
+                                                    Icon(
+                                                      Icons.comment,
+                                                      color: Colors.purple[900],
+                                                    ),
+                                                    SizedBox(width: 8),
+                                                    Text('Komentari'),
+                                                  ],
+                                                ),
+                                              ),
                                               SizedBox(width: 16),
-                                              SizedBox(width: 8),
                                               LikeButton(
                                                 itemId: praksa.id!,
                                                 itemType: ItemType.internship,

@@ -63,6 +63,11 @@ namespace StudentOglasi.Services
                 .ForMember(dest => dest.Smjestaj, opt => opt.MapFrom(src => src.SmjestajnaJedinica.Smjestaj));
             CreateMap<Model.Like, Database.Like>();
             CreateMap<Database.Like, Model.Like>();
+            CreateMap<KomentarInsertRequest, Database.Komentari>();
+            CreateMap<Database.Komentari, Model.Komentari>()
+                .ForMember(dest => dest.Ime, opt => opt.MapFrom(src => src.Korisnik.Ime))
+                .ForMember(dest => dest.Prezime, opt => opt.MapFrom(src => src.Korisnik.Prezime))
+                .ForMember(dest => dest.Odgovori, opt => opt.MapFrom(src => src.InverseParentKomentar));                
         }
     }
 }

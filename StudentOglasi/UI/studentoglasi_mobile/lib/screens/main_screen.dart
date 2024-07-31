@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:studentoglasi_mobile/providers/like_provider.dart';
 import 'package:studentoglasi_mobile/providers/objave_provider.dart';
 import 'package:studentoglasi_mobile/screens/accommodations_screen.dart';
+import 'package:studentoglasi_mobile/screens/components/comments_screen.dart';
 import 'package:studentoglasi_mobile/screens/components/like_button.dart';
 import 'package:studentoglasi_mobile/screens/internships_screen.dart';
 import 'package:studentoglasi_mobile/screens/news_details_screen.dart';
@@ -228,10 +229,30 @@ class _ObjavaListScreenState extends State<ObjavaListScreen> {
                                           SizedBox(height: 8),
                                           Row(
                                             children: [
-                                              Icon(Icons.comment,
-                                                  color: Colors.purple[900]),
-                                              SizedBox(width: 8),
-                                              Text('Komentari'),
+                                              InkWell(
+                                                onTap: () {
+                                                  Navigator.push(
+                                                    context,
+                                                    MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          CommentsScreen(
+                                                        postId: objava.id!,
+                                                        postType: ItemType.news,
+                                                      ),
+                                                    ),
+                                                  );
+                                                },
+                                                child: Row(
+                                                  children: [
+                                                    Icon(
+                                                      Icons.comment,
+                                                      color: Colors.purple[900],
+                                                    ),
+                                                    SizedBox(width: 8),
+                                                    Text('Komentari'),
+                                                  ],
+                                                ),
+                                              ),
                                               SizedBox(width: 16),
                                               LikeButton(
                                                 itemId: objava.id!,

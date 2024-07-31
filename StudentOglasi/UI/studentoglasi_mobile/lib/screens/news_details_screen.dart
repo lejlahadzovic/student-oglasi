@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:studentoglasi_mobile/models/Objava/objava.dart';
+import 'package:studentoglasi_mobile/screens/components/comments_screen.dart';
 import 'package:studentoglasi_mobile/screens/components/like_button.dart';
 import 'package:studentoglasi_mobile/utils/item_type.dart';
 import 'package:studentoglasi_mobile/utils/util.dart';
@@ -37,9 +38,17 @@ class ObjavaDetailsScreen extends StatelessWidget {
             Row(
               children: [
                 IconButton(
-                  icon: Icon(Icons.comment),
+                  icon: Icon(Icons.comment, color: Colors.purple[900]),
                   onPressed: () {
-                    // Handle comment button press
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => CommentsScreen(
+                          postId: objava.id!,
+                          postType: ItemType.news,
+                        ),
+                      ),
+                    );
                   },
                 ),
                 SizedBox(width: 8),

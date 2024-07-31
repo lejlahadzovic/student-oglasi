@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:studentoglasi_mobile/models/Oglas/oglas.dart';
+import 'package:studentoglasi_mobile/screens/components/comments_screen.dart';
 import 'package:studentoglasi_mobile/screens/components/like_button.dart';
 import 'package:studentoglasi_mobile/utils/item_type.dart';
 import 'package:studentoglasi_mobile/utils/util.dart';
@@ -39,9 +40,17 @@ class InternshipDetailsScreen extends StatelessWidget {
             Row(
               children: [
                 IconButton(
-                  icon: Icon(Icons.comment),
+                  icon: Icon(Icons.comment, color: Colors.purple[900]),
                   onPressed: () {
-                    // Handle comment button press
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => CommentsScreen(
+                          postId: internship.id!,
+                          postType: ItemType.internship,
+                        ),
+                      ),
+                    );
                   },
                 ),
                 SizedBox(width: 8),
