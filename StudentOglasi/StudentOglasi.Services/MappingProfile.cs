@@ -67,7 +67,9 @@ namespace StudentOglasi.Services
             CreateMap<Database.Komentari, Model.Komentari>()
                 .ForMember(dest => dest.Ime, opt => opt.MapFrom(src => src.Korisnik.Ime))
                 .ForMember(dest => dest.Prezime, opt => opt.MapFrom(src => src.Korisnik.Prezime))
-                .ForMember(dest => dest.Odgovori, opt => opt.MapFrom(src => src.InverseParentKomentar));                
+                .ForMember(dest => dest.Odgovori, opt => opt.MapFrom(src => src.InverseParentKomentar));
+            CreateMap<Model.Ocjene, Database.Ocjene>();
+            CreateMap<Database.Ocjene, Model.Ocjene>();
         }
     }
 }

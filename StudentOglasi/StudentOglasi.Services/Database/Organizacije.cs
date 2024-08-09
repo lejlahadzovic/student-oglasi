@@ -21,7 +21,5 @@ public partial class Organizacije
 
     public virtual Grad Grad { get; set; } = null!;
 
-    public virtual ICollection<Ocjene> Ocjenes { get; set; } = new List<Ocjene>();
-
     public virtual ICollection<Prakse> Prakses { get; set; } = new List<Prakse>();
 }

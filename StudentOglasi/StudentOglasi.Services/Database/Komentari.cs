@@ -7,10 +7,6 @@ public partial class Komentari
 {
     public int Id { get; set; }
 
-    public int PostId { get; set; }
-
-    public string PostType { get; set; } = null!;
-
     public int? ParentKomentarId { get; set; }
 
     public int KorisnikId { get; set; }
@@ -18,6 +14,10 @@ public partial class Komentari
     public DateTime? VrijemeObjave { get; set; }
 
     public string Text { get; set; } = null!;
+
+    public int PostId { get; set; }
+
+    public string PostType { get; set; } = null!;
 
     public virtual ICollection<Komentari> InverseParentKomentar { get; set; } = new List<Komentari>();
 

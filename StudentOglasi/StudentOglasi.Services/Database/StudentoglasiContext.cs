@@ -132,7 +132,9 @@ public partial class StudentoglasiContext : DbContext
 
             entity.HasIndex(e => e.PostId, "IX_Komentar_PostID");
 
-            entity.Property(e => e.PostType).HasMaxLength(50);
+            entity.Property(e => e.PostType)
+                .HasMaxLength(50)
+                .HasDefaultValue("");
             entity.Property(e => e.Text).HasMaxLength(3000);
             entity.Property(e => e.VrijemeObjave).HasColumnType("datetime");
 
@@ -219,52 +221,18 @@ public partial class StudentoglasiContext : DbContext
 
         modelBuilder.Entity<Ocjene>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK_Ocjena");
+            entity.HasKey(e => e.Id).HasName("PK__Ocjene__3214EC27B212595A");
 
             entity.ToTable("Ocjene");
 
-            entity.HasIndex(e => e.FakultetId, "IX_Ocjena_FakultetID");
-
-            entity.HasIndex(e => e.FirmaId, "IX_Ocjena_FirmaID");
-
-            entity.HasIndex(e => e.StipenditorId, "IX_Ocjena_StipenditorID");
-
-            entity.HasIndex(e => e.StudentId, "IX_Ocjena_StudentId");
-
-            entity.HasIndex(e => e.UniverzitetId, "IX_Ocjena_UniverzitetID");
-
-            entity.HasIndex(e => e.SmjestajId, "IX_Ocjene_SmjestajID");
-
             entity.Property(e => e.Id).HasColumnName("ID");
-            entity.Property(e => e.FakultetId).HasColumnName("FakultetID");
-            entity.Property(e => e.FirmaId).HasColumnName("FirmaID");
-            entity.Property(e => e.SmjestajId).HasColumnName("SmjestajID");
-            entity.Property(e => e.StipenditorId).HasColumnName("StipenditorID");
-            entity.Property(e => e.UniverzitetId).HasColumnName("UniverzitetID");
-
-            entity.HasOne(d => d.Fakultet).WithMany(p => p.Ocjenes)
-                .HasForeignKey(d => d.FakultetId)
-                .HasConstraintName("FK_Ocjena_Fakultet_FakultetID");
-
-            entity.HasOne(d => d.Firma).WithMany(p => p.Ocjenes)
-                .HasForeignKey(d => d.FirmaId)
-                .HasConstraintName("FK_Ocjena_Firma_FirmaID");
-
-            entity.HasOne(d => d.Smjestaj).WithMany(p => p.Ocjenes)
-                .HasForeignKey(d => d.SmjestajId)
-                .HasConstraintName("FK__Ocjene__Smjestaj__236943A5");
-
-            entity.HasOne(d => d.Stipenditor).WithMany(p => p.Ocjenes)
-                .HasForeignKey(d => d.StipenditorId)
-                .HasConstraintName("FK_Ocjena_Stipenditor_StipenditorID");
+            entity.Property(e => e.Ocjena).HasColumnType("decimal(3, 2)");
+            entity.Property(e => e.PostType).HasMaxLength(50);
 
             entity.HasOne(d => d.Student).WithMany(p => p.Ocjenes)
                 .HasForeignKey(d => d.StudentId)
-                .HasConstraintName("FK_Ocjena_Student_StudentId");
-
-            entity.HasOne(d => d.Univerzitet).WithMany(p => p.Ocjenes)
-                .HasForeignKey(d => d.UniverzitetId)
-                .HasConstraintName("FK_Ocjena_Univerzitet_UniverzitetID");
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK__Ocjene__StudentI__339FAB6E");
         });
 
         modelBuilder.Entity<Oglasi>(entity =>

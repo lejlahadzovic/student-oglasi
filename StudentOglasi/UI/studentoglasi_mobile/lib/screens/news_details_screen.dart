@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:studentoglasi_mobile/models/Objava/objava.dart';
 import 'package:studentoglasi_mobile/screens/components/comments_screen.dart';
-import 'package:studentoglasi_mobile/screens/components/like_button.dart';
+import 'package:studentoglasi_mobile/widgets/like_button.dart';
 import 'package:studentoglasi_mobile/utils/item_type.dart';
 import 'package:studentoglasi_mobile/utils/util.dart';
 

@@ -2,10 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:studentoglasi_mobile/models/Smjestaj/smjestaj.dart';
 import 'package:studentoglasi_mobile/models/search_result.dart';
+import 'package:studentoglasi_mobile/providers/ocjene_provider.dart';
 import 'package:studentoglasi_mobile/providers/smjestaji_provider.dart';
 import 'package:studentoglasi_mobile/screens/accommodation_details_screen.dart';
 import 'package:studentoglasi_mobile/screens/components/comments_screen.dart';
-import 'package:studentoglasi_mobile/screens/components/like_button.dart';
+import 'package:studentoglasi_mobile/widgets/like_button.dart';
 import 'package:studentoglasi_mobile/screens/internships_screen.dart';
 import 'package:studentoglasi_mobile/screens/main_screen.dart';
 import 'package:studentoglasi_mobile/utils/item_type.dart';
@@ -21,8 +22,10 @@ class AccommodationsScreen extends StatefulWidget {
 
 class _AccommodationsScreenState extends State<AccommodationsScreen> {
   late SmjestajiProvider _smjestajiProvider;
+  late OcjeneProvider _ocjeneProvider;
   SearchResult<Smjestaj>? result;
   TextEditingController _nazivController = TextEditingController();
+  Map<int, double> _averageRatings = {};
   bool _isLoading = false;
   bool _hasError = false;
 
@@ -30,6 +33,7 @@ class _AccommodationsScreenState extends State<AccommodationsScreen> {
   void initState() {
     super.initState();
     _smjestajiProvider = context.read<SmjestajiProvider>();
+    _ocjeneProvider = context.read<OcjeneProvider>();
     _fetchData();
   }
 
@@ -43,10 +47,12 @@ class _AccommodationsScreenState extends State<AccommodationsScreen> {
       var data = await _smjestajiProvider.get(filter: {
         'naziv': _nazivController.text,
       });
+      _averageRatings.clear();
       setState(() {
         result = data;
         _isLoading = false;
       });
+      await _fetchAverageRatings();
     } catch (e) {
       setState(() {
         _isLoading = false;
@@ -55,8 +61,40 @@ class _AccommodationsScreenState extends State<AccommodationsScreen> {
     }
   }
 
+  Future<void> _fetchAverageRatings() async {
+    try {
+      for (var smjestaj in result?.result ?? []) {
+        double averageRating = await _ocjeneProvider.getAverageOcjena(
+          smjestaj.id!,
+          ItemType.accommodation.toShortString(),
+        );
+        setState(() {
+          _averageRatings[smjestaj.id!] = averageRating;
+        });
+      }
+    } catch (error) {
+      print("Error fetching average ratings: $error");
+    }
+  }
+
   void _onSearchChanged() {
     _fetchData();
+  }
+
+    void _navigateToDetailsScreen(int accommodationId, double averageRating) async {
+    final shouldRefresh = await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => AccommodationDetailsScreen(
+          smjestaj: result!.result.firstWhere((s) => s.id == accommodationId),
+          averageRating: averageRating,
+        ),
+      ),
+    );
+
+    if (shouldRefresh == true) {
+      _fetchAverageRatings();
+    }
   }
 
   @override
@@ -131,20 +169,14 @@ class _AccommodationsScreenState extends State<AccommodationsScreen> {
                             itemCount: result?.count ?? 0,
                             itemBuilder: (context, index) {
                               final smjestaj = result!.result[index];
+                              final averageRating = _averageRatings[smjestaj.id] ?? 0.0;
                               return Padding(
                                 padding: const EdgeInsets.symmetric(
                                     horizontal: 8.0, vertical: 4.0),
                                 child: Card(
                                   child: InkWell(
                                     onTap: () {
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) =>
-                                              AccommodationDetailsScreen(
-                                                  smjestaj: smjestaj),
-                                        ),
-                                      );
+                                      _navigateToDetailsScreen(smjestaj.id!, averageRating);
                                     },
                                     child: Padding(
                                       padding: const EdgeInsets.all(16.0),
@@ -246,6 +278,14 @@ class _AccommodationsScreenState extends State<AccommodationsScreen> {
                                               ),
                                               SizedBox(width: 8),
                                               Text('Sviđa mi se'),
+                                              SizedBox(width: 16),
+                                              Row(
+                                                children: [
+                                                  Icon(Icons.star, color: Colors.amber),
+                                                  SizedBox(width: 4),
+                                                  Text(averageRating == 0.0 ? 'N/A' : averageRating.toStringAsFixed(1)),
+                                                ],
+                                              ),
                                             ],
                                           ),
                                         ],

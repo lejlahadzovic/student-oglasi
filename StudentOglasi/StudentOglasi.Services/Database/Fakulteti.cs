@@ -27,8 +27,6 @@ public partial class Fakulteti
 
     public int UniverzitetId { get; set; }
 
-    public virtual ICollection<Ocjene> Ocjenes { get; set; } = new List<Ocjene>();
-
     public virtual ICollection<SmjeroviFakulteti> SmjeroviFakultetis { get; set; } = new List<SmjeroviFakulteti>();
 
     public virtual ICollection<Studenti> Studentis { get; set; } = new List<Studenti>();

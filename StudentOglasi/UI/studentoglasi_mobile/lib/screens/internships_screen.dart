@@ -4,13 +4,14 @@ import 'package:studentoglasi_mobile/models/Oglas/oglas.dart';
 import 'package:studentoglasi_mobile/models/Organizacije/organizacije.dart';
 import 'package:studentoglasi_mobile/models/Praksa/praksa.dart';
 import 'package:studentoglasi_mobile/models/StatusOglas/statusoglasi.dart';
+import 'package:studentoglasi_mobile/providers/ocjene_provider.dart';
 import 'package:studentoglasi_mobile/providers/oglasi_provider.dart';
 import 'package:studentoglasi_mobile/providers/organizacije_provider.dart';
 import 'package:studentoglasi_mobile/providers/prakse_provider.dart';
 import 'package:studentoglasi_mobile/providers/statusoglasi_provider.dart';
 import 'package:studentoglasi_mobile/screens/accommodations_screen.dart';
 import 'package:studentoglasi_mobile/screens/components/comments_screen.dart';
-import 'package:studentoglasi_mobile/screens/components/like_button.dart';
+import 'package:studentoglasi_mobile/widgets/like_button.dart';
 import 'package:studentoglasi_mobile/screens/internship_details_screen.dart';
 import 'package:studentoglasi_mobile/screens/main_screen.dart';
 import 'package:studentoglasi_mobile/screens/scholarships_screen.dart';
@@ -29,6 +30,7 @@ class _InternshipsScreenState extends State<InternshipsScreen> {
   late StatusOglasiProvider _statusProvider;
   late OrganizacijeProvider _organizacijeProvider;
   late OglasiProvider _oglasiProvider;
+  late OcjeneProvider _ocjeneProvider;
   Organizacije? selectedOrganizacije;
   StatusOglasi? selectedStatusOglasi;
   bool _isLoading = true;
@@ -37,6 +39,7 @@ class _InternshipsScreenState extends State<InternshipsScreen> {
   SearchResult<StatusOglasi>? statusResult;
   SearchResult<Oglas>? oglasiResult;
   SearchResult<Praksa>? _praksa;
+  Map<int, double> _averageRatings = {};
   TextEditingController _naslovController = new TextEditingController();
   @override
   void initState() {
@@ -45,6 +48,7 @@ class _InternshipsScreenState extends State<InternshipsScreen> {
     _statusProvider = context.read<StatusOglasiProvider>();
     _organizacijeProvider = context.read<OrganizacijeProvider>();
     _oglasiProvider = context.read<OglasiProvider>();
+    _ocjeneProvider = context.read<OcjeneProvider>();
     _fetchData();
     _fetchOglasi();
     _fetchStatusOglasi();
@@ -72,16 +76,34 @@ class _InternshipsScreenState extends State<InternshipsScreen> {
     });
   }
 
+  Future<void> _fetchAverageRatings() async {
+    try {
+      for (var praksa in _praksa?.result ?? []) {
+        double averageRating = await _ocjeneProvider.getAverageOcjena(
+          praksa.id!,
+          ItemType.internship.toShortString(),
+        );
+        setState(() {
+          _averageRatings[praksa.id!] = averageRating;
+        });
+      }
+    } catch (error) {
+      print("Error fetching average ratings: $error");
+    }
+  }
+
   Future<void> _fetchData() async {
     try {
       var data = await _prakseProvider.get(filter: {
         'naslov': _naslovController.text,
         'organizacija': selectedOrganizacije?.id,
       });
+       _averageRatings.clear();
       setState(() {
         _praksa = data;
         _isLoading = false;
       });
+      await _fetchAverageRatings();
       print("Data fetched successfully: ${_praksa?.count} items.");
     } catch (error) {
       print("Error fetching data");
@@ -97,6 +119,22 @@ class _InternshipsScreenState extends State<InternshipsScreen> {
       _isLoading = true;
     });
     _fetchData();
+  }
+
+    void _navigateToDetailsScreen(int internshipId, double averageRating) async {
+    final shouldRefresh = await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => InternshipDetailsScreen(
+          internship: _praksa!.result.firstWhere((p) => p.id == internshipId).idNavigation!,
+          averageRating: averageRating,
+        ),
+      ),
+    );
+
+    if (shouldRefresh == true) {
+      _fetchAverageRatings();
+    }
   }
 
   @override
@@ -176,21 +214,14 @@ class _InternshipsScreenState extends State<InternshipsScreen> {
                             itemCount: _praksa?.count,
                             itemBuilder: (context, index) {
                               final praksa = _praksa!.result[index];
+                              final averageRating = _averageRatings[praksa.id] ?? 0.0;
                               return Padding(
                                 padding: const EdgeInsets.symmetric(
                                     horizontal: 8.0, vertical: 4.0),
                                 child: Card(
                                   child: InkWell(
                                     onTap: () {
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) =>
-                                              InternshipDetailsScreen(
-                                            internship: praksa.idNavigation!,
-                                          ),
-                                        ),
-                                      );
+                                      _navigateToDetailsScreen(praksa.id!, averageRating);
                                     },
                                     child: Padding(
                                       padding: const EdgeInsets.all(16.0),
@@ -258,7 +289,8 @@ class _InternshipsScreenState extends State<InternshipsScreen> {
                                                       builder: (context) =>
                                                           CommentsScreen(
                                                         postId: praksa.id!,
-                                                        postType: ItemType.internship,
+                                                        postType:
+                                                            ItemType.internship,
                                                       ),
                                                     ),
                                                   );
@@ -281,6 +313,14 @@ class _InternshipsScreenState extends State<InternshipsScreen> {
                                               ),
                                               SizedBox(width: 8),
                                               Text('Sviđa mi se'),
+                                              SizedBox(width: 16),
+                                              Row(
+                                                children: [
+                                                  Icon(Icons.star, color: Colors.amber),
+                                                  SizedBox(width: 4),
+                                                  Text(averageRating == 0.0 ? 'N/A' : averageRating.toStringAsFixed(1)),
+                                                ],
+                                              ),
                                             ],
                                           ),
                                         ],

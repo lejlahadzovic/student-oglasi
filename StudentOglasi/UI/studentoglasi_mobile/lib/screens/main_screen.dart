@@ -4,7 +4,7 @@ import 'package:studentoglasi_mobile/providers/like_provider.dart';
 import 'package:studentoglasi_mobile/providers/objave_provider.dart';
 import 'package:studentoglasi_mobile/screens/accommodations_screen.dart';
 import 'package:studentoglasi_mobile/screens/components/comments_screen.dart';
-import 'package:studentoglasi_mobile/screens/components/like_button.dart';
+import 'package:studentoglasi_mobile/widgets/like_button.dart';
 import 'package:studentoglasi_mobile/screens/internships_screen.dart';
 import 'package:studentoglasi_mobile/screens/news_details_screen.dart';
 import 'package:studentoglasi_mobile/screens/scholarships_screen.dart';
