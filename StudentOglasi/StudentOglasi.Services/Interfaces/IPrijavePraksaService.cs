@@ -1,4 +1,5 @@
 ﻿using StudentOglasi.Model;
+using StudentOglasi.Model.Requests;
 using StudentOglasi.Model.SearchObjects;
 using System;
 using System.Collections.Generic;
@@ -8,10 +9,11 @@ using System.Threading.Tasks;
 
 namespace StudentOglasi.Services.Interfaces
 {
-    public interface IPrijavePraksaService : IService<PrijavePraksa, PrijavePraksaSearchObject>
+    public interface IPrijavePraksaService : ICRUDService<PrijavePraksa, PrijavePraksaSearchObject, PrijavePrakseInsertRequest, PrijavePrakseUpdateRequest>
     {
         Task<Model.PrijavePraksa> Approve(int studentId, int praksaId);
         Task<Model.PrijavePraksa> Cancel(int studentId, int praksaId);
         Task<List<string>> AllowedActions(int studentId, int praksaId);
+        Task<List<PrijavePraksa>> GetByStudentIdAsync(int studentId);
     }
 }

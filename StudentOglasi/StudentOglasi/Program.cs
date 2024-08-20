@@ -17,6 +17,7 @@ using StudentOglasi.Services.StateMachines.RezervacijeStateMachine;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+builder.Services.AddHttpContextAccessor();
 builder.Services.AddTransient<IObjaveService, ObjaveService>();
 builder.Services.AddTransient<IKorisniciService, KorisniciService>();
 builder.Services.AddTransient<IKategorijeService, KategorijeService>();
@@ -91,6 +92,7 @@ builder.Services.AddSwaggerGen(c =>
         }
     });
 });
+
 
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<StudentoglasiContext>(options =>

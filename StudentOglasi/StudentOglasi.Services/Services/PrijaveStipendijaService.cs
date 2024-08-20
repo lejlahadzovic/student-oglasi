@@ -5,15 +5,22 @@ using StudentOglasi.Services.Interfaces;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using StudentOglasi.Services.StateMachines.PrijaveStipendijaStateMachine;
+using StudentOglasi.Model.Requests;
+using PrijaveStipendija = StudentOglasi.Model.PrijaveStipendija;
 
 namespace StudentOglasi.Services.Services
 {
-    public class PrijaveStipendijaService : BaseService<Model.PrijaveStipendija, Database.PrijaveStipendija, PrijaveStipendijaSearchObject>, IPrijaveStipendijaService
+    public class PrijaveStipendijaService : BaseCRUDService<Model.PrijaveStipendija, Database.PrijaveStipendija, PrijaveStipendijaSearchObject,PrijaveStipendijaInsertRequest,PrijaveStipendijaUpdateRequest>, IPrijaveStipendijaService
     {
         public BasePrijaveStipendijaState _baseState { get; set; }
         public PrijaveStipendijaService(StudentoglasiContext context, IMapper mapper, BasePrijaveStipendijaState baseState) : base(context, mapper)
         {
             _baseState = baseState;
+        }
+        public override Task<Model.PrijaveStipendija> Insert(PrijaveStipendijaInsertRequest insert)
+        {
+            var state = _baseState.CreateState("Initial");
+            return state.Insert(insert);
         }
         public override IQueryable<Database.PrijaveStipendija> AddFilter(IQueryable<Database.PrijaveStipendija> query, PrijaveStipendijaSearchObject? search = null)
         {
@@ -95,6 +102,15 @@ namespace StudentOglasi.Services.Services
             entity.Status = await _context.StatusPrijaves.FindAsync(entity.StatusId);
             var state = _baseState.CreateState(entity.Status.Naziv ?? "Na cekanju");
             return await state.AllowedActions();
+        }
+
+        public async Task<List<PrijaveStipendija>> GetByStudentIdAsync(int studentId)
+        {
+            var entity = _context.PrijaveStipendijas.Where(x => x.StudentId == studentId).Include(p => p.Stipendija).Include(p => p.Student).Include(p => p.Status).ToList();
+
+
+            return _mapper.Map<List<Model.PrijaveStipendija>>(entity);
+
         }
     }
 }

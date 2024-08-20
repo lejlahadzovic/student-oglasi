@@ -13,15 +13,31 @@ using Microsoft.EntityFrameworkCore;
 using Azure.Storage.Blobs.Models;
 using StudentOglasi.Services.StateMachines.PrakseStateMachine;
 using StudentOglasi.Services.StateMachines.PrijavePrakseStateMachine;
+using System.Drawing.Printing;
+using PrijavePraksa = StudentOglasi.Model.PrijavePraksa;
+using Microsoft.VisualStudio.Services.Identity;
 
 namespace StudentOglasi.Services.Services
 {
-    public class PrijavePraksaService : BaseService<Model.PrijavePraksa, Database.PrijavePraksa, PrijavePraksaSearchObject>, IPrijavePraksaService
+    public class PrijavePraksaService : BaseCRUDService<Model.PrijavePraksa, Database.PrijavePraksa, PrijavePraksaSearchObject, PrijavePrakseInsertRequest, PrijavePrakseUpdateRequest>, IPrijavePraksaService
     {
         public BasePrijavePrakseState _baseState { get; set; }
         public PrijavePraksaService(StudentoglasiContext context, IMapper mapper, BasePrijavePrakseState baseState) : base(context, mapper)
         {
             _baseState = baseState;
+        }
+        public override Task<Model.PrijavePraksa> Insert(PrijavePrakseInsertRequest insert)
+        {
+            var state = _baseState.CreateState("Initial");
+            return state.Insert(insert);
+        }
+        public async Task<List<PrijavePraksa>> GetByStudentIdAsync(int studentId)
+        {
+            var entity = _context.PrijavePraksas.Where(x => x.StudentId == studentId).Include(p=>p.Praksa).Include(p=>p.Student).Include(p => p.Status).ToList();
+
+
+            return _mapper.Map<List<Model.PrijavePraksa>>(entity);
+           
         }
         public override IQueryable<Database.PrijavePraksa> AddFilter(IQueryable<Database.PrijavePraksa> query, PrijavePraksaSearchObject? search = null)
         {
@@ -105,5 +121,7 @@ namespace StudentOglasi.Services.Services
             var state = _baseState.CreateState(entity.Status.Naziv ?? "Na cekanju");
             return await state.AllowedActions();
         }
+
+
     }
 }

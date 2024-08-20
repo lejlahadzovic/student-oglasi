@@ -46,6 +46,14 @@ class DrawerMenu extends StatelessWidget {
               Navigator.pushNamed(context, '/logout');
             },
           ),
+          ListTile(
+            leading: Icon(Icons.account_circle, color: Colors.purple[900]),
+            title: Text('Moje prijave'),
+            onTap: () {
+              Navigator.pop(context);
+              Navigator.pushNamed(context, '/prijave');
+            },
+          ),
         ],
       ),
     );

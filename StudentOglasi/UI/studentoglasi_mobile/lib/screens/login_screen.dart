@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:studentoglasi_mobile/providers/studenti_provider.dart';
+import 'package:studentoglasi_mobile/models/Korisnik/korisnik.dart';
+import 'package:studentoglasi_mobile/models/Student/student.dart';
+import 'package:studentoglasi_mobile/providers/base_provider.dart';
+import 'package:studentoglasi_mobile/providers/objave_provider.dart';
 import 'package:studentoglasi_mobile/screens/main_screen.dart';
 import 'package:studentoglasi_mobile/screens/registration_form.dart';
 
@@ -8,6 +12,8 @@ import '../utils/util.dart';
 //import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class LoginScreen extends StatefulWidget {
+
+  
   @override
   _LoginScreenState createState() => _LoginScreenState();
 }
@@ -16,11 +22,13 @@ class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   late StudentiProvider _studentProvider;
+  late ObjaveProvider _objaveProvider;
+  Student? student;
 
   Future<void> _login() async {
     var username = _usernameController.text;
     var password = _passwordController.text;
-
+     
     Authorization.username = username;
     Authorization.password = password;
 
@@ -29,7 +37,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
       Navigator.of(context).push(
         MaterialPageRoute(
-          builder: (context) => ObjavaListScreen(),
+          builder: (context) => ObjavaListScreen()
         ),
       );
     } on Exception {

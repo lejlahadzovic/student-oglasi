@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:studentoglasi_mobile/models/Oglas/oglas.dart';
 import 'package:studentoglasi_mobile/screens/components/like_button.dart';
+import 'package:studentoglasi_mobile/screens/scholarship_form_screen.dart';
 import 'package:studentoglasi_mobile/utils/item_type.dart';
 import 'package:studentoglasi_mobile/utils/util.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
@@ -83,9 +84,19 @@ class ScholarshipDetailsScreen extends StatelessWidget {
               Align(
                 alignment: Alignment.bottomRight,
                 child: ElevatedButton(
-                  onPressed: () {
-                    // Handle apply button press
-                  },
+                   onPressed: () {
+                  // Handle apply button press
+                  Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) =>
+                                              PrijavaStipendijaFormScreen(
+                                            scholarship:
+                                                scholarship,
+                                          ),
+                                        ),
+                                      );
+                },
                   child: Text('Prijavi se'),
                 ),
               ),

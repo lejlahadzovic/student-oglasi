@@ -18,6 +18,10 @@ namespace StudentOglasi.Services.StateMachines.PrijavePrakseStateMachine
             _mapper = mapper;
             _serviceProvider = serviceProvider;
         }
+        public virtual Task<Model.PrijavePraksa> Insert(PrijavePrakseInsertRequest request)
+        {
+            throw new UserException("Action is not allowed!");
+        }
 
         public virtual Task<Model.PrijavePraksa> Approve(int studentId, int praksaId)
         {

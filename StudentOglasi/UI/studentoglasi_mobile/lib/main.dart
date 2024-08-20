@@ -5,13 +5,17 @@ import 'package:studentoglasi_mobile/providers/oglasi_provider.dart';
 import 'package:studentoglasi_mobile/providers/organizacije_provider.dart';
 import 'package:studentoglasi_mobile/providers/prakse_provider.dart';
 import 'package:studentoglasi_mobile/providers/smjestaji_provider.dart';
+import 'package:studentoglasi_mobile/providers/prijavestipendija_provider.dart';
 import 'package:studentoglasi_mobile/providers/statusoglasi_provider.dart';
+import 'package:studentoglasi_mobile/providers/statusprijave_provider.dart';
 import 'package:studentoglasi_mobile/providers/stipendije_provider.dart';
 import 'package:studentoglasi_mobile/providers/stipenditori_provider.dart';
+import 'package:studentoglasi_mobile/screens/applications_screen.dart';
 import 'package:studentoglasi_mobile/screens/login_screen.dart';
 import 'package:studentoglasi_mobile/screens/profile_screen.dart';
 import 'providers/kategorije_provider.dart';
 import 'providers/objave_provider.dart';
+import 'providers/prijavepraksa_provider.dart';
 import 'screens/main_screen.dart';
 import 'package:studentoglasi_mobile/providers/nacin_studiranja_provider.dart';
 import 'package:studentoglasi_mobile/providers/studenti_provider.dart';
@@ -34,6 +38,9 @@ void main() {
         ChangeNotifierProvider(create: (context) => OrganizacijeProvider()),
         ChangeNotifierProvider(create: (context) => SmjestajiProvider()),
         ChangeNotifierProvider(create: (context) => LikeProvider()),
+         ChangeNotifierProvider(create: (context) => StatusPrijaveProvider()),
+        ChangeNotifierProvider(create: (context) => PrijaveStipendijaProvider()),
+        ChangeNotifierProvider(create: (context) => PrijavePraksaProvider()),
       ],
       child: MyApp(),
     ),
@@ -56,6 +63,7 @@ class MyApp extends StatelessWidget {
         '/home': (context) => ObjavaListScreen(),
         '/profile': (context) => ProfileScreen(),
         '/logout': (context) => LoginScreen(),
+        '/prijave':(context) => ApplicationsScreen(),
       },
     );
   }

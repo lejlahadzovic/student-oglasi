@@ -4,26 +4,20 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace StudentOglasi.Model
+namespace StudentOglasi.Model.Requests
 {
-    public class PrijaveStipendija
+    public class PrijaveStipendijaUpdateRequest
     {
         public int StudentId { get; set; }
 
         public int StipendijaId { get; set; }
 
-        public string? Dokumentacija { get; set; } 
+        public string Dokumentacija { get; set; } = null!;
 
         public string? Cv { get; set; }
 
         public decimal ProsjekOcjena { get; set; }
 
         public int StatusId { get; set; }
-
-        public virtual StatusPrijave Status { get; set; } = null!;
-
-        public virtual Stipendije Stipendija { get; set; } = null!;
-
-        public virtual Studenti Student { get; set; } = null!;
     }
 }

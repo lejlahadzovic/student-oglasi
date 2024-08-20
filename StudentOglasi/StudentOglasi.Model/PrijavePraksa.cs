@@ -14,7 +14,7 @@ namespace StudentOglasi.Model
 
         public string? PropratnoPismo { get; set; }
 
-        public string Cv { get; set; } = null!;
+        public string? Cv { get; set; }
 
         public string? Certifikati { get; set; }
 

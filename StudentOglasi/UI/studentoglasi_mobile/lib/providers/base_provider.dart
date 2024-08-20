@@ -226,4 +226,5 @@ abstract class BaseProvider<T> with ChangeNotifier {
     }
     return object;
   }
+
 }

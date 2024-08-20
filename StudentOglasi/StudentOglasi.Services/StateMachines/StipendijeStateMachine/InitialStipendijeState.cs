@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using StudentOglasi.Model.Requests;
 using StudentOglasi.Services.Database;
@@ -15,6 +16,7 @@ namespace StudentOglasi.Services.StateMachine.StipendijeStateMachine
     public class InitialStipendijeState : BaseStipendijeState
     {
         public readonly FileService _fileService;
+        private readonly IHttpContextAccessor _httpContextAccessor;
         public InitialStipendijeState(IServiceProvider serviceProvider, StudentoglasiContext context, IMapper mapper, FileService fileService) : base(serviceProvider, context, mapper)
         {
             _fileService = fileService;

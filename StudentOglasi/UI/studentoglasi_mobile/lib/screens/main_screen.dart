@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:studentoglasi_mobile/providers/like_provider.dart';
+import 'package:studentoglasi_mobile/models/Student/student.dart';
 import 'package:studentoglasi_mobile/providers/objave_provider.dart';
 import 'package:studentoglasi_mobile/screens/accommodations_screen.dart';
 import 'package:studentoglasi_mobile/screens/components/like_button.dart';
