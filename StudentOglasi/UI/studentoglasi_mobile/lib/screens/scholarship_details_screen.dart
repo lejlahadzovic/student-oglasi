@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:studentoglasi_mobile/models/Oglas/oglas.dart';
 import 'package:studentoglasi_mobile/screens/components/comments_screen.dart';
 import 'package:studentoglasi_mobile/widgets/like_button.dart';
-import 'package:studentoglasi_mobile/screens/components/like_button.dart';
 import 'package:studentoglasi_mobile/screens/scholarship_form_screen.dart';
 import 'package:studentoglasi_mobile/utils/item_type.dart';
 import 'package:studentoglasi_mobile/utils/util.dart';
@@ -148,7 +147,7 @@ class _ScholarshipDetailsScreenState extends State<ScholarshipDetailsScreen> {
                                           builder: (context) =>
                                               PrijavaStipendijaFormScreen(
                                             scholarship:
-                                                scholarship,
+                                                widget.scholarship,
                                           ),
                                         ),
                                       );

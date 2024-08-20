@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:studentoglasi_mobile/models/Oglas/oglas.dart';
 import 'package:studentoglasi_mobile/screens/components/comments_screen.dart';
 import 'package:studentoglasi_mobile/widgets/like_button.dart';
-import 'package:studentoglasi_mobile/screens/components/like_button.dart';
 import 'package:studentoglasi_mobile/screens/internship_form_screen.dart';
 import 'package:studentoglasi_mobile/utils/item_type.dart';
 import 'package:studentoglasi_mobile/utils/util.dart';
@@ -145,50 +144,40 @@ class _InternshipDetailsScreenState extends State<InternshipDetailsScreen> {
                 Align(
                   alignment: Alignment.bottomRight,
                   child: ElevatedButton(
+                    onPressed: () {},
+                    child: Text('Prijavi se'),
+                  ),
+                ),
+              ],
+            ),
+            Row(
+              children: [
+                Expanded(
+                  child: StarRatingWidget(
+                    postId: widget.internship.id!,
+                    postType: ItemType.internship,
+                    onRatingChanged: _fetchAverageRatings,
+                  ),
+                ),
+                Align(
+                  alignment: Alignment.bottomRight,
+                  child: ElevatedButton(
                     onPressed: () {
+                      // Handle apply button press
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => PrijavaPraksaFormScreen(
+                            internship: widget.internship,
+                          ),
+                        ),
+                      );
                     },
                     child: Text('Prijavi se'),
                   ),
                 ),
               ],
             ),
-            Row(children: [
-              Expanded(
-                child: RatingBar.builder(
-                  initialRating: 0,
-                  minRating: 1,
-                  direction: Axis.horizontal,
-                  allowHalfRating: true,
-                  itemCount: 5,
-                  itemBuilder: (context, _) => Icon(
-                    Icons.star,
-                    color: Colors.amber,
-                  ),
-                  onRatingUpdate: (rating) {
-                    // Handle rating update
-                  },
-                ),
-              ),
-              Align(
-                alignment: Alignment.bottomRight,
-                child: ElevatedButton(
-                  onPressed: () {
-                  // Handle apply button press
-                  Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) =>
-                                              PrijavaPraksaFormScreen(
-                                            internship:
-                                                internship,
-                                          ),
-                                        ),
-                                      );
-                },
-                  child: Text('Prijavi se'),
-                ),
-              ),
-            ])
           ],
         ),
       ),
