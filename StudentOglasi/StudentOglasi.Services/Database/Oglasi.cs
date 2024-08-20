@@ -17,8 +17,6 @@ public partial class Oglasi
 
     public string? Slika { get; set; }
 
-    public virtual ICollection<Komentari> Komentaris { get; set; } = new List<Komentari>();
-
     public virtual Prakse? Prakse { get; set; }
 
     public virtual Stipendije? Stipendije { get; set; }

@@ -4,12 +4,14 @@ import 'package:studentoglasi_mobile/models/Oglas/oglas.dart';
 import 'package:studentoglasi_mobile/models/StatusOglas/statusoglasi.dart';
 import 'package:studentoglasi_mobile/models/Stipendija/stipendija.dart';
 import 'package:studentoglasi_mobile/models/Stipenditor/stipenditor.dart';
+import 'package:studentoglasi_mobile/providers/ocjene_provider.dart';
 import 'package:studentoglasi_mobile/providers/oglasi_provider.dart';
 import 'package:studentoglasi_mobile/providers/statusoglasi_provider.dart';
 import 'package:studentoglasi_mobile/providers/stipendije_provider.dart';
 import 'package:studentoglasi_mobile/providers/stipenditori_provider.dart';
 import 'package:studentoglasi_mobile/screens/accommodations_screen.dart';
-import 'package:studentoglasi_mobile/screens/components/like_button.dart';
+import 'package:studentoglasi_mobile/screens/components/comments_screen.dart';
+import 'package:studentoglasi_mobile/widgets/like_button.dart';
 import 'package:studentoglasi_mobile/screens/internships_screen.dart';
 import 'package:studentoglasi_mobile/screens/main_screen.dart';
 import 'package:studentoglasi_mobile/screens/scholarship_details_screen.dart';
@@ -28,6 +30,7 @@ class _ScholarshipsScreenState extends State<ScholarshipsScreen> {
   late StatusOglasiProvider _statusProvider;
   late StipenditoriProvider _stipenditorProvider;
   late OglasiProvider _oglasiProvider;
+  late OcjeneProvider _ocjeneProvider;
   bool _isLoading = true;
   bool _hasError = false;
   Stipenditor? selectedStipenditor;
@@ -35,6 +38,7 @@ class _ScholarshipsScreenState extends State<ScholarshipsScreen> {
   SearchResult<Stipenditor>? stipenditoriResult;
   SearchResult<StatusOglasi>? statusResult;
   SearchResult<Oglas>? oglasiResult;
+  Map<int, double> _averageRatings = {};
   TextEditingController _naslovController = new TextEditingController();
   @override
   void initState() {
@@ -44,6 +48,7 @@ class _ScholarshipsScreenState extends State<ScholarshipsScreen> {
     _statusProvider = context.read<StatusOglasiProvider>();
     _stipenditorProvider = context.read<StipenditoriProvider>();
     _oglasiProvider = context.read<OglasiProvider>();
+    _ocjeneProvider = context.read<OcjeneProvider>();
     _fetchData();
     _fetchOglasi();
     _fetchStatusOglasi();
@@ -71,16 +76,34 @@ class _ScholarshipsScreenState extends State<ScholarshipsScreen> {
     });
   }
 
+  Future<void> _fetchAverageRatings() async {
+  try {
+    for (var stipendija in _stipendije?.result ?? []) {
+      double averageRating = await _ocjeneProvider.getAverageOcjena(
+        stipendija.id!,
+        ItemType.scholarship.toShortString(),
+      );
+      setState(() {
+        _averageRatings[stipendija.id!] = averageRating;
+      });
+    }
+  } catch (error) {
+    print("Error fetching average ratings: $error");
+  }
+}
+
   Future<void> _fetchData() async {
     try {
       var data = await _stipendijeProvider.get(filter: {
         'naslov': _naslovController.text,
         'stipenditor': selectedStipenditor?.id,
       });
+      _averageRatings.clear();
       setState(() {
         _stipendije = data;
         _isLoading = false;
       });
+      await _fetchAverageRatings();
       print("Data fetched successfully: ${_stipendije?.count} items.");
     } catch (error) {
       print("Error fetching data");
@@ -97,6 +120,22 @@ class _ScholarshipsScreenState extends State<ScholarshipsScreen> {
     });
     _fetchData();
   }
+
+  void _navigateToDetailsScreen(int scholarshipId, double averageRating) async {
+  final shouldRefresh = await Navigator.push(
+    context,
+    MaterialPageRoute(
+      builder: (context) => ScholarshipDetailsScreen(
+        scholarship: _stipendije!.result.firstWhere((s) => s.id == scholarshipId).idNavigation!,
+        averageRating: averageRating,
+      ),
+    ),
+  );
+
+  if (shouldRefresh == true) {
+    _fetchAverageRatings();
+  }
+}
 
   @override
   Widget build(BuildContext context) {
@@ -175,22 +214,14 @@ class _ScholarshipsScreenState extends State<ScholarshipsScreen> {
                             itemCount: _stipendije?.count,
                             itemBuilder: (context, index) {
                               final stipendije = _stipendije!.result[index];
+                              final averageRating = _averageRatings[stipendije.id] ?? 0.0;
                               return Padding(
                                 padding: const EdgeInsets.symmetric(
                                     horizontal: 8.0, vertical: 4.0),
                                 child: Card(
                                   child: InkWell(
                                     onTap: () {
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) =>
-                                              ScholarshipDetailsScreen(
-                                            scholarship:
-                                                stipendije.idNavigation!,
-                                          ),
-                                        ),
-                                      );
+                                      _navigateToDetailsScreen(stipendije.id!, averageRating);
                                     },
                                     child: Padding(
                                       padding: const EdgeInsets.all(16.0),
@@ -251,10 +282,30 @@ class _ScholarshipsScreenState extends State<ScholarshipsScreen> {
                                           SizedBox(height: 8),
                                           Row(
                                             children: [
-                                              Icon(Icons.comment,
-                                                  color: Colors.purple[900]),
-                                              SizedBox(width: 8),
-                                              Text('Komentari'),
+                                              InkWell(
+                                                onTap: () {
+                                                  Navigator.push(
+                                                    context,
+                                                    MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          CommentsScreen(
+                                                        postId: stipendije.id!,
+                                                        postType: ItemType.scholarship,
+                                                      ),
+                                                    ),
+                                                  );
+                                                },
+                                                child: Row(
+                                                  children: [
+                                                    Icon(
+                                                      Icons.comment,
+                                                      color: Colors.purple[900],
+                                                    ),
+                                                    SizedBox(width: 8),
+                                                    Text('Komentari'),
+                                                  ],
+                                                ),
+                                              ),
                                               SizedBox(width: 16),
                                               LikeButton(
                                                 itemId: stipendije.id!,
@@ -262,6 +313,14 @@ class _ScholarshipsScreenState extends State<ScholarshipsScreen> {
                                               ),
                                               SizedBox(width: 8),
                                               Text('Sviđa mi se'),
+                                              SizedBox(width: 16),
+                                              Row(
+                                                children: [
+                                                  Icon(Icons.star, color: Colors.amber),
+                                                  SizedBox(width: 4),
+                                                  Text(averageRating == 0.0 ? 'N/A' : averageRating.toStringAsFixed(1)),
+                                                ],
+                                              ),
                                             ],
                                           ),
                                         ],

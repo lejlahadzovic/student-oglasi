@@ -18,6 +18,4 @@ public partial class Objave
     public int KategorijaId { get; set; }
 
     public virtual Kategorija Kategorija { get; set; } = null!;
-
-    public virtual ICollection<Komentari> Komentaris { get; set; } = new List<Komentari>();
 }

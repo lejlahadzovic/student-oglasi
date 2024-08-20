@@ -52,6 +52,8 @@ builder.Services.AddTransient<IGradoviService, GradoviService>();
 builder.Services.AddTransient<ITipSmjestajaService, TipSmjestajaService>();
 builder.Services.AddTransient<ISlikeService, SlikeService>();
 builder.Services.AddTransient<ILikeService, LikeService>();
+builder.Services.AddTransient<IKomentariService, KomentariService>();
+builder.Services.AddTransient<IOcjeneService, OcjeneService>();
 builder.Services.AddTransient<SlikeService>();
 builder.Services.AddTransient<SmjestajnaJedinicaService>();
 builder.Services.AddTransient<DraftPrijavePraksaState>();

@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using StudentOglasi.Services.Database;
 
@@ -11,9 +12,11 @@ using StudentOglasi.Services.Database;
 namespace StudentOglasi.Services.Migrations
 {
     [DbContext(typeof(StudentoglasiContext))]
-    partial class StudentoglasiContextModelSnapshot : ModelSnapshot
+    [Migration("20240730011825_UpdateKomentariTable")]
+    partial class UpdateKomentariTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -145,10 +148,8 @@ namespace StudentOglasi.Services.Migrations
 
                     b.Property<string>("PostType")
                         .IsRequired()
-                        .ValueGeneratedOnAdd()
                         .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)")
-                        .HasDefaultValue("");
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("Text")
                         .IsRequired()
@@ -323,24 +324,49 @@ namespace StudentOglasi.Services.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<decimal>("Ocjena")
-                        .HasColumnType("decimal(3, 2)");
+                    b.Property<int?>("FakultetId")
+                        .HasColumnType("int")
+                        .HasColumnName("FakultetID");
 
-                    b.Property<int>("PostId")
-                        .HasColumnType("int");
+                    b.Property<int?>("FirmaId")
+                        .HasColumnType("int")
+                        .HasColumnName("FirmaID");
 
-                    b.Property<string>("PostType")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                    b.Property<string>("Komentar")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("SmjestajId")
+                        .HasColumnType("int")
+                        .HasColumnName("SmjestajID");
+
+                    b.Property<int?>("StipenditorId")
+                        .HasColumnType("int")
+                        .HasColumnName("StipenditorID");
 
                     b.Property<int>("StudentId")
                         .HasColumnType("int");
 
-                    b.HasKey("Id")
-                        .HasName("PK__Ocjene__3214EC27B212595A");
+                    b.Property<int?>("UniverzitetId")
+                        .HasColumnType("int")
+                        .HasColumnName("UniverzitetID");
 
-                    b.HasIndex("StudentId");
+                    b.Property<int>("Vrijednost")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id")
+                        .HasName("PK_Ocjena");
+
+                    b.HasIndex(new[] { "FakultetId" }, "IX_Ocjena_FakultetID");
+
+                    b.HasIndex(new[] { "FirmaId" }, "IX_Ocjena_FirmaID");
+
+                    b.HasIndex(new[] { "StipenditorId" }, "IX_Ocjena_StipenditorID");
+
+                    b.HasIndex(new[] { "StudentId" }, "IX_Ocjena_StudentId");
+
+                    b.HasIndex(new[] { "UniverzitetId" }, "IX_Ocjena_UniverzitetID");
+
+                    b.HasIndex(new[] { "SmjestajId" }, "IX_Ocjene_SmjestajID");
 
                     b.ToTable("Ocjene", (string)null);
                 });
@@ -1129,13 +1155,49 @@ namespace StudentOglasi.Services.Migrations
 
             modelBuilder.Entity("StudentOglasi.Services.Database.Ocjene", b =>
                 {
+                    b.HasOne("StudentOglasi.Services.Database.Fakulteti", "Fakultet")
+                        .WithMany("Ocjenes")
+                        .HasForeignKey("FakultetId")
+                        .HasConstraintName("FK_Ocjena_Fakultet_FakultetID");
+
+                    b.HasOne("StudentOglasi.Services.Database.Organizacije", "Firma")
+                        .WithMany("Ocjenes")
+                        .HasForeignKey("FirmaId")
+                        .HasConstraintName("FK_Ocjena_Firma_FirmaID");
+
+                    b.HasOne("StudentOglasi.Services.Database.Smjestaji", "Smjestaj")
+                        .WithMany("Ocjenes")
+                        .HasForeignKey("SmjestajId")
+                        .HasConstraintName("FK__Ocjene__Smjestaj__236943A5");
+
+                    b.HasOne("StudentOglasi.Services.Database.Stipenditori", "Stipenditor")
+                        .WithMany("Ocjenes")
+                        .HasForeignKey("StipenditorId")
+                        .HasConstraintName("FK_Ocjena_Stipenditor_StipenditorID");
+
                     b.HasOne("StudentOglasi.Services.Database.Studenti", "Student")
                         .WithMany("Ocjenes")
                         .HasForeignKey("StudentId")
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
-                        .HasConstraintName("FK__Ocjene__StudentI__339FAB6E");
+                        .HasConstraintName("FK_Ocjena_Student_StudentId");
+
+                    b.HasOne("StudentOglasi.Services.Database.Univerziteti", "Univerzitet")
+                        .WithMany("Ocjenes")
+                        .HasForeignKey("UniverzitetId")
+                        .HasConstraintName("FK_Ocjena_Univerzitet_UniverzitetID");
+
+                    b.Navigation("Fakultet");
+
+                    b.Navigation("Firma");
+
+                    b.Navigation("Smjestaj");
+
+                    b.Navigation("Stipenditor");
 
                     b.Navigation("Student");
+
+                    b.Navigation("Univerzitet");
                 });
 
             modelBuilder.Entity("StudentOglasi.Services.Database.Organizacije", b =>
@@ -1414,6 +1476,8 @@ namespace StudentOglasi.Services.Migrations
 
             modelBuilder.Entity("StudentOglasi.Services.Database.Fakulteti", b =>
                 {
+                    b.Navigation("Ocjenes");
+
                     b.Navigation("SmjeroviFakultetis");
 
                     b.Navigation("Studentis");
@@ -1463,6 +1527,8 @@ namespace StudentOglasi.Services.Migrations
 
             modelBuilder.Entity("StudentOglasi.Services.Database.Organizacije", b =>
                 {
+                    b.Navigation("Ocjenes");
+
                     b.Navigation("Prakses");
                 });
 
@@ -1480,6 +1546,8 @@ namespace StudentOglasi.Services.Migrations
 
             modelBuilder.Entity("StudentOglasi.Services.Database.Smjestaji", b =>
                 {
+                    b.Navigation("Ocjenes");
+
                     b.Navigation("Slikes");
 
                     b.Navigation("SmjestajnaJedinicas");
@@ -1515,6 +1583,8 @@ namespace StudentOglasi.Services.Migrations
 
             modelBuilder.Entity("StudentOglasi.Services.Database.Stipenditori", b =>
                 {
+                    b.Navigation("Ocjenes");
+
                     b.Navigation("Stipendijes");
                 });
 
@@ -1542,6 +1612,8 @@ namespace StudentOglasi.Services.Migrations
             modelBuilder.Entity("StudentOglasi.Services.Database.Univerziteti", b =>
                 {
                     b.Navigation("Fakultetis");
+
+                    b.Navigation("Ocjenes");
                 });
 #pragma warning restore 612, 618
         }
