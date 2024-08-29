@@ -8,6 +8,7 @@ using System.Security.Claims;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.VisualStudio.Services.Users;
 using Microsoft.AspNetCore.Http;
+using StudentOglasi.Services.Services;
 
 namespace StudentOglasi.Services.StateMachines.PrijaveStipendijaStateMachine
 {
@@ -16,14 +17,15 @@ namespace StudentOglasi.Services.StateMachines.PrijaveStipendijaStateMachine
         
         private readonly IPrijaveStipendijaService _prijaveStipendijaService;
         private readonly IHttpContextAccessor _httpContextAccessor;
-        public InitialPrijaveStipendijaState(IHttpContextAccessor httpContextAccessor,IServiceProvider serviceProvider, StudentoglasiContext context, IMapper mapper, IPrijaveStipendijaService prijaveStipendijaService) : base(serviceProvider, context, mapper)
+        public readonly FileService _fileService;
+        public InitialPrijaveStipendijaState(IHttpContextAccessor httpContextAccessor,IServiceProvider serviceProvider, FileService fileService, StudentoglasiContext context, IMapper mapper, IPrijaveStipendijaService prijaveStipendijaService) : base(serviceProvider, context, mapper)
         {
-            
+            _fileService = fileService;
             _prijaveStipendijaService = prijaveStipendijaService;
             _httpContextAccessor = httpContextAccessor;
         }
 
-        public override async Task<Model.PrijaveStipendija> Insert(PrijaveStipendijaInsertRequest request)
+        public override async Task<Model.PrijaveStipendija> Insert([FromForm] PrijaveStipendijaInsertRequest request)
         {
             try
             {
@@ -31,6 +33,9 @@ namespace StudentOglasi.Services.StateMachines.PrijaveStipendijaStateMachine
             var username = user.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             var set = _context.Set<PrijaveStipendija>();
             var entity = _mapper.Map<PrijaveStipendija>(request);
+
+            entity.Dokumentacija = await UploadFileAsync(request.Dokumentacija);
+            entity.Cv = await UploadFileAsync(request.Cv);
 
             entity.Status = await _context.StatusPrijaves.FirstOrDefaultAsync(e => e.Naziv.Contains("Na cekanju"));
             entity.StatusId = entity.Status.Id;
@@ -52,6 +57,20 @@ namespace StudentOglasi.Services.StateMachines.PrijaveStipendijaStateMachine
             {
                 // Log the detailed information
                 throw new Exception($"Mapping failed: {ex.Message}, Inner Exception: {ex.InnerException?.Message}", ex);
+            }
+        }
+        private async Task<string> UploadFileAsync(IFormFile? file)
+        {
+            if (file == null) return null;
+
+            var uploadResponse = await _fileService.UploadAsync(file);
+            if (!uploadResponse.Error)
+            {
+                return uploadResponse.Blob.Name;
+            }
+            else
+            {
+                throw new Exception("Greška pri uploadu file");
             }
         }
         public override async Task<List<string>> AllowedActions()

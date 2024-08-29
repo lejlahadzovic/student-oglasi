@@ -121,6 +121,66 @@ abstract class BaseProvider<T> with ChangeNotifier {
       throw Exception("Something bad happened, please try again");
     }
   }
+Future<T> insertFileMultipartData(Map<String, dynamic> formData) async {
+  var url = "$_baseUrl$_endPoint";
+  var request = http.MultipartRequest(
+    'POST',
+    Uri.parse(url),
+  );
+
+  request.headers.addAll(createHeaders());
+
+  for (var key in formData.keys) {
+    var value = formData[key];
+
+    if (value != null) {
+      if (value is String && value.contains('/')) {
+        // Assuming it's a file path
+        var file = await http.MultipartFile.fromPath(key, value);
+        request.files.add(file);
+      }  else if (value is double) {
+        // Convert numeric values to the desired format
+        String formattedValue = value.toStringAsFixed(2).replaceAll('.', ',');
+        request.fields[key] = formattedValue;
+      }
+      else {
+        request.fields[key] = value.toString();
+      }
+    }
+  }
+  print('Request fields: ${request.fields}'); // Debugging: Log the fields to check the values before sending
+
+  var response = await _ioClient.send(request);
+
+  if (response.statusCode < 299) {
+    var responseBody = await response.stream.bytesToString();
+    var data = jsonDecode(responseBody);
+    return fromJson(data);
+  } else if (response.statusCode == 401) {
+    throw Exception("Unauthorized");
+  } else {
+    var responseBody = await response.stream.bytesToString();
+    print(responseBody);
+    throw Exception("Something bad happened, please try again");
+  }
+}
+
+  Future<bool> cancel(int? id, {int? entityId}) async {
+    var url;
+    if (entityId != null) {
+      url = Uri.parse('$_baseUrl$_endPoint/$id/$entityId/cancel');
+    } else {
+      url = Uri.parse('$_baseUrl$_endPoint/$id/cancel');
+    }
+
+    var headers = createHeaders();
+    final response = await _ioClient.put(url, headers: headers);
+    if (response.statusCode == 200) {
+      return true;
+    } else {
+      throw Exception('Failed to cancel');
+    }
+  }
 
   Future<T> update(int id, [dynamic request]) async {
     var url = "$_baseUrl$_endPoint/$id";

@@ -13,5 +13,6 @@ namespace StudentOglasi.Services.Interfaces
         Task<Model.Rezervacije> Approve(int studentId, int smjestajnaJedinicaId);
         Task<Model.Rezervacije> Cancel(int studentId, int smjestajnaJedinicaId);
         Task<List<string>> AllowedActions(int studentId, int smjestajnaJedinicaId);
+        Task<List<Rezervacije>> GetByStudentIdAsync(int studentId);
     }
 }

@@ -123,5 +123,21 @@ namespace StudentOglasi.Services.Services
 
             return await state.AllowedActions();
         }
+        public async Task<List<Model.Rezervacije>> GetByStudentIdAsync(int studentId)
+        {
+            var entity = _context.Rezervacijes.Where(x => x.StudentId == studentId)
+                .Include(p=>p.SmjestajnaJedinica)
+                .Include(p => p.SmjestajnaJedinica.Smjestaj)
+                .Include(p => p.Student)
+                .Include(p => p.Student.Fakultet)
+                .Include(p => p.Student.NacinStudiranja)
+                .Include(p => p.Student.Smjer)
+                .Include(p => p.Student.IdNavigation)
+                .Include(p => p.Status).ToList();
+
+
+            return _mapper.Map<List<Model.Rezervacije>>(entity);
+
+        }
     }
 }

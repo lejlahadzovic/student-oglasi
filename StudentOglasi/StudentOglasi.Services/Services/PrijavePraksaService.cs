@@ -33,8 +33,17 @@ namespace StudentOglasi.Services.Services
         }
         public async Task<List<PrijavePraksa>> GetByStudentIdAsync(int studentId)
         {
-            var entity = _context.PrijavePraksas.Where(x => x.StudentId == studentId).Include(p=>p.Praksa).Include(p=>p.Student).Include(p => p.Status).ToList();
-
+            var entity =await _context.PrijavePraksas.Where(x => x.StudentId == studentId)
+                .Include(p=>p.Praksa)
+                .Include(p => p.Praksa.IdNavigation)
+                .Include(p => p.Praksa.Organizacija)
+                .Include(p => p.Praksa.Status)
+                .Include(p=>p.Student)
+                .Include(p=>p.Student.Fakultet)
+                .Include(p => p.Student.NacinStudiranja)
+                .Include(p => p.Student.Smjer)
+                .Include(p => p.Student.IdNavigation)
+                .Include(p => p.Status).ToListAsync();
 
             return _mapper.Map<List<Model.PrijavePraksa>>(entity);
            

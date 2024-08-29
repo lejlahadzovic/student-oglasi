@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:studentoglasi_mobile/providers/studenti_provider.dart';
-import 'package:studentoglasi_mobile/models/Korisnik/korisnik.dart';
 import 'package:studentoglasi_mobile/models/Student/student.dart';
-import 'package:studentoglasi_mobile/providers/base_provider.dart';
 import 'package:studentoglasi_mobile/providers/objave_provider.dart';
 import 'package:studentoglasi_mobile/screens/main_screen.dart';
 import 'package:studentoglasi_mobile/screens/registration_form.dart';

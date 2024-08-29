@@ -23,7 +23,7 @@ class DrawerMenu extends StatelessWidget {
           ),
           ),
           ListTile(
-            leading: Icon(Icons.home, color: Colors.purple[900]),
+            leading: Icon(Icons.home_outlined, color: Colors.purple[900]),
             title: Text('Početna'),
             onTap: () {
               Navigator.pop(context);
@@ -31,11 +31,19 @@ class DrawerMenu extends StatelessWidget {
             },
           ),
           ListTile(
-            leading: Icon(Icons.account_circle, color: Colors.purple[900]),
+            leading: Icon(Icons.account_circle_outlined, color: Colors.purple[900]),
             title: Text('Moj profil'),
             onTap: () {
               Navigator.pop(context);
               Navigator.pushNamed(context, '/profile');
+            },
+          ),
+          ListTile(
+            leading: Icon(Icons.mail_outline, color: Colors.purple[900]),
+            title: Text('Moje prijave'),
+            onTap: () {
+              Navigator.pop(context);
+              Navigator.pushNamed(context, '/prijave');
             },
           ),
           ListTile(
@@ -44,14 +52,6 @@ class DrawerMenu extends StatelessWidget {
             onTap: () {
               Navigator.pop(context);
               Navigator.pushNamed(context, '/logout');
-            },
-          ),
-          ListTile(
-            leading: Icon(Icons.account_circle, color: Colors.purple[900]),
-            title: Text('Moje prijave'),
-            onTap: () {
-              Navigator.pop(context);
-              Navigator.pushNamed(context, '/prijave');
             },
           ),
         ],

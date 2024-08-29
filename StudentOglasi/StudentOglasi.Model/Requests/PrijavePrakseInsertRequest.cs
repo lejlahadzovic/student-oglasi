@@ -11,11 +11,11 @@ namespace StudentOglasi.Model.Requests
     {
         public int PraksaId { get; set; }
 
-        public string? PropratnoPismo { get; set; }
+        public IFormFile? PropratnoPismo { get; set; }
 
-        public string Cv { get; set; } = null!;
+        public IFormFile? Cv { get; set; }
 
-        public string? Certifikati { get; set; }
+        public IFormFile? Certifikati { get; set; }
 
     }
 }

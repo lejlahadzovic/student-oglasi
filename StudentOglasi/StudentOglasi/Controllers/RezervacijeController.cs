@@ -31,5 +31,11 @@ namespace StudentOglasi.Controllers
         {
             return await (_service as IRezervacijeService).AllowedActions(studentId, smjestajnaJedinicaId);
         }
+
+        [HttpGet("student/{studentId}")]
+        public async Task<List<Rezervacije>> GetByStudentId(int studentId)
+        {
+            return await (_service as IRezervacijeService).GetByStudentIdAsync(studentId);
+        }
     }
 }

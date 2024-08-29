@@ -144,24 +144,6 @@ class _InternshipDetailsScreenState extends State<InternshipDetailsScreen> {
                 Align(
                   alignment: Alignment.bottomRight,
                   child: ElevatedButton(
-                    onPressed: () {},
-                    child: Text('Prijavi se'),
-                  ),
-                ),
-              ],
-            ),
-            Row(
-              children: [
-                Expanded(
-                  child: StarRatingWidget(
-                    postId: widget.internship.id!,
-                    postType: ItemType.internship,
-                    onRatingChanged: _fetchAverageRatings,
-                  ),
-                ),
-                Align(
-                  alignment: Alignment.bottomRight,
-                  child: ElevatedButton(
                     onPressed: () {
                       // Handle apply button press
                       Navigator.push(

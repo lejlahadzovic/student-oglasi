@@ -106,7 +106,17 @@ namespace StudentOglasi.Services.Services
 
         public async Task<List<PrijaveStipendija>> GetByStudentIdAsync(int studentId)
         {
-            var entity = _context.PrijaveStipendijas.Where(x => x.StudentId == studentId).Include(p => p.Stipendija).Include(p => p.Student).Include(p => p.Status).ToList();
+            var entity = _context.PrijaveStipendijas.Where(x => x.StudentId == studentId)
+                .Include(p => p.Stipendija)
+                .Include(p => p.Stipendija.IdNavigation)
+                .Include(p => p.Stipendija.Stipenditor)
+                .Include(p => p.Stipendija.Status)
+                .Include(p => p.Student)
+                .Include(p => p.Student.Fakultet)
+                .Include(p => p.Student.NacinStudiranja)
+                .Include(p => p.Student.Smjer)
+                .Include(p => p.Student.IdNavigation)
+                .Include(p => p.Status).ToList();
 
 
             return _mapper.Map<List<Model.PrijaveStipendija>>(entity);
