@@ -44,6 +44,14 @@ dependencies:
   form_builder_validators: ^9.1.0
   flutter_rating_bar: ^4.0.1
   file_picker: ^8.0.5
+  firebase_core: ^3.4.0
+  cloud_firestore: ^5.3.0
+  firebase_storage: ^12.2.0
+  dash_chat_2: ^0.0.20
+  google_fonts: ^6.2.1
+  get_it: ^7.7.0
+  image_picker: ^1.1.2
+  path: ^1.9.0
 
 dev_dependencies:
   flutter_test:
