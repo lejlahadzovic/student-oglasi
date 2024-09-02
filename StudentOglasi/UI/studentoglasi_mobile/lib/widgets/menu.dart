@@ -54,6 +54,14 @@ class DrawerMenu extends StatelessWidget {
               Navigator.pushNamed(context, '/logout');
             },
           ),
+          ListTile(
+            leading: Icon(Icons.chat_bubble_outline, color: Colors.purple[900]),
+            title: Text('Chat'),
+            onTap: () {
+              Navigator.pop(context);
+              Navigator.pushNamed(context, '/chat');
+            },
+          ),
         ],
       ),
     );

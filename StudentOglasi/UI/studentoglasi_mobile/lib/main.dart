@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
 import 'package:provider/provider.dart';
 import 'package:studentoglasi_mobile/providers/komentari_provider.dart';
 import 'package:studentoglasi_mobile/providers/like_provider.dart';
@@ -14,8 +15,12 @@ import 'package:studentoglasi_mobile/providers/statusprijave_provider.dart';
 import 'package:studentoglasi_mobile/providers/stipendije_provider.dart';
 import 'package:studentoglasi_mobile/providers/stipenditori_provider.dart';
 import 'package:studentoglasi_mobile/screens/applications_screen.dart';
+import 'package:studentoglasi_mobile/screens/users_list_screen.dart';
 import 'package:studentoglasi_mobile/screens/login_screen.dart';
 import 'package:studentoglasi_mobile/screens/profile_screen.dart';
+import 'package:studentoglasi_mobile/services/database_service.dart';
+import 'package:studentoglasi_mobile/services/media_service.dart';
+import 'package:studentoglasi_mobile/utils/util.dart';
 import 'providers/kategorije_provider.dart';
 import 'providers/objave_provider.dart';
 import 'providers/prijavepraksa_provider.dart';
@@ -24,7 +29,14 @@ import 'package:studentoglasi_mobile/providers/nacin_studiranja_provider.dart';
 import 'package:studentoglasi_mobile/providers/studenti_provider.dart';
 import 'package:studentoglasi_mobile/providers/univerziteti_provider.dart';
 
-void main() {
+import 'services/storage_service.dart';
+
+void main() async {
+  final GetIt getIt = GetIt.instance;
+  getIt.registerLazySingleton<DatabaseService>(() => DatabaseService());
+  getIt.registerLazySingleton<MediaService>(() => MediaService());
+  getIt.registerLazySingleton<StorageService>(() => StorageService());
+  await setup();
   runApp(
     MultiProvider(
       providers: [
@@ -43,7 +55,7 @@ void main() {
         ChangeNotifierProvider(create: (context) => LikeProvider()),
         ChangeNotifierProvider(create: (context) => KomentariProvider()),
         ChangeNotifierProvider(create: (context) => OcjeneProvider()),
-         ChangeNotifierProvider(create: (context) => StatusPrijaveProvider()),
+        ChangeNotifierProvider(create: (context) => StatusPrijaveProvider()),
         ChangeNotifierProvider(create: (context) => PrijaveStipendijaProvider()),
         ChangeNotifierProvider(create: (context) => PrijavePraksaProvider()),
         ChangeNotifierProvider(create: (context) => RezervacijeProvider()),
@@ -51,6 +63,11 @@ void main() {
       child: MyApp(),
     ),
   );
+}
+
+Future<void> setup() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await setupFirebase();
 }
 
 class MyApp extends StatelessWidget {
@@ -70,6 +87,7 @@ class MyApp extends StatelessWidget {
         '/profile': (context) => ProfileScreen(),
         '/logout': (context) => LoginScreen(),
         '/prijave':(context) => ApplicationsScreen(),
+        '/chat':(context)=>UsersListScreen(),
       },
     );
   }
