@@ -11,5 +11,6 @@ namespace StudentOglasi.Services.Interfaces
 {
     public interface ISmjestajiService : ICRUDService<Smjestaji, SmjestajiSearchObject, SmjestajiInsertRequest, SmjestajiUpdateRequest>
     {
+        Task<List<Model.Smjestaji>> GetRecommendedSmjestaji(int studentId);
     }
 }

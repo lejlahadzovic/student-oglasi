@@ -14,5 +14,6 @@ namespace StudentOglasi.Services.Interfaces
         Task<Model.Stipendije> Activate(int id);
         Task<Model.Stipendije> Hide(int id);
         Task<List<string>> AllowedActions(int id);
+        Task<List<Model.Stipendije>> GetRecommendedStipendije(int studentId);
     }
 }

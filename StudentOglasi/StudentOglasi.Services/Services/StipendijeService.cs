@@ -11,10 +11,12 @@ namespace StudentOglasi.Services.Services
 {
     public class StipendijeService : BaseCRUDService<Model.Stipendije, Database.Stipendije, StipendijeSearchObject, StipendijeInsertRequest, StipendijeUpdateRequest>, IStipendijeService
     {
+        private readonly RecommenderSystem _recommenderSystem;
         public readonly FileService _fileService;
         public BaseStipendijeState _baseState { get; set; }
-        public StipendijeService(StudentoglasiContext context, IMapper mapper, FileService fileService, BaseStipendijeState baseState) : base(context, mapper)
+        public StipendijeService(StudentoglasiContext context, IMapper mapper, FileService fileService, RecommenderSystem recommenderSystem, BaseStipendijeState baseState) : base(context, mapper)
         {
+            _recommenderSystem = recommenderSystem;
             _fileService = fileService;
             _baseState = baseState;
         }
@@ -121,6 +123,17 @@ namespace StudentOglasi.Services.Services
             entity.Status = await _context.StatusOglasis.FindAsync(entity.StatusId);
             var state = _baseState.CreateState(entity.Status.Naziv ?? "Initial");
             return await state.AllowedActions();
+        }
+        public async Task<List<Model.Stipendije>> GetRecommendedStipendije(int studentId)
+        {
+            var recommendedPostIds = await _recommenderSystem.GetRecommendedPostIds(studentId, "scholarship");
+
+            var recommendedStipendije = await _context.Stipendijes
+                .Include(p => p.IdNavigation)
+                .Where(p => recommendedPostIds.Contains(p.Id))
+                .ToListAsync();
+
+            return _mapper.Map<List<Model.Stipendije>>(recommendedStipendije);
         }
     }
 }

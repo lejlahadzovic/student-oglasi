@@ -9,6 +9,7 @@ import 'package:studentoglasi_mobile/providers/oglasi_provider.dart';
 import 'package:studentoglasi_mobile/providers/statusoglasi_provider.dart';
 import 'package:studentoglasi_mobile/providers/stipendije_provider.dart';
 import 'package:studentoglasi_mobile/providers/stipenditori_provider.dart';
+import 'package:studentoglasi_mobile/providers/studenti_provider.dart';
 import 'package:studentoglasi_mobile/screens/accommodations_screen.dart';
 import 'package:studentoglasi_mobile/screens/components/comments_screen.dart';
 import 'package:studentoglasi_mobile/widgets/like_button.dart';
@@ -40,6 +41,7 @@ class _ScholarshipsScreenState extends State<ScholarshipsScreen> {
   SearchResult<Oglas>? oglasiResult;
   Map<int, double> _averageRatings = {};
   TextEditingController _naslovController = new TextEditingController();
+  SearchResult<Stipendije> recommendedStipendije = SearchResult<Stipendije>();
   @override
   void initState() {
     // TODO: implement initState
@@ -53,6 +55,7 @@ class _ScholarshipsScreenState extends State<ScholarshipsScreen> {
     _fetchOglasi();
     _fetchStatusOglasi();
     _fetchStipenditori();
+    _fetchRecommendedStipendije();
   }
 
   void _fetchStatusOglasi() async {
@@ -77,20 +80,44 @@ class _ScholarshipsScreenState extends State<ScholarshipsScreen> {
   }
 
   Future<void> _fetchAverageRatings() async {
-  try {
-    for (var stipendija in _stipendije?.result ?? []) {
-      double averageRating = await _ocjeneProvider.getAverageOcjena(
-        stipendija.id!,
-        ItemType.scholarship.toShortString(),
-      );
-      setState(() {
-        _averageRatings[stipendija.id!] = averageRating;
-      });
+    try {
+      for (var stipendija in _stipendije?.result ?? []) {
+        double averageRating = await _ocjeneProvider.getAverageOcjena(
+          stipendija.id!,
+          ItemType.scholarship.toShortString(),
+        );
+        setState(() {
+          _averageRatings[stipendija.id!] = averageRating;
+        });
+      }
+    } catch (error) {
+      print("Error fetching average ratings: $error");
     }
-  } catch (error) {
-    print("Error fetching average ratings: $error");
   }
-}
+
+  Future<void> _fetchRecommendedStipendije() async {
+    try {
+      var studentiProvider =
+          Provider.of<StudentiProvider>(context, listen: false);
+      var studentId = studentiProvider.currentStudent?.id;
+
+      if (studentId == null) {
+        var student = await studentiProvider.getCurrentStudent();
+        studentId = student.id;
+      }
+
+      if (studentId != null) {
+        recommendedStipendije =
+            await Provider.of<StipendijeProvider>(context, listen: false)
+                .getRecommended(studentId);
+        setState(() {});
+      } else {
+        print("Student ID is not available");
+      }
+    } catch (error) {
+      print("Error fetching recommended scholarships: $error");
+    }
+  }
 
   Future<void> _fetchData() async {
     try {
@@ -122,23 +149,33 @@ class _ScholarshipsScreenState extends State<ScholarshipsScreen> {
   }
 
   void _navigateToDetailsScreen(int scholarshipId, double averageRating) async {
-  final shouldRefresh = await Navigator.push(
-    context,
-    MaterialPageRoute(
-      builder: (context) => ScholarshipDetailsScreen(
-        scholarship: _stipendije!.result.firstWhere((s) => s.id == scholarshipId).idNavigation!,
-        averageRating: averageRating,
+    final shouldRefresh = await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => ScholarshipDetailsScreen(
+          scholarship: _stipendije!.result
+              .firstWhere((s) => s.id == scholarshipId)
+              .idNavigation!,
+          averageRating: averageRating,
+        ),
       ),
-    ),
-  );
+    );
 
-  if (shouldRefresh == true) {
-    _fetchAverageRatings();
+    if (shouldRefresh == true) {
+      _fetchAverageRatings();
+    }
   }
-}
 
   @override
   Widget build(BuildContext context) {
+    final recommendedIds =
+        recommendedStipendije.result.map((p) => p.id).toSet();
+
+    final filteredStipendije = _stipendije?.result
+            .where((p) => !recommendedIds.contains(p.id))
+            .toList() ??
+        [];
+
     return Scaffold(
       appBar: AppBar(
         title: Row(
@@ -211,128 +248,153 @@ class _ScholarshipsScreenState extends State<ScholarshipsScreen> {
                     : _stipendije?.count == 0
                         ? Center(child: Text('No data available.'))
                         : ListView.builder(
-                            itemCount: _stipendije?.count,
+                            itemCount: recommendedStipendije.count +
+                                filteredStipendije.length,
                             itemBuilder: (context, index) {
-                              final stipendije = _stipendije!.result[index];
-                              final averageRating = _averageRatings[stipendije.id] ?? 0.0;
-                              return Padding(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 8.0, vertical: 4.0),
-                                child: Card(
-                                  child: InkWell(
-                                    onTap: () {
-                                      _navigateToDetailsScreen(stipendije.id!, averageRating);
-                                    },
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(16.0),
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          stipendije.idNavigation?.slika != null
-                                              ? Image.network(
-                                                  FilePathManager.constructUrl(
-                                                      stipendije.idNavigation!
-                                                          .slika!),
-                                                  height: 200,
-                                                  width: double.infinity,
-                                                  fit: BoxFit.cover,
-                                                )
-                                              : SizedBox(
-                                                  width: 800,
-                                                  height: 450,
-                                                  child: Column(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .center,
-                                                    children: [
-                                                      Icon(
-                                                        Icons.image,
-                                                        size: 200,
-                                                        color: Colors.grey,
-                                                      ),
-                                                      SizedBox(height: 20),
-                                                      Text(
-                                                        'Nema dostupne slike',
-                                                        style: TextStyle(
-                                                            fontSize: 24,
-                                                            color: Colors.grey),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                ),
-                                          SizedBox(height: 8),
-                                          Text(
-                                            stipendije.idNavigation?.naslov ??
-                                                'No title',
-                                            style: TextStyle(
-                                                fontSize: 18,
-                                                fontWeight: FontWeight.bold),
-                                          ),
-                                          SizedBox(height: 8),
-                                          Text(
-                                            stipendije.idNavigation?.opis ??
-                                                'Nema sadržaja',
-                                            style: TextStyle(fontSize: 16),
-                                            maxLines: 2,
-                                            overflow: TextOverflow.ellipsis,
-                                            softWrap: true,
-                                          ),
-                                          SizedBox(height: 8),
-                                          SizedBox(height: 8),
-                                          Row(
-                                            children: [
-                                              InkWell(
-                                                onTap: () {
-                                                  Navigator.push(
-                                                    context,
-                                                    MaterialPageRoute(
-                                                      builder: (context) =>
-                                                          CommentsScreen(
-                                                        postId: stipendije.id!,
-                                                        postType: ItemType.scholarship,
-                                                      ),
-                                                    ),
-                                                  );
-                                                },
-                                                child: Row(
-                                                  children: [
-                                                    Icon(
-                                                      Icons.comment,
-                                                      color: Colors.purple[900],
-                                                    ),
-                                                    SizedBox(width: 8),
-                                                    Text('Komentari'),
-                                                  ],
-                                                ),
-                                              ),
-                                              SizedBox(width: 16),
-                                              LikeButton(
-                                                itemId: stipendije.id!,
-                                                itemType: ItemType.scholarship,
-                                              ),
-                                              SizedBox(width: 8),
-                                              Text('Sviđa mi se'),
-                                              SizedBox(width: 16),
-                                              Row(
-                                                children: [
-                                                  Icon(Icons.star, color: Colors.amber),
-                                                  SizedBox(width: 4),
-                                                  Text(averageRating == 0.0 ? 'N/A' : averageRating.toStringAsFixed(1)),
-                                                ],
-                                              ),
-                                            ],
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              );
+                              if (index < (recommendedStipendije.count)) {
+                                final praksa =
+                                    recommendedStipendije.result[index];
+                                return _buildPostCard(praksa,
+                                    isRecommended: true);
+                              } else {
+                                final praksa = filteredStipendije[
+                                    index - (recommendedStipendije.count)];
+                                return _buildPostCard(praksa);
+                              }
                             },
                           ),
           ),
         ],
+      ),
+    );
+  }
+
+  Widget _buildPostCard(Stipendije stipendija, {bool isRecommended = false}) {
+    final averageRating = _averageRatings[stipendija.id] ?? 0.0;
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
+      child: Card(
+        child: InkWell(
+          onTap: () {
+            _navigateToDetailsScreen(stipendija.id!, averageRating);
+          },
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Stack(
+                  children: [
+                    stipendija.idNavigation?.slika != null
+                        ? Image.network(
+                            FilePathManager.constructUrl(
+                                stipendija.idNavigation!.slika!),
+                            height: 200,
+                            width: double.infinity,
+                            fit: BoxFit.cover,
+                          )
+                        : const SizedBox(
+                            width: 800,
+                            height: 450,
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Icon(
+                                  Icons.image,
+                                  size: 200,
+                                  color: Colors.grey,
+                                ),
+                                SizedBox(height: 20),
+                                Text(
+                                  'Nema dostupne slike',
+                                  style: TextStyle(
+                                      fontSize: 24, color: Colors.grey),
+                                ),
+                              ],
+                            ),
+                          ),
+                    if (isRecommended)
+                      Positioned(
+                        top: 8,
+                        left: 8,
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 8.0, vertical: 4.0),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(4.0),
+                          ),
+                          child: Text(
+                            'Preporučeno',
+                            style: TextStyle(
+                              color: Colors.purple[900],
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                      ),
+                  ],
+                ),
+                SizedBox(height: 8),
+                Text(
+                  stipendija.idNavigation?.naslov ?? 'No title',
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                ),
+                SizedBox(height: 8),
+                Text(
+                  stipendija.idNavigation?.opis ?? 'Nema sadržaja',
+                  style: TextStyle(fontSize: 16),
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  softWrap: true,
+                ),
+                SizedBox(height: 8),
+                Row(
+                  children: [
+                    InkWell(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => CommentsScreen(
+                              postId: stipendija.id!,
+                              postType: ItemType.scholarship,
+                            ),
+                          ),
+                        );
+                      },
+                      child: Row(
+                        children: [
+                          Icon(Icons.comment, color: Colors.purple[900]),
+                          SizedBox(width: 8),
+                          Text('Komentari'),
+                        ],
+                      ),
+                    ),
+                    SizedBox(width: 16),
+                    LikeButton(
+                      itemId: stipendija.id!,
+                      itemType: ItemType.scholarship,
+                    ),
+                    SizedBox(width: 8),
+                    Text('Sviđa mi se'),
+                    SizedBox(width: 16),
+                    Row(
+                      children: [
+                        Icon(Icons.star, color: Colors.amber),
+                        SizedBox(width: 4),
+                        Text(averageRating == 0.0
+                            ? 'N/A'
+                            : averageRating.toStringAsFixed(1)),
+                      ],
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ),
       ),
     );
   }

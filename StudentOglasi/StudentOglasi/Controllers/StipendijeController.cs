@@ -45,6 +45,19 @@ namespace StudentOglasi.Controllers
             return await (_service as IStipendijeService).AllowedActions(id);
         }
 
+        [HttpGet("recommendations/{studentId}")]
+        public async Task<IActionResult> GetRecommendations(int studentId)
+        {
+            var stipendije = await (_service as IStipendijeService).GetRecommendedStipendije(studentId);
+
+            if (stipendije == null || !stipendije.Any())
+            {
+                return NotFound("No recommendations available.");
+            }
+
+            return Ok(stipendije);
+        }
+
     }
-    
+
 }
