@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.EntityFrameworkCore;
+using StudentOglasi.Helper;
 using StudentOglasi.Model;
 using StudentOglasi.Model.Requests;
 using StudentOglasi.Model.SearchObjects;
@@ -21,6 +22,15 @@ namespace StudentOglasi.Services.Services
         {
             _slikeService = slikeService;
             _smjestajneJediniceService = smjestajneJediniceService;
+        }
+        public override async Task<Model.Smjestaji> Insert(SmjestajiInsertRequest request)
+        {
+            var entity = await base.Insert(request);
+
+            string title = entity.Naziv;
+            await FirebaseCloudMessaging.SendNotification("Novosti: Smještaj ", title, "success");
+
+            return entity;
         }
         public override IQueryable<Database.Smjestaji> AddFilter(IQueryable<Database.Smjestaji> query, SmjestajiSearchObject? search = null)
         {

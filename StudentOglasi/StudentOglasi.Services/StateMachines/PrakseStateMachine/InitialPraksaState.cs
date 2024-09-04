@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.EntityFrameworkCore;
+using StudentOglasi.Helper;
 using StudentOglasi.Model.Requests;
 using StudentOglasi.Services.Database;
 using StudentOglasi.Services.Services;
@@ -37,6 +38,8 @@ namespace StudentOglasi.Services.StateMachines.PrakseStateMachine
             set.Add(entity);
 
             await _context.SaveChangesAsync();
+            string title = entity.IdNavigation.Naslov;
+            await FirebaseCloudMessaging.SendNotification("Novosti: Prakse", title, "success");
             return _mapper.Map<Model.Prakse>(entity);
         }
         public override async Task<List<string>> AllowedActions()
