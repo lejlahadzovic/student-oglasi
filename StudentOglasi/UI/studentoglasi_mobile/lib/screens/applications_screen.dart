@@ -14,7 +14,6 @@ import 'package:studentoglasi_mobile/providers/prijavestipendija_provider.dart';
 import 'package:studentoglasi_mobile/providers/rezervacije_provider.dart';
 import 'package:studentoglasi_mobile/providers/statusprijave_provider.dart';
 import 'package:studentoglasi_mobile/providers/studenti_provider.dart';
-import 'package:studentoglasi_mobile/screens/accommodation_details_screen.dart';
 import '../models/search_result.dart';
 import '../widgets/menu.dart';
 

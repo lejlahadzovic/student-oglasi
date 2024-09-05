@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using Microsoft.EntityFrameworkCore;
-using StudentOglasi.Helper;
 using StudentOglasi.Model;
 using StudentOglasi.Model.Requests;
 using StudentOglasi.Model.SearchObjects;
@@ -17,9 +16,12 @@ namespace StudentOglasi.Services.Services
     public class SmjestajiService : BaseCRUDService<Model.Smjestaji, Database.Smjestaji, SmjestajiSearchObject, SmjestajiInsertRequest, SmjestajiUpdateRequest>, ISmjestajiService
     {
         private readonly SlikeService _slikeService;
+
+        public readonly ObavijestiService _obavijestiService;
         private readonly SmjestajnaJedinicaService _smjestajneJediniceService;
-        public SmjestajiService(StudentoglasiContext context, IMapper mapper, SlikeService slikeService, SmjestajnaJedinicaService smjestajneJediniceService) : base(context, mapper)
+        public SmjestajiService(StudentoglasiContext context, IMapper mapper, SlikeService slikeService, SmjestajnaJedinicaService smjestajneJediniceService, ObavijestiService obavijestiService) : base(context, mapper)
         {
+            _obavijestiService = obavijestiService;
             _slikeService = slikeService;
             _smjestajneJediniceService = smjestajneJediniceService;
         }
@@ -28,7 +30,7 @@ namespace StudentOglasi.Services.Services
             var entity = await base.Insert(request);
 
             string title = entity.Naziv;
-            await FirebaseCloudMessaging.SendNotification("Novosti: Smještaj ", title, "success");
+            await _obavijestiService.SendNotificationSmjestaj("Novosti: Smještaj ", title, entity.Id,"success");
 
             return entity;
         }

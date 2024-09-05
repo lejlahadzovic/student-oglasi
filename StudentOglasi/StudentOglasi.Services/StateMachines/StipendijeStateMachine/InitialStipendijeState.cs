@@ -1,9 +1,9 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
-using StudentOglasi.Helper;
 using StudentOglasi.Model.Requests;
 using StudentOglasi.Services.Database;
+using StudentOglasi.Services.Interfaces;
 using StudentOglasi.Services.OglasiStateMachine;
 using StudentOglasi.Services.Services;
 using System;
@@ -17,9 +17,11 @@ namespace StudentOglasi.Services.StateMachine.StipendijeStateMachine
     public class InitialStipendijeState : BaseStipendijeState
     {
         public readonly FileService _fileService;
+        public readonly ObavijestiService _obavijestiService;
         private readonly IHttpContextAccessor _httpContextAccessor;
-        public InitialStipendijeState(IServiceProvider serviceProvider, StudentoglasiContext context, IMapper mapper, FileService fileService) : base(serviceProvider, context, mapper)
+        public InitialStipendijeState(IServiceProvider serviceProvider, StudentoglasiContext context, IMapper mapper, FileService fileService, ObavijestiService obavijestiService) : base(serviceProvider, context, mapper)
         {
+            _obavijestiService = obavijestiService;
             _fileService = fileService;
         }
         public override async Task<Model.Stipendije> Insert(StipendijeInsertRequest request)
@@ -47,7 +49,7 @@ namespace StudentOglasi.Services.StateMachine.StipendijeStateMachine
 
             await _context.SaveChangesAsync();
             string title = entity.IdNavigation.Naslov;
-            await FirebaseCloudMessaging.SendNotification("Novosti: Stipendije", title, "success");
+            await _obavijestiService.SendNotificationOglasi("Novosti: Stipendije", title, entity.IdNavigation.Id, "success");
             return _mapper.Map<Model.Stipendije>(entity);
         }
         public override async Task<List<string>> AllowedActions()

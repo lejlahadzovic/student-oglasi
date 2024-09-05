@@ -3,6 +3,7 @@ import 'package:get_it/get_it.dart';
 import 'package:provider/provider.dart';
 import 'package:studentoglasi_mobile/providers/komentari_provider.dart';
 import 'package:studentoglasi_mobile/providers/like_provider.dart';
+import 'package:studentoglasi_mobile/providers/obavijesti_provider.dart';
 import 'package:studentoglasi_mobile/providers/ocjene_provider.dart';
 import 'package:studentoglasi_mobile/providers/oglasi_provider.dart';
 import 'package:studentoglasi_mobile/providers/organizacije_provider.dart';
@@ -15,6 +16,7 @@ import 'package:studentoglasi_mobile/providers/statusprijave_provider.dart';
 import 'package:studentoglasi_mobile/providers/stipendije_provider.dart';
 import 'package:studentoglasi_mobile/providers/stipenditori_provider.dart';
 import 'package:studentoglasi_mobile/screens/applications_screen.dart';
+import 'package:studentoglasi_mobile/screens/notifications_screen.dart';
 import 'package:studentoglasi_mobile/screens/users_list_screen.dart';
 import 'package:studentoglasi_mobile/screens/login_screen.dart';
 import 'package:studentoglasi_mobile/screens/profile_screen.dart';
@@ -30,6 +32,8 @@ import 'package:studentoglasi_mobile/providers/studenti_provider.dart';
 import 'package:studentoglasi_mobile/providers/univerziteti_provider.dart';
 
 import 'services/storage_service.dart';
+
+final navigatorKey=GlobalKey<NavigatorState>();
 
 void main() async {
   final GetIt getIt = GetIt.instance;
@@ -47,6 +51,7 @@ void main() async {
         ChangeNotifierProvider(create: (context) => StudentiProvider()),
         ChangeNotifierProvider(create: (context) => StipendijeProvider()),
         ChangeNotifierProvider(create: (context) => OglasiProvider()),
+        ChangeNotifierProvider(create: (context) => ObavijestiProvider()),
         ChangeNotifierProvider(create: (context) => StatusOglasiProvider()),
         ChangeNotifierProvider(create: (context) => StipenditoriProvider()),
         ChangeNotifierProvider(create: (context) => PraksaProvider()),
@@ -71,7 +76,9 @@ Future<void> setup() async {
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  
+  
+ const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -81,6 +88,7 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
       ),
       initialRoute: '/',
+      navigatorKey: navigatorKey,
       routes: {
         '/': (context) => LoginScreen(),
         '/home': (context) => ObjavaListScreen(),
@@ -88,6 +96,7 @@ class MyApp extends StatelessWidget {
         '/logout': (context) => LoginScreen(),
         '/prijave':(context) => ApplicationsScreen(),
         '/chat':(context)=>UsersListScreen(),
+        '/obavijesti':(context)=>NotificationScreen(),
       },
     );
   }

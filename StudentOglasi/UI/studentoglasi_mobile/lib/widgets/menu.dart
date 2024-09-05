@@ -47,19 +47,27 @@ class DrawerMenu extends StatelessWidget {
             },
           ),
           ListTile(
-            leading: Icon(Icons.logout, color: Colors.purple[900]),
-            title: Text('Odjavi se'),
-            onTap: () {
-              Navigator.pop(context);
-              Navigator.pushNamed(context, '/logout');
-            },
-          ),
-          ListTile(
             leading: Icon(Icons.chat_bubble_outline, color: Colors.purple[900]),
             title: Text('Chat'),
             onTap: () {
               Navigator.pop(context);
               Navigator.pushNamed(context, '/chat');
+            },
+          ),
+          ListTile(
+            leading: Icon(Icons.notification_add_outlined, color: Colors.purple[900]),
+            title: Text('Obavijesti'),
+            onTap: () {
+              Navigator.pop(context);
+              Navigator.pushNamed(context, '/obavijesti');
+            },
+          ),
+          ListTile(
+            leading: Icon(Icons.logout, color: Colors.purple[900]),
+            title: Text('Odjavi se'),
+            onTap: () {
+              Navigator.pop(context);
+              Navigator.pushNamed(context, '/logout');
             },
           ),
         ],

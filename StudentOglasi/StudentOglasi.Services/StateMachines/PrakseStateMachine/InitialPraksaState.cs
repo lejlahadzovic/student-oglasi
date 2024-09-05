@@ -1,8 +1,8 @@
 ﻿using AutoMapper;
 using Microsoft.EntityFrameworkCore;
-using StudentOglasi.Helper;
 using StudentOglasi.Model.Requests;
 using StudentOglasi.Services.Database;
+using StudentOglasi.Services.Interfaces;
 using StudentOglasi.Services.Services;
 
 namespace StudentOglasi.Services.StateMachines.PrakseStateMachine
@@ -10,8 +10,11 @@ namespace StudentOglasi.Services.StateMachines.PrakseStateMachine
     public class InitialPraksaState : BasePrakseState
     {
         public readonly FileService _fileService;
-        public InitialPraksaState(IServiceProvider serviceProvider, StudentoglasiContext context, FileService fileService, IMapper mapper) : base(serviceProvider, context, mapper)
+
+        public readonly ObavijestiService _obavijestiService;
+        public InitialPraksaState(IServiceProvider serviceProvider, StudentoglasiContext context, FileService fileService, IMapper mapper, ObavijestiService obavijestiService) : base(serviceProvider, context, mapper)
         {
+            _obavijestiService = obavijestiService;
             _fileService = fileService;
         }
         public override async Task<Model.Prakse> Insert(PrakseInsertRequest request)
@@ -39,7 +42,7 @@ namespace StudentOglasi.Services.StateMachines.PrakseStateMachine
 
             await _context.SaveChangesAsync();
             string title = entity.IdNavigation.Naslov;
-            await FirebaseCloudMessaging.SendNotification("Novosti: Prakse", title, "success");
+            await _obavijestiService.SendNotificationOglasi("Novosti: Stipendije", title, entity.IdNavigation.Id, "success");
             return _mapper.Map<Model.Prakse>(entity);
         }
         public override async Task<List<string>> AllowedActions()

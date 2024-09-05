@@ -5,6 +5,8 @@ import 'package:studentoglasi_mobile/firebase_options.dart';
 import 'package:studentoglasi_mobile/services/database_service.dart';
 import 'package:studentoglasi_mobile/services/media_service.dart';
 
+import '../firebase_api.dart';
+
 class Authorization {
   static String? username;
   static String? password;
@@ -32,6 +34,7 @@ Future<void> setupFirebase() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+  await FirebaseApi().initNotifications();
 }
 
 Future<void> registerServices() async {

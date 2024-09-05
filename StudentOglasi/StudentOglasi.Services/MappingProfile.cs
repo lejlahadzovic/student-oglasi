@@ -74,6 +74,7 @@ namespace StudentOglasi.Services
                 .ForMember(dest => dest.Odgovori, opt => opt.MapFrom(src => src.InverseParentKomentar));
             CreateMap<Model.Ocjene, Database.Ocjene>();
             CreateMap<Database.Ocjene, Model.Ocjene>();
+            CreateMap<Database.Obavijesti, Model.Obavijesti>();
         }
     }
 }

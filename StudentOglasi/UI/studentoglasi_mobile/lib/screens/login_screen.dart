@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:studentoglasi_mobile/providers/studenti_provider.dart';
 import 'package:studentoglasi_mobile/models/Student/student.dart';
-import 'package:studentoglasi_mobile/providers/objave_provider.dart';
 import 'package:studentoglasi_mobile/screens/main_screen.dart';
 import 'package:studentoglasi_mobile/screens/registration_form.dart';
 
@@ -20,7 +19,6 @@ class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   late StudentiProvider _studentProvider;
-  late ObjaveProvider _objaveProvider;
   Student? student;
 
   Future<void> _login() async {

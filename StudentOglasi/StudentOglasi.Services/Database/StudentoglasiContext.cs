@@ -29,6 +29,8 @@ public partial class StudentoglasiContext : DbContext
 
     public virtual DbSet<NacinStudiranja> NacinStudiranjas { get; set; }
 
+    public virtual DbSet<Obavijesti> Obavijestis { get; set; }
+
     public virtual DbSet<Objave> Objaves { get; set; }
 
     public virtual DbSet<Ocjene> Ocjenes { get; set; }
@@ -77,8 +79,6 @@ public partial class StudentoglasiContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.UseCollation("SQL_Latin1_General_CP1_CI_AS");
-
         modelBuilder.Entity<Fakulteti>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("PK_Fakultet");
@@ -201,6 +201,26 @@ public partial class StudentoglasiContext : DbContext
             entity.Property(e => e.Naziv).HasMaxLength(100);
         });
 
+        modelBuilder.Entity<Obavijesti>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK__Obavijes__3214EC0753F85485");
+
+            entity.ToTable("Obavijesti");
+
+            entity.Property(e => e.DatumKreiranja)
+                .HasDefaultValueSql("(getdate())")
+                .HasColumnType("datetime");
+            entity.Property(e => e.Naziv).HasMaxLength(255);
+
+            entity.HasOne(d => d.Oglasi).WithMany(p => p.Obavijestis)
+                .HasForeignKey(d => d.OglasiId)
+                .HasConstraintName("FK_Obavijesti_Oglasi");
+
+            entity.HasOne(d => d.Smjestaji).WithMany(p => p.Obavijestis)
+                .HasForeignKey(d => d.SmjestajiId)
+                .HasConstraintName("FK_Obavijesti_Smjestaji");
+        });
+
         modelBuilder.Entity<Objave>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("PK_Objava");
@@ -225,9 +245,13 @@ public partial class StudentoglasiContext : DbContext
 
             entity.ToTable("Ocjene");
 
+            entity.HasIndex(e => e.StudentId, "IX_Ocjene_StudentId");
+
             entity.Property(e => e.Id).HasColumnName("ID");
             entity.Property(e => e.Ocjena).HasColumnType("decimal(3, 2)");
-            entity.Property(e => e.PostType).HasMaxLength(50);
+            entity.Property(e => e.PostType)
+                .HasMaxLength(50)
+                .HasDefaultValue("");
 
             entity.HasOne(d => d.Student).WithMany(p => p.Ocjenes)
                 .HasForeignKey(d => d.StudentId)

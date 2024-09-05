@@ -31,6 +31,8 @@ public partial class Smjestaji
 
     public virtual Grad Grad { get; set; } = null!;
 
+    public virtual ICollection<Obavijesti> Obavijestis { get; set; } = new List<Obavijesti>();
+
     public virtual ICollection<Slike> Slikes { get; set; } = new List<Slike>();
 
     public virtual ICollection<SmjestajnaJedinica> SmjestajnaJedinicas { get; set; } = new List<SmjestajnaJedinica>();
