@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:studentoglasi_mobile/models/SmjestajnaJedinica/smjestajna_jedinica.dart';
 import 'package:studentoglasi_mobile/providers/ocjene_provider.dart';
 import 'package:studentoglasi_mobile/screens/components/comments_screen.dart';
+import 'package:studentoglasi_mobile/screens/components/reservation_screen.dart';
 import 'package:studentoglasi_mobile/utils/item_type.dart';
 import 'package:studentoglasi_mobile/widgets/image_gallery.dart';
 import 'package:studentoglasi_mobile/widgets/like_button.dart';
@@ -133,7 +134,7 @@ class _AccommodationUnitCardState extends State<AccommodationUnitCard> {
                     future: _averageRating,
                     builder: (context, snapshot) {
                       if (snapshot.connectionState == ConnectionState.waiting) {
-                         return CircularProgressIndicator();
+                        return CircularProgressIndicator();
                       } else if (snapshot.hasError) {
                         return Text("N/A");
                       } else {
@@ -248,6 +249,25 @@ class _AccommodationUnitCardState extends State<AccommodationUnitCard> {
                   ],
                 ),
               ),
+              SizedBox(height: 8),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  ElevatedButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => ReservationScreen(
+                            jedinica: widget.jedinica,
+                          ),
+                        ),
+                      );
+                    },
+                    child: Text('Rezerviši'),
+                  ),
+                ],
+              )
             ],
           ),
         ),

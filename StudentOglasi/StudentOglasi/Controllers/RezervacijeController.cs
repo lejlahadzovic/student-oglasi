@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using StudentOglasi.Model;
+using StudentOglasi.Model.Requests;
 using StudentOglasi.Model.SearchObjects;
 using StudentOglasi.Services.Interfaces;
 
@@ -12,6 +13,12 @@ namespace StudentOglasi.Controllers
         public RezervacijeController(ILogger<BaseController<Rezervacije, RezervacijeSearchObject>> logger, IRezervacijeService rezervacijeService) : base(logger, rezervacijeService)
         {
 
+        }
+
+        [HttpPost]
+        public async Task<Model.Rezervacije> Insert([FromBody] RezervacijaInsertRequest request)
+        {
+            return await (_service as IRezervacijeService).Insert(request);
         }
 
         [HttpPut("{studentId}/{smjestajnaJedinicaId}/approve")]

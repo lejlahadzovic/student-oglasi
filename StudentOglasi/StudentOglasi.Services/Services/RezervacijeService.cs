@@ -123,6 +123,13 @@ namespace StudentOglasi.Services.Services
 
             return await state.AllowedActions();
         }
+
+        public async Task<Model.Rezervacije> Insert(RezervacijaInsertRequest request)
+        {
+            var state = _baseState.CreateState("Initial");
+            return await state.Insert(request);
+        }
+
         public async Task<List<Model.Rezervacije>> GetByStudentIdAsync(int studentId)
         {
             var entity = _context.Rezervacijes.Where(x => x.StudentId == studentId)

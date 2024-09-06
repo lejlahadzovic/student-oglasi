@@ -83,6 +83,7 @@ namespace StudentOglasi.Services.Services
 
             var recommendedSmjestaji = await _context.Smjestajis
                 .Where(p => recommendedPostIds.Contains(p.Id))
+                .Include(p => p.Slikes)
                 .ToListAsync();
 
             return _mapper.Map<List<Model.Smjestaji>>(recommendedSmjestaji);
