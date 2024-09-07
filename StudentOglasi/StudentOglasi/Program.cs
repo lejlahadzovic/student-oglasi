@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using StudentOglasi;
 using StudentOglasi.Filters;
+using StudentOglasi.Model;
 using StudentOglasi.Services.Database;
 using StudentOglasi.Services.Interfaces;
 using StudentOglasi.Services.OglasiStateMachine;
@@ -71,6 +72,7 @@ builder.Services.AddTransient<DraftRezervacijaState>();
 builder.Services.AddTransient<ApprovedRezervacijaState>();
 builder.Services.AddTransient<CanceledRezervacijaState>();
 builder.Services.AddTransient<InitialRezervacijaState>();
+builder.Services.AddTransient<IStripeService, StripeService>();
 
 builder.Services.AddControllers(x =>
 {
@@ -107,6 +109,7 @@ builder.Services.AddAutoMapper(typeof(IKorisniciService));
 builder.Services.AddAutoMapper(typeof(IStipendijeService));
 builder.Services.AddAuthentication("BasicAuthentication")
     .AddScheme<AuthenticationSchemeOptions, BasicAuthenticationHandler>("BasicAuthentication", null);
+builder.Services.Configure<StripeSettings>(builder.Configuration.GetSection("Stripe"));
 
 var app = builder.Build();
 

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:studentoglasi_mobile/models/Rezervacije/rezervacije.dart';
 import 'package:studentoglasi_mobile/models/SmjestajnaJedinica/smjestajna_jedinica.dart';
+import 'package:studentoglasi_mobile/providers/payment_provider.dart';
 import 'package:studentoglasi_mobile/providers/rezervacije_provider.dart';
 import 'package:studentoglasi_mobile/providers/studenti_provider.dart';
 
@@ -20,6 +20,13 @@ class _ReservationScreenState extends State<ReservationScreen> {
   int _numberOfGuests = 1;
   double _totalPrice = 0.0;
   TextEditingController _notesController = TextEditingController();
+  PaymentProvider? paymentProvider;
+
+  @override
+  void initState() {
+    super.initState();
+    paymentProvider = Provider.of<PaymentProvider>(context, listen: false);
+  }
 
   void _selectStartDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
@@ -84,12 +91,13 @@ class _ReservationScreenState extends State<ReservationScreen> {
       // );
 
       Map<String, dynamic> rezervacija = {
-        "studentId": studentId,  
+        "studentId": studentId,
         "smjestajnaJedinicaId": widget.jedinica.id,
         "datumPrijave": _startDate!.toIso8601String(),
         "datumOdjave": _endDate!.toIso8601String(),
         "brojOsoba": _numberOfGuests,
-        "napomena": _notesController.text.isNotEmpty ? _notesController.text : null,
+        "napomena":
+            _notesController.text.isNotEmpty ? _notesController.text : null,
         "cijena": _totalPrice
       };
 
@@ -99,12 +107,12 @@ class _ReservationScreenState extends State<ReservationScreen> {
         await rezervacijeProvider.insertJsonData(rezervacija);
 
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Rezervacija uspješna!')),
+          SnackBar(content: Text('Rezervacija je uspješno potvrđena!')),
         );
         Navigator.pop(context);
       } catch (error) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Greška pri rezervaciji: $error')),
+          SnackBar(content: Text('Došlo je do greške prilikom rezervacije')),
         );
       }
     } else {
@@ -220,8 +228,29 @@ class _ReservationScreenState extends State<ReservationScreen> {
               SizedBox(height: 16),
               Center(
                 child: ElevatedButton(
-                  onPressed: _confirmReservation,
-                  child: Text('Potvrdi rezervaciju'),
+                  onPressed: (_startDate != null &&
+                          _endDate != null &&
+                          _numberOfGuests > 0 &&
+                          _totalPrice > 0)
+                      ? () async {
+                          try {
+                            await paymentProvider!
+                                .createPaymentIntent(_totalPrice);
+                            await paymentProvider!.presentPaymentSheet();
+
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(content: Text('Uplata je uspješno izvršena!')),
+                            );
+                            _confirmReservation();
+                          } catch (e) {
+                            print('Uplata nije uspjela: $e');
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(content: Text('Uplata nije uspjela')),
+                            );
+                          }
+                        }
+                      : null,
+                  child: Text('Plati i rezerviši'),
                 ),
               ),
             ],
