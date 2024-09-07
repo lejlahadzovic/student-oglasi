@@ -5,6 +5,7 @@ using StudentOglasi.Model;
 using StudentOglasi.Model.Requests;
 using StudentOglasi.Model.SearchObjects;
 using StudentOglasi.Services.Interfaces;
+using StudentOglasi.Services.Services;
 
 namespace StudentOglasi.Controllers
 {
@@ -45,5 +46,19 @@ namespace StudentOglasi.Controllers
         {
             return await (_service as IPrakseService).AllowedActions(id);
         }
+
+        [HttpGet("recommendations/{studentId}")]
+        public async Task<IActionResult> GetRecommendations(int studentId)
+        {
+            var prakse = await (_service as IPrakseService).GetRecommendedPrakse(studentId);
+
+            if (prakse == null || !prakse.Any())
+            {
+                return NotFound("No recommendations available.");
+            }
+
+            return Ok(prakse);
+        }
+
     }
 }

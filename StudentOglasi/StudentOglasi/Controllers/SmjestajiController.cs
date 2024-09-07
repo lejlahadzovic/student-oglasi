@@ -17,6 +17,20 @@ namespace StudentOglasi.Controllers
         {
 
         }
+
+        [HttpGet("recommendations/{studentId}")]
+        public async Task<IActionResult> GetRecommendations(int studentId)
+        {
+            var smjestaji = await (_service as ISmjestajiService).GetRecommendedSmjestaji(studentId);
+
+            if (smjestaji == null || !smjestaji.Any())
+            {
+                return NotFound("No recommendations available.");
+            }
+
+            return Ok(smjestaji);
+        }
+
     }
-    
+
 }

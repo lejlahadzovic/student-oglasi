@@ -27,7 +27,11 @@ namespace StudentOglasi.Services.StateMachines.RezervacijeStateMachine
         {
             throw new UserException("Action is not allowed!");
         }
-   
+        public virtual Task<Model.Rezervacije> Insert(RezervacijaInsertRequest request)
+        {
+            throw new UserException("Action is not allowed in this state!");
+        }
+
         public BaseRezervacijaState CreateState(string stateName)
         {
             switch (stateName)

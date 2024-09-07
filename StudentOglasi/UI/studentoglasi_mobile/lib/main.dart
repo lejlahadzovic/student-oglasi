@@ -7,6 +7,7 @@ import 'package:studentoglasi_mobile/providers/obavijesti_provider.dart';
 import 'package:studentoglasi_mobile/providers/ocjene_provider.dart';
 import 'package:studentoglasi_mobile/providers/oglasi_provider.dart';
 import 'package:studentoglasi_mobile/providers/organizacije_provider.dart';
+import 'package:studentoglasi_mobile/providers/payment_provider.dart';
 import 'package:studentoglasi_mobile/providers/prakse_provider.dart';
 import 'package:studentoglasi_mobile/providers/rezervacije_provider.dart';
 import 'package:studentoglasi_mobile/providers/smjestaji_provider.dart';
@@ -30,6 +31,7 @@ import 'screens/main_screen.dart';
 import 'package:studentoglasi_mobile/providers/nacin_studiranja_provider.dart';
 import 'package:studentoglasi_mobile/providers/studenti_provider.dart';
 import 'package:studentoglasi_mobile/providers/univerziteti_provider.dart';
+import 'package:flutter_stripe/flutter_stripe.dart';
 
 import 'services/storage_service.dart';
 
@@ -41,6 +43,7 @@ void main() async {
   getIt.registerLazySingleton<MediaService>(() => MediaService());
   getIt.registerLazySingleton<StorageService>(() => StorageService());
   await setup();
+  Stripe.publishableKey = 'pk_test_51PvkhfP3JU9VUaXuXwaJkIdILZyMLDhghKZNrwKc7BaVdFISQ8xyaLeGOLmjnrlN5FYVjuXX2IqHgu41xj8pvDig00v487U8Iz';
   runApp(
     MultiProvider(
       providers: [
@@ -64,6 +67,7 @@ void main() async {
         ChangeNotifierProvider(create: (context) => PrijaveStipendijaProvider()),
         ChangeNotifierProvider(create: (context) => PrijavePraksaProvider()),
         ChangeNotifierProvider(create: (context) => RezervacijeProvider()),
+        Provider(create: (_) => PaymentProvider()),
       ],
       child: MyApp(),
     ),

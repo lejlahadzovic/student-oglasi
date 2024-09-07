@@ -9,6 +9,7 @@ import 'package:studentoglasi_mobile/providers/oglasi_provider.dart';
 import 'package:studentoglasi_mobile/providers/organizacije_provider.dart';
 import 'package:studentoglasi_mobile/providers/prakse_provider.dart';
 import 'package:studentoglasi_mobile/providers/statusoglasi_provider.dart';
+import 'package:studentoglasi_mobile/providers/studenti_provider.dart';
 import 'package:studentoglasi_mobile/screens/accommodations_screen.dart';
 import 'package:studentoglasi_mobile/screens/components/comments_screen.dart';
 import 'package:studentoglasi_mobile/widgets/like_button.dart';
@@ -41,6 +42,8 @@ class _InternshipsScreenState extends State<InternshipsScreen> {
   SearchResult<Praksa>? _praksa;
   Map<int, double> _averageRatings = {};
   TextEditingController _naslovController = new TextEditingController();
+  SearchResult<Praksa> recommendedPrakse = SearchResult<Praksa>();
+
   @override
   void initState() {
     super.initState();
@@ -53,6 +56,7 @@ class _InternshipsScreenState extends State<InternshipsScreen> {
     _fetchOglasi();
     _fetchStatusOglasi();
     _fetchOrganizacije();
+    _fetchRecommendedPrakse();
   }
 
   void _fetchStatusOglasi() async {
@@ -74,6 +78,27 @@ class _InternshipsScreenState extends State<InternshipsScreen> {
     setState(() {
       organizacijeResult = organizacijeData;
     });
+  }
+
+  Future<void> _fetchRecommendedPrakse() async {
+    try {
+    var studentiProvider = Provider.of<StudentiProvider>(context, listen: false);
+    var studentId = studentiProvider.currentStudent?.id;
+
+    if (studentId == null) {
+      var student = await studentiProvider.getCurrentStudent();
+      studentId = student.id;
+    }
+
+    if (studentId != null) {
+      recommendedPrakse = await Provider.of<PraksaProvider>(context, listen: false).getRecommended(studentId);
+      setState(() {});
+    } else {
+      print("Student ID is not available");
+    }
+    } catch (error) {
+      print("Error fetching recommended internships: $error");
+    }
   }
 
   Future<void> _fetchAverageRatings() async {
@@ -141,6 +166,12 @@ class _InternshipsScreenState extends State<InternshipsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final recommendedIds = recommendedPrakse.result.map((p) => p.id).toSet();
+
+    final filteredPraksa =
+        _praksa?.result.where((p) => !recommendedIds.contains(p.id)).toList() ??
+            [];
+
     return Scaffold(
       appBar: AppBar(
         title: Row(
@@ -231,134 +262,150 @@ class _InternshipsScreenState extends State<InternshipsScreen> {
                     : _praksa?.count == 0
                         ? const Center(child: Text('No data available.'))
                         : ListView.builder(
-                            itemCount: _praksa?.count,
+                            itemCount:
+                                recommendedPrakse.count + filteredPraksa.length,
                             itemBuilder: (context, index) {
-                              final praksa = _praksa!.result[index];
-                              final averageRating =
-                                  _averageRatings[praksa.id] ?? 0.0;
-                              return Padding(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 8.0, vertical: 4.0),
-                                child: Card(
-                                  child: InkWell(
-                                    onTap: () {
-                                      _navigateToDetailsScreen(
-                                          praksa.id!, averageRating);
-                                    },
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(16.0),
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          praksa.idNavigation?.slika != null
-                                              ? Image.network(
-                                                  FilePathManager.constructUrl(
-                                                      praksa.idNavigation!
-                                                          .slika!),
-                                                  height: 200,
-                                                  width: double.infinity,
-                                                  fit: BoxFit.cover,
-                                                )
-                                              : const SizedBox(
-                                                  width: 800,
-                                                  height: 450,
-                                                  child: Column(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .center,
-                                                    children: [
-                                                      Icon(
-                                                        Icons.image,
-                                                        size: 200,
-                                                        color: Colors.grey,
-                                                      ),
-                                                      SizedBox(height: 20),
-                                                      Text(
-                                                        'Nema dostupne slike',
-                                                        style: TextStyle(
-                                                            fontSize: 24,
-                                                            color: Colors.grey),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                ),
-                                          SizedBox(height: 8),
-                                          Text(
-                                            praksa.idNavigation?.naslov ??
-                                                'No title',
-                                            style: TextStyle(
-                                                fontSize: 18,
-                                                fontWeight: FontWeight.bold),
-                                          ),
-                                          Text(
-                                            praksa.idNavigation?.opis ??
-                                                'Nema sadržaja',
-                                            style: TextStyle(fontSize: 16),
-                                            maxLines: 2,
-                                            overflow: TextOverflow.ellipsis,
-                                            softWrap: true,
-                                          ),
-                                          SizedBox(height: 8),
-                                          SizedBox(height: 8),
-                                          Row(
-                                            children: [
-                                              InkWell(
-                                                onTap: () {
-                                                  Navigator.push(
-                                                    context,
-                                                    MaterialPageRoute(
-                                                      builder: (context) =>
-                                                          CommentsScreen(
-                                                        postId: praksa.id!,
-                                                        postType:
-                                                            ItemType.internship,
-                                                      ),
-                                                    ),
-                                                  );
-                                                },
-                                                child: Row(
-                                                  children: [
-                                                    Icon(
-                                                      Icons.comment,
-                                                      color: Colors.blue,
-                                                    ),
-                                                    SizedBox(width: 8),
-                                                    Text('Komentari'),
-                                                  ],
-                                                ),
-                                              ),
-                                              SizedBox(width: 16),
-                                              LikeButton(
-                                                itemId: praksa.id!,
-                                                itemType: ItemType.internship,
-                                              ),
-                                              SizedBox(width: 8),
-                                              Text('Sviđa mi se'),
-                                              SizedBox(width: 16),
-                                              Row(
-                                                children: [
-                                                  Icon(Icons.star,
-                                                      color: Colors.amber),
-                                                  SizedBox(width: 4),
-                                                  Text(averageRating == 0.0
-                                                      ? 'N/A'
-                                                      : averageRating
-                                                          .toStringAsFixed(1)),
-                                                ],
-                                              ),
-                                            ],
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              );
+                              if (index < (recommendedPrakse.count)) {
+                                final praksa = recommendedPrakse.result[index];
+                                return _buildPostCard(praksa,
+                                    isRecommended: true);
+                              } else {
+                                final praksa = filteredPraksa[index - (recommendedPrakse.count)];
+                                return _buildPostCard(praksa);
+                              }
                             },
                           ),
           ),
         ],
+      ),
+    );
+  }
+
+  Widget _buildPostCard(Praksa praksa, {bool isRecommended = false}) {
+    final averageRating = _averageRatings[praksa.id] ?? 0.0;
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
+      child: Card(
+        child: InkWell(
+          onTap: () {
+            _navigateToDetailsScreen(praksa.id!, averageRating);
+          },
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Stack(
+                  children: [
+                    praksa.idNavigation?.slika != null
+                        ? Image.network(
+                            FilePathManager.constructUrl(
+                                praksa.idNavigation!.slika!),
+                            height: 200,
+                            width: double.infinity,
+                            fit: BoxFit.cover,
+                          )
+                        : const SizedBox(
+                            width: 800,
+                            height: 450,
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Icon(
+                                  Icons.image,
+                                  size: 200,
+                                  color: Colors.grey,
+                                ),
+                                SizedBox(height: 20),
+                                Text(
+                                  'Nema dostupne slike',
+                                  style: TextStyle(
+                                      fontSize: 24, color: Colors.grey),
+                                ),
+                              ],
+                            ),
+                          ),
+                    if (isRecommended)
+                      Positioned(
+                        top: 8,
+                        left: 8,
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 8.0, vertical: 4.0),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(4.0),
+                          ),
+                          child: Text(
+                            'Preporučeno',
+                            style: TextStyle(
+                              color: Colors.blue,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                      ),
+                  ],
+                ),
+                SizedBox(height: 8),
+                Text(
+                  praksa.idNavigation?.naslov ?? 'No title',
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                ),
+                Text(
+                  praksa.idNavigation?.opis ?? 'Nema sadržaja',
+                  style: TextStyle(fontSize: 16),
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  softWrap: true,
+                ),
+                SizedBox(height: 8),
+                Row(
+                  children: [
+                    InkWell(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => CommentsScreen(
+                              postId: praksa.id!,
+                              postType: ItemType.internship,
+                            ),
+                          ),
+                        );
+                      },
+                      child: Row(
+                        children: [
+                          Icon(Icons.comment, color: Colors.blue),
+                          SizedBox(width: 8),
+                          Text('Komentari'),
+                        ],
+                      ),
+                    ),
+                    SizedBox(width: 16),
+                    LikeButton(
+                      itemId: praksa.id!,
+                      itemType: ItemType.internship,
+                    ),
+                    SizedBox(width: 8),
+                    Text('Sviđa mi se'),
+                    SizedBox(width: 16),
+                    Row(
+                      children: [
+                        Icon(Icons.star, color: Colors.amber),
+                        SizedBox(width: 4),
+                        Text(averageRating == 0.0
+                            ? 'N/A'
+                            : averageRating.toStringAsFixed(1)),
+                      ],
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ),
       ),
     );
   }

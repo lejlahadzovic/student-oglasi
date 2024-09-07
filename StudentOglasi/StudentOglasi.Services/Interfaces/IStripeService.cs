@@ -1,6 +1,7 @@
-﻿using StudentOglasi.Model;
+﻿using Stripe;
 using StudentOglasi.Model.Requests;
 using StudentOglasi.Model.SearchObjects;
+using StudentOglasi.Services.Database;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,8 +10,8 @@ using System.Threading.Tasks;
 
 namespace StudentOglasi.Services.Interfaces
 {
-    public interface ISmjestajiService : ICRUDService<Smjestaji, SmjestajiSearchObject, SmjestajiInsertRequest, SmjestajiUpdateRequest>
+    public interface IStripeService
     {
-        Task<List<Model.Smjestaji>> GetRecommendedSmjestaji(int studentId);
+        Task<PaymentIntent> CreatePaymentIntent(decimal amount, string currency);
     }
 }

@@ -15,13 +15,15 @@ namespace StudentOglasi.Services.Services
 {
     public class SmjestajiService : BaseCRUDService<Model.Smjestaji, Database.Smjestaji, SmjestajiSearchObject, SmjestajiInsertRequest, SmjestajiUpdateRequest>, ISmjestajiService
     {
+        private readonly RecommenderSystem _recommenderSystem;
         private readonly SlikeService _slikeService;
 
         public readonly ObavijestiService _obavijestiService;
         private readonly SmjestajnaJedinicaService _smjestajneJediniceService;
-        public SmjestajiService(StudentoglasiContext context, IMapper mapper, SlikeService slikeService, SmjestajnaJedinicaService smjestajneJediniceService, ObavijestiService obavijestiService) : base(context, mapper)
+        public SmjestajiService(StudentoglasiContext context, IMapper mapper, SlikeService slikeService, SmjestajnaJedinicaService smjestajneJediniceService, ObavijestiService obavijestiService, RecommenderSystem recommenderSystem) : base(context, mapper)
         {
             _obavijestiService = obavijestiService;
+            _recommenderSystem = recommenderSystem;
             _slikeService = slikeService;
             _smjestajneJediniceService = smjestajneJediniceService;
         }
@@ -86,6 +88,17 @@ namespace StudentOglasi.Services.Services
                     await _smjestajneJediniceService.Delete(jedinica.Id);
                 }
             }
+        }
+        public async Task<List<Model.Smjestaji>> GetRecommendedSmjestaji(int studentId)
+        {
+            var recommendedPostIds = await _recommenderSystem.GetRecommendedPostIds(studentId, "accommodation");
+
+            var recommendedSmjestaji = await _context.Smjestajis
+                .Where(p => recommendedPostIds.Contains(p.Id))
+                .Include(p => p.Slikes)
+                .ToListAsync();
+
+            return _mapper.Map<List<Model.Smjestaji>>(recommendedSmjestaji);
         }
     }
 }

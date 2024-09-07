@@ -11,13 +11,28 @@ namespace StudentOglasi.Services.Services
 {
     public class PrakseService : BaseCRUDService<Model.Prakse, Database.Prakse, PrakseSearchObject, PrakseInsertRequest, PrakseUpdateRequest>, IPrakseService
     {
+        private readonly RecommenderSystem _recommenderSystem;
         public readonly FileService _fileService;
         public BasePrakseState _baseState { get; set; }
-        public PrakseService(StudentoglasiContext context, IMapper mapper, FileService fileService, BasePrakseState baseState) : base(context, mapper)
+        public PrakseService(StudentoglasiContext context, IMapper mapper, FileService fileService, RecommenderSystem recommenderSystem, BasePrakseState baseState) : base(context, mapper)
         {
+            _recommenderSystem = recommenderSystem;
             _fileService = fileService;
             _baseState = baseState;
         }
+
+        public async Task<List<Model.Prakse>> GetRecommendedPrakse(int studentId)
+        {
+            var recommendedPostIds = await _recommenderSystem.GetRecommendedPostIds(studentId, "internship");
+
+            var recommendedPrakse = await _context.Prakses
+                .Include(p => p.IdNavigation)
+                .Where(p => recommendedPostIds.Contains(p.Id))
+                .ToListAsync();
+
+            return _mapper.Map<List<Model.Prakse>>(recommendedPrakse);
+        }
+
         public override Task<Model.Prakse> Insert(PrakseInsertRequest insert)
         {
             var state = _baseState.CreateState("Initial");
