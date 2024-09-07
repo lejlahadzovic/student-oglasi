@@ -1,3 +1,4 @@
+using DotNetEnv;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
@@ -111,7 +112,14 @@ builder.Services.AddAutoMapper(typeof(IKorisniciService));
 builder.Services.AddAutoMapper(typeof(IStipendijeService));
 builder.Services.AddAuthentication("BasicAuthentication")
     .AddScheme<AuthenticationSchemeOptions, BasicAuthenticationHandler>("BasicAuthentication", null);
-builder.Services.Configure<StripeSettings>(builder.Configuration.GetSection("Stripe"));
+
+Env.Load();
+
+builder.Services.Configure<StripeSettings>(options =>
+{
+    options.SecretKey = Environment.GetEnvironmentVariable("STRIPE_SECRET_KEY");
+    options.PublishableKey = Environment.GetEnvironmentVariable("STRIPE_PUBLISHABLE_KEY");
+});
 
 var app = builder.Build();
 

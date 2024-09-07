@@ -2,7 +2,6 @@ import 'dart:convert';
 
 import 'package:studentoglasi_mobile/models/Praksa/praksa.dart';
 import 'package:studentoglasi_mobile/providers/base_provider.dart';
-import 'package:studentoglasi_mobile/providers/studenti_provider.dart';
 import '../models/search_result.dart';
 
 class PraksaProvider extends BaseProvider<Praksa> {
