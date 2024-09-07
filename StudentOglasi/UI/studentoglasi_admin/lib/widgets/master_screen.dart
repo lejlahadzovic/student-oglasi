@@ -1,10 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:studentoglasi_admin/main.dart';
 import 'package:studentoglasi_admin/screens/components/side_menu.dart';
-import 'package:studentoglasi_admin/screens/login.dart';
-import 'package:studentoglasi_admin/screens/objave_list_screen.dart';
-import 'package:studentoglasi_admin/screens/prakse_list_screen.dart';
-import 'package:studentoglasi_admin/screens/stipendije_list_screen.dart';
 
 class MasterScreenWidget extends StatefulWidget {
   Widget? child;

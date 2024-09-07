@@ -20,10 +20,8 @@ class _PrijavaStipendijaFormScreenState extends State<PrijavaStipendijaFormScree
   final _formKey = GlobalKey<FormBuilderState>();
   late PrijaveStipendijaProvider _prijaveStipendijaProvider;
 
-  // Variables to hold form data
   Map<String, dynamic> _formData = {};
 
-  // Controllers for TextFormFields
   final TextEditingController _cvController = TextEditingController();
   final TextEditingController _dokumentacijaController = TextEditingController();
 
@@ -114,20 +112,6 @@ class _PrijavaStipendijaFormScreenState extends State<PrijavaStipendijaFormScree
       appBar: AppBar(
         title: Text('Prijavi se na stipendiju'),
         centerTitle: true,
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back_ios_new, color: Colors.deepPurple), // Custom back button
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
-        ),
-        elevation: 0, // Remove the default shadow
-        bottom: PreferredSize(
-          preferredSize: Size.fromHeight(1.0), // Height of the bottom border
-          child: Container(
-            color: Colors.deepPurple, // Set the color of the thin bottom line
-            height: 1.0,
-          ),
-        ),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -136,7 +120,6 @@ class _PrijavaStipendijaFormScreenState extends State<PrijavaStipendijaFormScree
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // CV Field
               Text('CV', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
               SizedBox(height: 5),
               FormBuilderTextField(
@@ -154,8 +137,6 @@ class _PrijavaStipendijaFormScreenState extends State<PrijavaStipendijaFormScree
                 validator: FormBuilderValidators.required(errorText: 'Please select a CV file'),
               ),
               SizedBox(height: 20),
-
-              // Dokumentacija Field
               Text('Dokumentacija', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
               SizedBox(height: 5),
               FormBuilderTextField(
@@ -173,8 +154,6 @@ class _PrijavaStipendijaFormScreenState extends State<PrijavaStipendijaFormScree
                 validator: FormBuilderValidators.required(errorText: 'Please select a Dokumentacija file'),
               ),
               SizedBox(height: 20),
-
-              // Prosjek Ocjena Field
               Text('Prosjek Ocjena', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
               SizedBox(height: 5),
               FormBuilderTextField(
@@ -193,12 +172,11 @@ class _PrijavaStipendijaFormScreenState extends State<PrijavaStipendijaFormScree
               ),
               SizedBox(height: 30),
 
-              // Submit Button
               Align(
                 alignment: Alignment.center,
                 child: ElevatedButton(
                   onPressed: _submitForm,
-                  child: Text('Submit'),
+                  child: Text('Prijavi se'),
                   style: ElevatedButton.styleFrom(
                     padding: EdgeInsets.symmetric(horizontal: 40, vertical: 15),
                     textStyle: TextStyle(fontSize: 16),

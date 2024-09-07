@@ -83,7 +83,7 @@ class _InternshipDetailsScreenState extends State<InternshipDetailsScreen> {
             Row(
               children: [
                 IconButton(
-                  icon: Icon(Icons.comment, color: Colors.purple[900]),
+                  icon: Icon(Icons.comment, color: Colors.blue),
                   onPressed: () {
                     Navigator.push(
                       context,
@@ -145,7 +145,6 @@ class _InternshipDetailsScreenState extends State<InternshipDetailsScreen> {
                   alignment: Alignment.bottomRight,
                   child: ElevatedButton(
                     onPressed: () {
-                      // Handle apply button press
                       Navigator.push(
                         context,
                         MaterialPageRoute(

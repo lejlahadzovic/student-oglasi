@@ -98,7 +98,7 @@ class _InternshipsScreenState extends State<InternshipsScreen> {
         'naslov': _naslovController.text,
         'organizacija': selectedOrganizacije?.id,
       });
-       _averageRatings.clear();
+      _averageRatings.clear();
       setState(() {
         _praksa = data;
         _isLoading = false;
@@ -121,12 +121,14 @@ class _InternshipsScreenState extends State<InternshipsScreen> {
     _fetchData();
   }
 
-    void _navigateToDetailsScreen(int internshipId, double averageRating) async {
+  void _navigateToDetailsScreen(int internshipId, double averageRating) async {
     final shouldRefresh = await Navigator.push(
       context,
       MaterialPageRoute(
         builder: (context) => InternshipDetailsScreen(
-          internship: _praksa!.result.firstWhere((p) => p.id == internshipId).idNavigation!,
+          internship: _praksa!.result
+              .firstWhere((p) => p.id == internshipId)
+              .idNavigation!,
           averageRating: averageRating,
         ),
       ),
@@ -144,17 +146,35 @@ class _InternshipsScreenState extends State<InternshipsScreen> {
         title: Row(
           children: [
             Expanded(
-              child: TextField(
-                controller: _naslovController,
-                decoration: const InputDecoration(
-                  hintText: 'Pretraži...',
-                  border: InputBorder.none,
+              child: Container(
+                padding:
+                    EdgeInsets.only(bottom: 12.0), 
+                child: TextField(
+                  controller: _naslovController,
+                  style: TextStyle(color: Colors.white), 
+                  decoration: const InputDecoration(
+                    hintText: 'Pretraži...',
+                    hintStyle: TextStyle(
+                        color: Colors.white),
+                    enabledBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(
+                          color: Colors.white, width: 1),
+                    ),
+                    focusedBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(
+                          color: Colors.white, width: 1),
+                    ),
+                    border: UnderlineInputBorder(
+                      borderSide: BorderSide(
+                          color: Colors.white, width: 1),
+                    ),
+                  ),
+                  onChanged: (text) => _onSearchChanged(),
                 ),
-                onChanged: (text) => _onSearchChanged(),
               ),
             ),
             IconButton(
-              icon: Icon(Icons.search, color: Colors.purple[900]),
+              icon: Icon(Icons.search, color: Colors.white),
               onPressed: _onSearchChanged,
             ),
           ],
@@ -214,14 +234,16 @@ class _InternshipsScreenState extends State<InternshipsScreen> {
                             itemCount: _praksa?.count,
                             itemBuilder: (context, index) {
                               final praksa = _praksa!.result[index];
-                              final averageRating = _averageRatings[praksa.id] ?? 0.0;
+                              final averageRating =
+                                  _averageRatings[praksa.id] ?? 0.0;
                               return Padding(
                                 padding: const EdgeInsets.symmetric(
                                     horizontal: 8.0, vertical: 4.0),
                                 child: Card(
                                   child: InkWell(
                                     onTap: () {
-                                      _navigateToDetailsScreen(praksa.id!, averageRating);
+                                      _navigateToDetailsScreen(
+                                          praksa.id!, averageRating);
                                     },
                                     child: Padding(
                                       padding: const EdgeInsets.all(16.0),
@@ -299,7 +321,7 @@ class _InternshipsScreenState extends State<InternshipsScreen> {
                                                   children: [
                                                     Icon(
                                                       Icons.comment,
-                                                      color: Colors.purple[900],
+                                                      color: Colors.blue,
                                                     ),
                                                     SizedBox(width: 8),
                                                     Text('Komentari'),
@@ -316,9 +338,13 @@ class _InternshipsScreenState extends State<InternshipsScreen> {
                                               SizedBox(width: 16),
                                               Row(
                                                 children: [
-                                                  Icon(Icons.star, color: Colors.amber),
+                                                  Icon(Icons.star,
+                                                      color: Colors.amber),
                                                   SizedBox(width: 4),
-                                                  Text(averageRating == 0.0 ? 'N/A' : averageRating.toStringAsFixed(1)),
+                                                  Text(averageRating == 0.0
+                                                      ? 'N/A'
+                                                      : averageRating
+                                                          .toStringAsFixed(1)),
                                                 ],
                                               ),
                                             ],

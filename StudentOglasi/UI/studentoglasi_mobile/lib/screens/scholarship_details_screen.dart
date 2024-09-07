@@ -54,7 +54,7 @@ class _ScholarshipDetailsScreenState extends State<ScholarshipDetailsScreen> {
         leading: IconButton(
     icon: Icon(Icons.arrow_back),
     onPressed: () {
-      Navigator.pop(context, true); // Signal za osvježavanje
+      Navigator.pop(context, true);
     },
   ),
       ),
@@ -80,7 +80,7 @@ class _ScholarshipDetailsScreenState extends State<ScholarshipDetailsScreen> {
             Row(
               children: [
                 IconButton(
-                  icon: Icon(Icons.comment, color: Colors.purple[900]),
+                  icon: Icon(Icons.comment, color: Colors.blue),
                   onPressed: () {
                     Navigator.push(
                       context,
@@ -140,7 +140,6 @@ class _ScholarshipDetailsScreenState extends State<ScholarshipDetailsScreen> {
                 alignment: Alignment.bottomRight,
                 child: ElevatedButton(
                    onPressed: () {
-                  // Handle apply button press
                   Navigator.push(
                                         context,
                                         MaterialPageRoute(

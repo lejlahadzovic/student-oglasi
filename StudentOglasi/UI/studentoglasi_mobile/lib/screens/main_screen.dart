@@ -32,7 +32,6 @@ class _ObjavaListScreenState extends State<ObjavaListScreen> {
   TextEditingController _naslovController = new TextEditingController();
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     _objaveProvider = context.read<ObjaveProvider>();
     _kategorijeProvider = context.read<KategorijaProvider>();
@@ -88,21 +87,42 @@ class _ObjavaListScreenState extends State<ObjavaListScreen> {
         title: Row(
           children: [
             Expanded(
-              child: TextField(
-                controller: _naslovController,
-                decoration: InputDecoration(
-                  hintText: 'Pretraži...',
-                  border: InputBorder.none,
+              child: Container(
+                padding:
+                    EdgeInsets.only(bottom: 12.0),
+                child: TextField(
+                  controller: _naslovController,
+                  style: TextStyle(color: Colors.white),
+                  decoration: InputDecoration(
+                    hintText: 'Pretraži...',
+                    hintStyle: TextStyle(
+                        color: Colors.white), 
+                    enabledBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(
+                          color: Colors.white, width: 1),
+                    ),
+                    focusedBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(
+                          color: Colors.white, width: 1),
+                    ),
+                    border: UnderlineInputBorder(
+                      borderSide: BorderSide(
+                          color: Colors.white, width: 1), 
+                    ),
+                  ),
+                  onChanged: (text) => _onSearchChanged(),
                 ),
-                onChanged: (text) => _onSearchChanged(),
               ),
             ),
             IconButton(
-              icon: Icon(Icons.search, color: Colors.purple[900]),
+              icon: Icon(Icons.search, color: Colors.white),
               onPressed: _onSearchChanged,
             ),
           ],
         ),
+        backgroundColor: Colors.blue, // AppBar background to white
+        iconTheme: IconThemeData(color: Colors.white), // Menu icon to blue
+        elevation: 0, // Remove shadow
       ),
       drawer: DrawerMenu(),
       body: Column(
@@ -229,7 +249,7 @@ class _ObjavaListScreenState extends State<ObjavaListScreen> {
                                           Row(
                                             children: [
                                               Icon(Icons.comment,
-                                                  color: Colors.purple[900]),
+                                                  color: Colors.blue),
                                               SizedBox(width: 8),
                                               Text('Komentari'),
                                               SizedBox(width: 16),

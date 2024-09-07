@@ -134,10 +134,14 @@ class _ProfileScreenState extends State<ProfileScreen>
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Profile'),
+        title: Text('Moj profil'),
         bottom: TabBar(
           controller: _tabController,
           tabs: [Tab(text: 'Osnovni podaci'), Tab(text: 'Podaci o studijama')],
+          labelColor: Colors.white, 
+          unselectedLabelColor: Colors
+              .white70,
+          indicatorColor: Colors.white,
         ),
       ),
       drawer: DrawerMenu(),
@@ -267,7 +271,9 @@ class _ProfileScreenState extends State<ProfileScreen>
             onPressed: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => ChangePasswordScreen(userId: _currentStudent?.id)),
+                MaterialPageRoute(
+                    builder: (context) =>
+                        ChangePasswordScreen(userId: _currentStudent?.id)),
               );
             },
             icon: Icon(Icons.lock),

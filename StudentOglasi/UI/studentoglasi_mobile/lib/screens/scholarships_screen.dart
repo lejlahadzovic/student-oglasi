@@ -42,7 +42,6 @@ class _ScholarshipsScreenState extends State<ScholarshipsScreen> {
   TextEditingController _naslovController = new TextEditingController();
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     _stipendijeProvider = context.read<StipendijeProvider>();
     _statusProvider = context.read<StatusOglasiProvider>();
@@ -144,17 +143,35 @@ class _ScholarshipsScreenState extends State<ScholarshipsScreen> {
         title: Row(
           children: [
             Expanded(
-              child: TextField(
-                controller: _naslovController,
-                decoration: InputDecoration(
-                  hintText: 'Pretraži...',
-                  border: InputBorder.none,
+              child: Container(
+                padding:
+                    EdgeInsets.only(bottom: 12.0),
+                child: TextField(
+                  controller: _naslovController,
+                  style: TextStyle(color: Colors.white),
+                  decoration: const InputDecoration(
+                    hintText: 'Pretraži...',
+                    hintStyle: TextStyle(
+                        color: Colors.white),
+                    enabledBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(
+                          color: Colors.white, width: 1),
+                    ),
+                    focusedBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(
+                          color: Colors.white, width: 1),
+                    ),
+                    border: UnderlineInputBorder(
+                      borderSide: BorderSide(
+                          color: Colors.white, width: 1),
+                    ),
+                  ),
+                  onChanged: (text) => _onSearchChanged(),
                 ),
-                onChanged: (text) => _onSearchChanged(),
               ),
             ),
             IconButton(
-              icon: Icon(Icons.search, color: Colors.purple[900]),
+              icon: Icon(Icons.search, color: Colors.white),
               onPressed: _onSearchChanged,
             ),
           ],
@@ -299,7 +316,7 @@ class _ScholarshipsScreenState extends State<ScholarshipsScreen> {
                                                   children: [
                                                     Icon(
                                                       Icons.comment,
-                                                      color: Colors.purple[900],
+                                                      color: Colors.blue,
                                                     ),
                                                     SizedBox(width: 8),
                                                     Text('Komentari'),

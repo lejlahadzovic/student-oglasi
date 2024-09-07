@@ -8,70 +8,80 @@ class DrawerMenu extends StatelessWidget {
         padding: EdgeInsets.zero,
         children: <Widget>[
           Container(
-            height: 100, // Set the height as per your requirement
-            child: DrawerHeader(
+            height: 100, 
+            child: const DrawerHeader(
               decoration: BoxDecoration(
-                color: Colors.purple[900],
+                color: Colors.blue,
               ),
-            child: Text(
-              'StudentOglasi',
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 24,
+              child: Row(
+                children: [
+                  Icon(Icons.school, color: Colors.white, size: 30),
+                  SizedBox(width: 12),
+                  Text(
+                    'StudentOglasi',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
               ),
             ),
           ),
+          _buildListTile(
+            context,
+            Icons.home_outlined,
+            'Početna',
+            '/home',
           ),
-          ListTile(
-            leading: Icon(Icons.home_outlined, color: Colors.purple[900]),
-            title: Text('Početna'),
-            onTap: () {
-              Navigator.pop(context);
-              Navigator.pushNamed(context, '/home');
-            },
+          _buildListTile(
+            context,
+            Icons.account_circle_outlined,
+            'Moj profil',
+            '/profile',
           ),
-          ListTile(
-            leading: Icon(Icons.account_circle_outlined, color: Colors.purple[900]),
-            title: Text('Moj profil'),
-            onTap: () {
-              Navigator.pop(context);
-              Navigator.pushNamed(context, '/profile');
-            },
+          _buildListTile(
+            context,
+            Icons.mail_outline,
+            'Moje prijave',
+            '/prijave',
           ),
-          ListTile(
-            leading: Icon(Icons.mail_outline, color: Colors.purple[900]),
-            title: Text('Moje prijave'),
-            onTap: () {
-              Navigator.pop(context);
-              Navigator.pushNamed(context, '/prijave');
-            },
+          _buildListTile(
+            context,
+            Icons.chat_bubble_outline,
+            'Chat',
+            '/chat',
           ),
-          ListTile(
-            leading: Icon(Icons.chat_bubble_outline, color: Colors.purple[900]),
-            title: Text('Chat'),
-            onTap: () {
-              Navigator.pop(context);
-              Navigator.pushNamed(context, '/chat');
-            },
+          _buildListTile(
+            context,
+            Icons.notification_add_outlined,
+            'Obavijesti',
+            '/obavijesti',
           ),
-          ListTile(
-            leading: Icon(Icons.notification_add_outlined, color: Colors.purple[900]),
-            title: Text('Obavijesti'),
-            onTap: () {
-              Navigator.pop(context);
-              Navigator.pushNamed(context, '/obavijesti');
-            },
-          ),
-          ListTile(
-            leading: Icon(Icons.logout, color: Colors.purple[900]),
-            title: Text('Odjavi se'),
-            onTap: () {
-              Navigator.pop(context);
-              Navigator.pushNamed(context, '/logout');
-            },
+          _buildListTile(
+            context,
+            Icons.logout,
+            'Odjavi se',
+            '/logout',
           ),
         ],
       ),
+    );
+  }
+
+  Widget _buildListTile(BuildContext context, IconData icon, String title, String route) {
+    return InkWell(
+      onTap: () {
+        Navigator.pop(context);
+        Navigator.pushNamed(context, route);
+      },
+      child: ListTile(
+        leading: Icon(icon, color: Colors.blue),
+        title: Text(title, style: TextStyle(color: Colors.blue)),
+      ),
+      splashColor: Colors.blue.withOpacity(0.2),
+      highlightColor: Colors.blue.withOpacity(0.1),
     );
   }
 }

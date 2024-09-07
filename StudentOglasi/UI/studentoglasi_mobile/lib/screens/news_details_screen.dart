@@ -14,7 +14,21 @@ class ObjavaDetailsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(objava.naslov ?? 'News Details'),
+        backgroundColor: Colors.blue,
+        title: Text(
+          objava.naslov ?? 'News Details',
+          style: TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        centerTitle: true,
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back, color: Colors.white),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -34,11 +48,11 @@ class ObjavaDetailsScreen extends StatelessWidget {
                       child: Text('No Image Available'),
                     ),
                   ),
-                     SizedBox(height: 8),
+            SizedBox(height: 8),
             Row(
               children: [
                 IconButton(
-                  icon: Icon(Icons.comment, color: Colors.purple[900]),
+                  icon: Icon(Icons.comment, color: Colors.blue), // Blue comment icon
                   onPressed: () {
                     Navigator.push(
                       context,
@@ -52,23 +66,33 @@ class ObjavaDetailsScreen extends StatelessWidget {
                   },
                 ),
                 SizedBox(width: 8),
-                  LikeButton(
-                    itemId: objava.id!,
-                    itemType: ItemType.news,
-                  ),
-                SizedBox(width: 8),
-                
+                LikeButton(
+                  itemId: objava.id!,
+                  itemType: ItemType.news,
+                ),
               ],
             ),
             SizedBox(height: 16),
+
+            // Title of the news
             Text(
               objava.naslov ?? 'No Title',
-              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+              style: TextStyle(
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+                color: Colors.black87,
+              ),
             ),
             SizedBox(height: 16),
+
+            // News content
             Text(
               objava.sadrzaj ?? 'No Description',
-              style: TextStyle(fontSize: 16),
+              style: TextStyle(
+                fontSize: 16,
+                color: Colors.black54,
+                height: 1.5,
+              ),
             ),
           ],
         ),

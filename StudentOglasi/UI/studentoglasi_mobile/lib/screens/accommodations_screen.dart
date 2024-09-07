@@ -90,7 +90,7 @@ class _AccommodationsScreenState extends State<AccommodationsScreen> {
           averageRating: averageRating,
         ),
       ),
-    );
+    ); 
 
     if (shouldRefresh == true) {
       _fetchAverageRatings();
@@ -101,16 +101,34 @@ class _AccommodationsScreenState extends State<AccommodationsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Row(
+       title: Row(
           children: [
             Expanded(
-              child: TextField(
-                controller: _nazivController,
-                decoration: InputDecoration(
-                  hintText: 'Pretraži...',
-                  border: InputBorder.none,
+              child: Container(
+                padding:
+                    EdgeInsets.only(bottom: 12.0), // Move underline slightly up
+                child: TextField(
+                  controller: _nazivController,
+                  style: TextStyle(color: Colors.white), // Text color to white
+                  decoration: InputDecoration(
+                    hintText: 'Pretraži...',
+                    hintStyle: TextStyle(
+                        color: Colors.white), // Hint text color to white
+                    enabledBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(
+                          color: Colors.white, width: 1), // Thin white line
+                    ),
+                    focusedBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(
+                          color: Colors.white, width: 1), // White line on focus
+                    ),
+                    border: UnderlineInputBorder(
+                      borderSide: BorderSide(
+                          color: Colors.white, width: 1), // Default white line
+                    ),
+                  ),
+                  onChanged: (text) => _onSearchChanged(),
                 ),
-                onChanged: (text) => _onSearchChanged(),
               ),
             ),
             IconButton(
@@ -264,7 +282,7 @@ class _AccommodationsScreenState extends State<AccommodationsScreen> {
                                                   children: [
                                                     Icon(
                                                       Icons.comment,
-                                                      color: Colors.purple[900],
+                                                      color: Colors.blue,
                                                     ),
                                                     SizedBox(width: 8),
                                                     Text('Komentari'),

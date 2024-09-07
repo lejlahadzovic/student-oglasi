@@ -5,7 +5,6 @@ import 'package:number_paginator/number_paginator.dart';
 import 'package:provider/provider.dart';
 import 'package:studentoglasi_admin/models/Rezervacije/rezervacije.dart';
 import 'package:studentoglasi_admin/models/Smjestaj/smjestaj.dart';
-import 'package:studentoglasi_admin/models/SmjestajnaJedinica/smjestajna_jedinica.dart';
 import 'package:studentoglasi_admin/models/Student/student.dart';
 import 'package:studentoglasi_admin/providers/rezervacije_provider.dart';
 import 'package:studentoglasi_admin/providers/smjestaji_provider.dart';

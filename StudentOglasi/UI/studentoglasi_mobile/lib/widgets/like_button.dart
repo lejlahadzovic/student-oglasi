@@ -66,7 +66,7 @@ class _LikeButtonState extends State<LikeButton> {
         IconButton(
           icon: Icon(
             isLiked ? Icons.favorite : Icons.favorite_border,
-            color: Colors.purple[900],
+            color: Colors.blue,
           ),
           onPressed: currentStudent != null
               ? () => _toggleLike(currentStudent.id!)

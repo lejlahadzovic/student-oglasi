@@ -6,11 +6,8 @@ import 'package:studentoglasi_mobile/screens/main_screen.dart';
 import 'package:studentoglasi_mobile/screens/registration_form.dart';
 
 import '../utils/util.dart';
-//import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class LoginScreen extends StatefulWidget {
-
-  
   @override
   _LoginScreenState createState() => _LoginScreenState();
 }
@@ -24,17 +21,15 @@ class _LoginScreenState extends State<LoginScreen> {
   Future<void> _login() async {
     var username = _usernameController.text;
     var password = _passwordController.text;
-     
+
     Authorization.username = username;
     Authorization.password = password;
 
     try {
-       await _studentProvider.getCurrentStudent(); 
+      await _studentProvider.getCurrentStudent();
 
       Navigator.of(context).push(
-        MaterialPageRoute(
-          builder: (context) => ObjavaListScreen()
-        ),
+        MaterialPageRoute(builder: (context) => ObjavaListScreen()),
       );
     } on Exception {
       String error = "Pogrešno korisničko ime ili lozinka";
@@ -58,40 +53,71 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     _studentProvider = context.read<StudentiProvider>();
     return Scaffold(
+      backgroundColor: Colors.grey[200],
       appBar: AppBar(
-        title: Text('Login'),
+        title: Text('StudentOglasi',
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 25, 
+              fontWeight: FontWeight.bold,
+            )),
+        centerTitle: true,
+        backgroundColor: Colors.blueAccent, 
         automaticallyImplyLeading: false,
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          children: <Widget>[
-            TextField(
-              controller: _usernameController,
-              decoration: InputDecoration(labelText: 'Username'),
-            ),
-            TextField(
-              controller: _passwordController,
-              decoration: InputDecoration(labelText: 'Password'),
-              obscureText: true,
-            ),
-            SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: _login,
-              child: Text('Login'),
-            ),
-            SizedBox(height: 20),
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (context) => RegistrationForm(),
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 32.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              SizedBox(height: 100), 
+              Icon(Icons.school,
+                  size: 80, color: Colors.blueAccent),
+              SizedBox(height: 40),
+              TextField(
+                controller: _usernameController,
+                decoration: InputDecoration(
+                  labelText: 'Korisničko ime',
+                  border: OutlineInputBorder(),
+                  prefixIcon: Icon(Icons.person),
+                ),
+              ),
+              SizedBox(height: 20),
+              TextField(
+                controller: _passwordController,
+                decoration: InputDecoration(
+                  labelText: 'Lozinka',
+                  border: OutlineInputBorder(),
+                  prefixIcon: Icon(Icons.lock),
+                ),
+                obscureText: true,
+              ),
+              SizedBox(height: 30),
+              ElevatedButton(
+                onPressed: _login,
+                style: ElevatedButton.styleFrom(
+                  minimumSize: Size(double.infinity, 50),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8.0),
                   ),
-                );
-              },
-              child: Text('Don\'t have an account? Sign Up'),
-            ),
-          ],
+                ),
+                child: Text('Prijavi se', style: TextStyle(fontSize: 18)),
+              ),
+              SizedBox(height: 20),
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(builder: (context) => RegistrationForm()),
+                  );
+                },
+                child: Text(
+                  'Nemaš korisnički račun? Kreiraj novi račun.',
+                  style: TextStyle(color: Colors.blueAccent), 
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

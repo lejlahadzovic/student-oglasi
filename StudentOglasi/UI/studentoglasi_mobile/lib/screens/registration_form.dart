@@ -122,11 +122,9 @@ class _RegistrationFormState extends State<RegistrationForm> {
             } else if (_currentStep == 1) {
               _saveStudentForm();
               if (_studentFormKey.currentState?.saveAndValidate() ?? false) {
-                // Handle form submission here
                 print('User Form Values: $_userFormData');
                 print('Student Form Values: $_studentFormData');
 
-                // Prepare data to send to API
                 var formData = {
                   'idNavigation.ime': _userFormData['ime'],
                   'idNavigation.prezime': _userFormData['prezime'],
@@ -146,8 +144,6 @@ class _RegistrationFormState extends State<RegistrationForm> {
                       (_studentFormData['nacinStudiranja'] as NacinStudiranja)
                           .id,
                 };
-
-                // Send formData to API
                 _sendDataToApi(formData);
               }
             }
@@ -190,58 +186,76 @@ class _RegistrationFormState extends State<RegistrationForm> {
               key: _userFormKey,
               child: Column(
                 children: [
-                  FormBuilderTextField(
-                    name: 'ime',
-                    decoration: InputDecoration(labelText: 'Ime'),
-                    validator: FormBuilderValidators.compose([
-                      FormBuilderValidators.required(),
-                      FormBuilderValidators.minLength(3),
-                      FormBuilderValidators.maxLength(50),
-                    ]),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 8.0),
+                    child: FormBuilderTextField(
+                      name: 'ime',
+                      decoration: InputDecoration(labelText: 'Ime'),
+                      validator: FormBuilderValidators.compose([
+                        FormBuilderValidators.required(),
+                        FormBuilderValidators.minLength(3),
+                        FormBuilderValidators.maxLength(50),
+                      ]),
+                    ),
                   ),
-                  FormBuilderTextField(
-                    name: 'prezime',
-                    decoration: InputDecoration(labelText: 'Prezime'),
-                    validator: FormBuilderValidators.compose([
-                      FormBuilderValidators.required(),
-                      FormBuilderValidators.minLength(3),
-                      FormBuilderValidators.maxLength(50),
-                    ]),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 8.0),
+                    child: FormBuilderTextField(
+                      name: 'prezime',
+                      decoration: InputDecoration(labelText: 'Prezime'),
+                      validator: FormBuilderValidators.compose([
+                        FormBuilderValidators.required(),
+                        FormBuilderValidators.minLength(3),
+                        FormBuilderValidators.maxLength(50),
+                      ]),
+                    ),
                   ),
-                  FormBuilderTextField(
-                    name: 'email',
-                    decoration: InputDecoration(labelText: 'Email'),
-                    validator: FormBuilderValidators.compose([
-                      FormBuilderValidators.required(),
-                      FormBuilderValidators.email(),
-                    ]),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 8.0),
+                    child: FormBuilderTextField(
+                      name: 'email',
+                      decoration: InputDecoration(labelText: 'Email'),
+                      validator: FormBuilderValidators.compose([
+                        FormBuilderValidators.required(),
+                        FormBuilderValidators.email(),
+                      ]),
+                    ),
                   ),
-                  FormBuilderTextField(
-                    name: 'korisnickoIme',
-                    decoration: InputDecoration(labelText: 'Korisničko Ime'),
-                    validator: FormBuilderValidators.required(),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 8.0),
+                    child: FormBuilderTextField(
+                      name: 'korisnickoIme',
+                      decoration: InputDecoration(labelText: 'Korisničko Ime'),
+                      validator: FormBuilderValidators.required(),
+                    ),
                   ),
-                  FormBuilderTextField(
-                    name: 'password',
-                    decoration: InputDecoration(labelText: 'Lozinka'),
-                    obscureText: true,
-                    validator: FormBuilderValidators.required(),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 8.0),
+                    child: FormBuilderTextField(
+                      name: 'password',
+                      decoration: InputDecoration(labelText: 'Lozinka'),
+                      obscureText: true,
+                      validator: FormBuilderValidators.required(),
+                    ),
                   ),
-                  FormBuilderTextField(
-                    name: 'passwordPotvrda',
-                    decoration: InputDecoration(labelText: 'Potvrdite lozinku'),
-                    obscureText: true,
-                    validator: FormBuilderValidators.compose([
-                      FormBuilderValidators.required(),
-                      (val) {
-                        if (_userFormKey
-                                .currentState?.fields['password']?.value !=
-                            val) {
-                          return "Lozinke se ne podudaraju";
-                        }
-                        return null;
-                      },
-                    ]),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 8.0),
+                    child: FormBuilderTextField(
+                      name: 'passwordPotvrda',
+                      decoration: InputDecoration(labelText: 'Potvrdite lozinku'),
+                      obscureText: true,
+                      validator: FormBuilderValidators.compose([
+                        FormBuilderValidators.required(),
+                        (val) {
+                          if (_userFormKey
+                                  .currentState?.fields['password']?.value !=
+                              val) {
+                            return "Lozinke se ne podudaraju";
+                          }
+                          return null;
+                        },
+                      ]),
+                    ),
                   ),
                 ],
               ),
@@ -257,92 +271,113 @@ class _RegistrationFormState extends State<RegistrationForm> {
               },
               child: Column(
                 children: [
-                  FormBuilderDropdown<Univerzitet>(
-                    name: 'univerzitet',
-                    decoration: InputDecoration(labelText: 'Univerzitet'),
-                    validator: FormBuilderValidators.required(),
-                    onChanged: (Univerzitet? newValue) {
-                      setState(() {
-                        selectedUniverzitet = newValue;
-                        selectedFakultet = null;
-                        smjerovi = [];
-                      });
-                    },
-                    items: univerziteti?.result
-                            .map((univerzitet) => DropdownMenuItem<Univerzitet>(
-                                  value: univerzitet,
-                                  child: Text(univerzitet.naziv ?? ''),
-                                ))
-                            .toList() ??
-                        [],
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 8.0),
+                    child: FormBuilderDropdown<Univerzitet>(
+                      name: 'univerzitet',
+                      decoration: InputDecoration(labelText: 'Univerzitet'),
+                      validator: FormBuilderValidators.required(),
+                      onChanged: (Univerzitet? newValue) {
+                        setState(() {
+                          selectedUniverzitet = newValue;
+                          selectedFakultet = null;
+                          smjerovi = [];
+                        });
+                      },
+                      items: univerziteti?.result
+                              .map((univerzitet) => DropdownMenuItem<Univerzitet>(
+                                    value: univerzitet,
+                                    child: Text(univerzitet.naziv ?? ''),
+                                  ))
+                              .toList() ??
+                          [],
+                    ),
                   ),
-                  FormBuilderDropdown<Fakultet>(
-                    name: 'fakultet',
-                    decoration: InputDecoration(labelText: 'Fakultet'),
-                    validator: FormBuilderValidators.required(),
-                    onChanged: (Fakultet? newValue) {
-                      setState(() {
-                        selectedFakultet = newValue;
-                        smjerovi = newValue?.smjerovi ?? [];
-                      });
-                    },
-                    items: selectedUniverzitet?.fakultetis
-                            ?.map((fakultet) => DropdownMenuItem<Fakultet>(
-                                  value: fakultet,
-                                  child: Text(fakultet.naziv ?? ''),
-                                ))
-                            .toList() ??
-                        [],
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 8.0),
+                    child: FormBuilderDropdown<Fakultet>(
+                      name: 'fakultet',
+                      decoration: InputDecoration(labelText: 'Fakultet'),
+                      validator: FormBuilderValidators.required(),
+                      onChanged: (Fakultet? newValue) {
+                        setState(() {
+                          selectedFakultet = newValue;
+                          smjerovi = newValue?.smjerovi ?? [];
+                        });
+                      },
+                      items: selectedUniverzitet?.fakultetis
+                              ?.map((fakultet) => DropdownMenuItem<Fakultet>(
+                                    value: fakultet,
+                                    child: Text(fakultet.naziv ?? ''),
+                                  ))
+                              .toList() ??
+                          [],
+                    ),
                   ),
-                  FormBuilderDropdown<Smjer>(
-                    name: 'smjer',
-                    decoration: InputDecoration(labelText: 'Smjer'),
-                    validator: FormBuilderValidators.required(),
-                    items: smjerovi
-                        .map((smjer) => DropdownMenuItem<Smjer>(
-                              value: smjer,
-                              child: Text(smjer.naziv ?? ''),
-                            ))
-                        .toList(),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 8.0),
+                    child: FormBuilderDropdown<Smjer>(
+                      name: 'smjer',
+                      decoration: InputDecoration(labelText: 'Smjer'),
+                      validator: FormBuilderValidators.required(),
+                      items: smjerovi
+                          .map((smjer) => DropdownMenuItem<Smjer>(
+                                value: smjer,
+                                child: Text(smjer.naziv ?? ''),
+                              ))
+                          .toList(),
+                    ),
                   ),
-                  FormBuilderDropdown<NacinStudiranja>(
-                    name: 'nacinStudiranja',
-                    decoration: InputDecoration(labelText: 'Način Studiranja'),
-                    validator: FormBuilderValidators.required(),
-                    items: naciniStudiranjaResult?.result
-                            .map((nacinStudiranja) =>
-                                DropdownMenuItem<NacinStudiranja>(
-                                  value: nacinStudiranja,
-                                  child: Text(nacinStudiranja.naziv ?? ''),
-                                ))
-                            .toList() ??
-                        [],
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 8.0),
+                    child: FormBuilderDropdown<NacinStudiranja>(
+                      name: 'nacinStudiranja',
+                      decoration: InputDecoration(labelText: 'Način Studiranja'),
+                      validator: FormBuilderValidators.required(),
+                      items: naciniStudiranjaResult?.result
+                              .map((nacinStudiranja) =>
+                                  DropdownMenuItem<NacinStudiranja>(
+                                    value: nacinStudiranja,
+                                    child: Text(nacinStudiranja.naziv ?? ''),
+                                  ))
+                              .toList() ??
+                          [],
+                    ),
                   ),
-                  FormBuilderTextField(
-                    name: 'brojIndeksa',
-                    decoration: InputDecoration(labelText: 'Broj Indeksa'),
-                    validator: FormBuilderValidators.required(),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 8.0),
+                    child: FormBuilderTextField(
+                      name: 'brojIndeksa',
+                      decoration: InputDecoration(labelText: 'Broj Indeksa'),
+                      validator: FormBuilderValidators.required(),
+                    ),
                   ),
-                  FormBuilderDropdown<int>(
-                    name: 'godinaStudija',
-                    decoration: InputDecoration(labelText: 'Godina Studija'),
-                    validator: FormBuilderValidators.required(),
-                    items: [1, 2, 3, 4]
-                        .map((year) => DropdownMenuItem<int>(
-                              value: year,
-                              child: Text('$year. godina'),
-                            ))
-                        .toList(),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 8.0),
+                    child: FormBuilderDropdown<int>(
+                      name: 'godinaStudija',
+                      decoration: InputDecoration(labelText: 'Godina Studija'),
+                      validator: FormBuilderValidators.required(),
+                      items: [1, 2, 3, 4]
+                          .map((year) => DropdownMenuItem<int>(
+                                value: year,
+                                child: Text('$year. godina'),
+                              ))
+                          .toList(),
+                    ),
                   ),
-                  FormBuilderTextField(
-                    name: 'prosjecnaOcjena',
-                    decoration: InputDecoration(labelText: 'Prosječna Ocjena'),
-                    validator: FormBuilderValidators.compose([
-                      FormBuilderValidators.numeric(),
-                      FormBuilderValidators.min(5.0),
-                      FormBuilderValidators.max(10.0),
-                    ]),
-                    keyboardType: TextInputType.number,
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 8.0),
+                    child: FormBuilderTextField(
+                      name: 'prosjecnaOcjena',
+                      decoration: InputDecoration(labelText: 'Prosječna Ocjena'),
+                      validator: FormBuilderValidators.compose([
+                        FormBuilderValidators.numeric(),
+                        FormBuilderValidators.min(5.0),
+                        FormBuilderValidators.max(10.0),
+                      ]),
+                      keyboardType: TextInputType.number,
+                    ),
                   ),
                 ],
               ),

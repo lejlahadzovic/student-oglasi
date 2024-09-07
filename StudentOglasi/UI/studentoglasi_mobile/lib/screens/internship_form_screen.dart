@@ -20,10 +20,8 @@ class _PrijavaPraksaFormScreenState extends State<PrijavaPraksaFormScreen> {
   final _formKey = GlobalKey<FormBuilderState>();
   late PrijavePraksaProvider _prijavaPraksaProvider;
 
-  // Variables to hold form data
   Map<String, dynamic> _formData = {};
 
-  // Controllers for TextFormFields
   final TextEditingController _cvController = TextEditingController();
   final TextEditingController _certifikatiController = TextEditingController();
   final TextEditingController _propratnoPismoController = TextEditingController();
@@ -36,7 +34,6 @@ class _PrijavaPraksaFormScreenState extends State<PrijavaPraksaFormScreen> {
 
   @override
   void dispose() {
-    // Dispose controllers to avoid memory leaks
     _cvController.dispose();
     _certifikatiController.dispose();
     _propratnoPismoController.dispose();
@@ -50,8 +47,6 @@ class _PrijavaPraksaFormScreenState extends State<PrijavaPraksaFormScreen> {
       setState(() {
         String filePath = result.files.single.path!;
         String fileName = result.files.single.name;
-
-        // Update form data and UI display
         if (fieldName == 'cv') {
           _cvController.text = fileName;
           _formData['cv'] = filePath;
@@ -70,7 +65,6 @@ class _PrijavaPraksaFormScreenState extends State<PrijavaPraksaFormScreen> {
 
   void _saveForm() {
     if (_formKey.currentState?.saveAndValidate() ?? false) {
-      // Merge form values with the already set file paths
       _formData = {
         ..._formKey.currentState?.value ?? {},
         'cv': _formData['cv'],
@@ -123,20 +117,6 @@ class _PrijavaPraksaFormScreenState extends State<PrijavaPraksaFormScreen> {
       appBar: AppBar(
         title: Text('Prijavi se na praksu'),
         centerTitle: true,
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back_ios_new, color: Colors.deepPurple), // Custom back button
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
-        ),
-        elevation: 0, // Remove the default shadow
-        bottom: PreferredSize(
-          preferredSize: Size.fromHeight(1.0), // Height of the bottom border
-          child: Container(
-            color: Colors.deepPurple, // Set the color of the thin bottom line
-            height: 1.0,
-          ),
-        ),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -145,7 +125,6 @@ class _PrijavaPraksaFormScreenState extends State<PrijavaPraksaFormScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Certifikati Field
               Text('Certifikati', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
               SizedBox(height: 5),
               FormBuilderTextField(
@@ -164,7 +143,6 @@ class _PrijavaPraksaFormScreenState extends State<PrijavaPraksaFormScreen> {
               ),
               SizedBox(height: 20),
 
-              // CV Field
               Text('CV', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
               SizedBox(height: 5),
               FormBuilderTextField(
@@ -182,8 +160,6 @@ class _PrijavaPraksaFormScreenState extends State<PrijavaPraksaFormScreen> {
                 validator: FormBuilderValidators.required(errorText: 'Please select a CV file'),
               ),
               SizedBox(height: 20),
-
-              // Propratno Pismo Field
               Text('Propratno pismo', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
               SizedBox(height: 5),
               FormBuilderTextField(
@@ -201,8 +177,6 @@ class _PrijavaPraksaFormScreenState extends State<PrijavaPraksaFormScreen> {
                 validator: FormBuilderValidators.required(errorText: 'Please select a propratno pismo file'),
               ),
               SizedBox(height: 30),
-
-              // Submit Button
               Align(
                 alignment: Alignment.center,
                 child: ElevatedButton(

@@ -43,7 +43,6 @@ class FirebaseApi {
 
   void handleMessage(RemoteMessage? message) {
     if (message == null) return;
-    //  _navigateToNotificationScreen();
     navigatorKey.currentState?.pushNamed('/obavijesti');
   }
 

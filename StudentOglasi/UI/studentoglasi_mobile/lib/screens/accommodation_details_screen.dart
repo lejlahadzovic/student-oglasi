@@ -102,7 +102,7 @@ class _AccommodationDetailsScreenState
                     ),
                   ),
                   IconButton(
-                    icon: Icon(Icons.comment, color: Colors.purple[900]),
+                    icon: Icon(Icons.comment, color: Colors.blue),
                     onPressed: () {
                       Navigator.push(
                         context,

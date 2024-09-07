@@ -53,14 +53,14 @@ class _UsersListScreenState extends State<UsersListScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Chat with Students'),
+        title: Text('Inbox'),
       ),
       body: _isLoading
           ? Center(child: CircularProgressIndicator())
           : _hasError
               ? Center(child: Text('Failed to load users. Please try again.'))
               : _users.isEmpty
-                  ? Center(child: Text('No users available for chat.'))
+                  ? Center(child: Text('Nema dostipnih razgovora.'))
                   : ListView.builder(
                       itemCount: _users.length,
                       itemBuilder: (context, index) {

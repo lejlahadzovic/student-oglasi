@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import '../models/Obavijesti/obavijesti.dart';
 import '../models/search_result.dart';
@@ -22,10 +23,9 @@ class _NotificationScreenState extends State<NotificationScreen> {
 
   Future<void> _fetchNotifications() async {
     try {
-      // Call your provider's getObavijesti() method to fetch data
       var data = await Provider.of<ObavijestiProvider>(context, listen: false).get();
       setState(() {
-        _notifications = data;  // Store fetched notifications in the SearchResult
+        _notifications = data;
         _isLoading = false;
       });
     } catch (error) {
@@ -36,18 +36,25 @@ class _NotificationScreenState extends State<NotificationScreen> {
     }
   }
 
+  String _formatDate(DateTime? date) {
+    if (date == null) {
+      return "";
+    }
+    return DateFormat('MMMM dd, yyyy').format(date);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Notifications'),
+        title: Text('Obavijesti'),
       ),
       body: _isLoading
           ? Center(child: CircularProgressIndicator())
           : _hasError
               ? Center(child: Text('Failed to load notifications.'))
               : _notifications.result.isEmpty
-                  ? Center(child: Text('No notifications found.'))
+                  ? Center(child: Text('Trenutno nema obavijesti'))
                   : ListView.builder(
                       itemCount: _notifications.result.length,
                       itemBuilder: (ctx, index) {
@@ -55,10 +62,36 @@ class _NotificationScreenState extends State<NotificationScreen> {
                         return Card(
                           margin: const EdgeInsets.symmetric(
                               vertical: 8.0, horizontal: 16.0),
-                          child: ListTile(
-                            title: Text(notification.naziv ?? 'No Title'),
-                            subtitle: Text(notification.opis ?? 'No Description'),
-                            trailing: Text(notification.datumKreiranja.toString()),
+                          child: Padding(
+                            padding: const EdgeInsets.all(16.0),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  _formatDate(notification.datumKreiranja),
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    color: Colors.grey[600],
+                                  ),
+                                ),
+                                SizedBox(height: 8),
+                                Text(
+                                  notification.naziv ?? 'Nema naziva',
+                                  style: TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                SizedBox(height: 8),
+                                Text(
+                                  notification.opis ?? 'Nema dostupnog opisa',
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    color: Colors.grey[800],
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
                         );
                       },
