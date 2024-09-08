@@ -484,8 +484,7 @@ class _StipendijeDetailsDialogState extends State<StipendijeDetailsDialog> {
               showDialog(
                   context: context,
                   builder: (BuildContext context) => AlertDialog(
-                        title: Text("Error"),
-                        content: Text(e.toString()),
+                        content: Text("Došlo je do greške. Molimo pokušajte opet!"),
                         actions: [
                           TextButton(
                               onPressed: () => Navigator.pop(context),

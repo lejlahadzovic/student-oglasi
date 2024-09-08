@@ -219,8 +219,8 @@ class _PrijavePraksaListScreen extends State<PrijavePraksaListScreen> {
                 child: IntrinsicWidth(
                   stepWidth: double.infinity,
                   child: DataTable(
-                      columns: [
-                        const DataColumn(
+                      columns: const [
+                        DataColumn(
                           label: Expanded(
                             child: Text(
                               'Ime i prezime',
@@ -229,7 +229,7 @@ class _PrijavePraksaListScreen extends State<PrijavePraksaListScreen> {
                             ),
                           ),
                         ),
-                        const DataColumn(
+                        DataColumn(
                           label: Expanded(
                             child: Text(
                               'Broj indeksa',
@@ -238,7 +238,7 @@ class _PrijavePraksaListScreen extends State<PrijavePraksaListScreen> {
                             ),
                           ),
                         ),
-                        const DataColumn(
+                        DataColumn(
                           label: Expanded(
                             child: Text(
                               'Certifikati',
@@ -247,7 +247,7 @@ class _PrijavePraksaListScreen extends State<PrijavePraksaListScreen> {
                             ),
                           ),
                         ),
-                        const DataColumn(
+                        DataColumn(
                           label: Expanded(
                             child: Text(
                               'Status',
@@ -256,7 +256,7 @@ class _PrijavePraksaListScreen extends State<PrijavePraksaListScreen> {
                             ),
                           ),
                         ),
-                        const DataColumn(
+                        DataColumn(
                           label: Expanded(
                             child: Text(
                               'Naziv prakse',
@@ -265,7 +265,7 @@ class _PrijavePraksaListScreen extends State<PrijavePraksaListScreen> {
                             ),
                           ),
                         ),
-                        const DataColumn(
+                        DataColumn(
                           label: Expanded(
                             child: Text(
                               'Akcije',

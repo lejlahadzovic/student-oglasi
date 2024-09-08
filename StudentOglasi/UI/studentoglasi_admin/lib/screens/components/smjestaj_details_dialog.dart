@@ -15,6 +15,7 @@ import 'package:studentoglasi_admin/models/search_result.dart';
 import 'package:studentoglasi_admin/providers/slike_provider.dart';
 import 'package:studentoglasi_admin/providers/smjestaji_provider.dart';
 import 'package:studentoglasi_admin/providers/smjestajna_jedinica_provider.dart';
+import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:studentoglasi_admin/utils/util.dart';
 
 class SmjestajDetailsDialog extends StatefulWidget {
@@ -163,6 +164,16 @@ class _SmjestajDetailsDialogState extends State<SmjestajDetailsDialog> {
                                   BorderRadius.all(Radius.circular(10)),
                             ),
                           ),
+                          validator: FormBuilderValidators.compose([
+                            FormBuilderValidators.required(
+                              errorText: 'Naziv smještaja je obavezan.',
+                            ),
+                            FormBuilderValidators.minLength(
+                              3,
+                              errorText:
+                                  'Naziv smještaja mora imati najmanje 3 znaka.',
+                            ),
+                          ]),
                           onChanged: (value) {
                             setState(() {
                               _smjestaj.naziv = value;
@@ -180,6 +191,9 @@ class _SmjestajDetailsDialogState extends State<SmjestajDetailsDialog> {
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(10),
                             ),
+                          ),
+                          validator: FormBuilderValidators.required(
+                            errorText: 'Tip smještaja je obavezan.',
                           ),
                           items: widget.tipoviSmjestajaResult?.result
                                   .map((TipSmjestaja tipSmjestaja) =>
@@ -208,6 +222,16 @@ class _SmjestajDetailsDialogState extends State<SmjestajDetailsDialog> {
                                   BorderRadius.all(Radius.circular(10)),
                             ),
                           ),
+                          validator: FormBuilderValidators.compose([
+                            FormBuilderValidators.required(
+                              errorText: 'Adresa je obavezna.',
+                            ),
+                            FormBuilderValidators.minLength(
+                              5,
+                              errorText:
+                                  'Adresa mora imati najmanje 5 znakova.',
+                            ),
+                          ]),
                           onChanged: (value) {
                             setState(() {
                               _smjestaj.adresa = value;
@@ -225,6 +249,9 @@ class _SmjestajDetailsDialogState extends State<SmjestajDetailsDialog> {
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(10),
                             ),
+                          ),
+                          validator: FormBuilderValidators.required(
+                            errorText: 'Grad je obavezan.',
                           ),
                           items: widget.gradoviResult?.result
                                   .map((Grad grad) => DropdownMenuItem(
@@ -247,6 +274,16 @@ class _SmjestajDetailsDialogState extends State<SmjestajDetailsDialog> {
                       ),
                     ),
                     maxLines: 3,
+                    validator: FormBuilderValidators.compose([
+                      FormBuilderValidators.required(
+                        errorText: 'Opis smještaja je obavezan.',
+                      ),
+                      FormBuilderValidators.minLength(
+                        10,
+                        errorText:
+                            'Opis smještaja mora imati najmanje 10 znakova.',
+                      ),
+                    ]),
                     onChanged: (value) {
                       setState(() {
                         _smjestaj.opis = value;
@@ -421,6 +458,16 @@ class _SmjestajDetailsDialogState extends State<SmjestajDetailsDialog> {
                                 initialValue:
                                     _initialValue['smjestajnaJedinica']?[i]
                                         ['naziv'],
+                                validator: FormBuilderValidators.compose([
+                                  FormBuilderValidators.required(
+                                    errorText: 'Naziv smještaja je obavezan.',
+                                  ),
+                                  FormBuilderValidators.minLength(
+                                    3,
+                                    errorText:
+                                        'Naziv smještaja mora imati najmanje 3 znaka.',
+                                  ),
+                                ]),
                                 onChanged: (value) {
                                   setState(() {
                                     _smjestaj.smjestajnaJedinicas![i].naziv =
@@ -449,6 +496,16 @@ class _SmjestajDetailsDialogState extends State<SmjestajDetailsDialog> {
                                     _initialValue['smjestajnaJedinica']?[i]
                                         ['kapacitet'],
                                 keyboardType: TextInputType.number,
+                                validator: (value) {
+                                  if (value == null || value.isEmpty) {
+                                    return 'Kapacitet je obavezan.';
+                                  }
+                                  final int? kapacitet = int.tryParse(value);
+                                  if (kapacitet == null || kapacitet <= 0) {
+                                    return 'Kapacitet mora biti pozitivan broj.';
+                                  }
+                                  return null;
+                                },
                                 onChanged: (value) {
                                   setState(() {
                                     _smjestaj.smjestajnaJedinicas![i].kapacitet;
@@ -472,6 +529,16 @@ class _SmjestajDetailsDialogState extends State<SmjestajDetailsDialog> {
                                     _initialValue['smjestajnaJedinica']?[i]
                                         ['cijena'],
                                 keyboardType: TextInputType.number,
+                                validator: (value) {
+                                  if (value == null || value.isEmpty) {
+                                    return 'Cijena je obavezna.';
+                                  }
+                                  final double? cijena = double.tryParse(value);
+                                  if (cijena == null || cijena <= 0) {
+                                    return 'Cijena mora biti pozitivan broj.';
+                                  }
+                                  return null;
+                                },
                                 onChanged: (value) {
                                   setState(() {
                                     _smjestaj.smjestajnaJedinicas![i].cijena;
@@ -494,6 +561,15 @@ class _SmjestajDetailsDialogState extends State<SmjestajDetailsDialog> {
                           initialValue: _initialValue['smjestajnaJedinica']?[i]
                               ['opis'],
                           maxLines: 3,
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Opis smještaja je obavezan.';
+                            }
+                            if (value.length < 10) {
+                              return 'Opis smještaja mora imati najmanje 10 znakova.';
+                            }
+                            return null;
+                          },
                           onChanged: (value) {
                             setState(() {
                               _smjestaj.smjestajnaJedinicas![i].opis = value;

@@ -192,7 +192,8 @@ class _RegistrationFormState extends State<RegistrationForm> {
                       name: 'ime',
                       decoration: InputDecoration(labelText: 'Ime'),
                       validator: FormBuilderValidators.compose([
-                        FormBuilderValidators.required(),
+                        FormBuilderValidators.required(
+                            errorText: 'Ime je obavezno.'),
                         FormBuilderValidators.minLength(3),
                         FormBuilderValidators.maxLength(50),
                       ]),
@@ -204,7 +205,8 @@ class _RegistrationFormState extends State<RegistrationForm> {
                       name: 'prezime',
                       decoration: InputDecoration(labelText: 'Prezime'),
                       validator: FormBuilderValidators.compose([
-                        FormBuilderValidators.required(),
+                        FormBuilderValidators.required(
+                            errorText: 'Prezime je obavezno.'),
                         FormBuilderValidators.minLength(3),
                         FormBuilderValidators.maxLength(50),
                       ]),
@@ -216,7 +218,8 @@ class _RegistrationFormState extends State<RegistrationForm> {
                       name: 'email',
                       decoration: InputDecoration(labelText: 'Email'),
                       validator: FormBuilderValidators.compose([
-                        FormBuilderValidators.required(),
+                        FormBuilderValidators.required(
+                            errorText: 'Email je obavezan.'),
                         FormBuilderValidators.email(),
                       ]),
                     ),
@@ -226,7 +229,8 @@ class _RegistrationFormState extends State<RegistrationForm> {
                     child: FormBuilderTextField(
                       name: 'korisnickoIme',
                       decoration: InputDecoration(labelText: 'Korisničko Ime'),
-                      validator: FormBuilderValidators.required(),
+                      validator: FormBuilderValidators.required(
+                            errorText: 'Koriscničko ime je obavezno.'),
                     ),
                   ),
                   Padding(
@@ -234,18 +238,33 @@ class _RegistrationFormState extends State<RegistrationForm> {
                     child: FormBuilderTextField(
                       name: 'password',
                       decoration: InputDecoration(labelText: 'Lozinka'),
+                      
                       obscureText: true,
-                      validator: FormBuilderValidators.required(),
+                      validator: FormBuilderValidators.compose([
+                        FormBuilderValidators.required(
+                            errorText: 'Lozinka je obavezna.'),
+                        FormBuilderValidators.minLength(8,
+                            errorText: 'Lozinka mora imati najmanje 8 znakova.'),
+                        FormBuilderValidators.maxLength(15,
+                            errorText: 'Lozinka može imati najviše 15 znakova.'),
+                        FormBuilderValidators.match(
+                          r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,15}$',
+                          errorText:
+                              'Lozinka mora sadržavati barem jedno veliko slovo, jedno malo slovo i jednu znamenku.',
+                        ),
+                      ]),
                     ),
                   ),
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 8.0),
                     child: FormBuilderTextField(
                       name: 'passwordPotvrda',
-                      decoration: InputDecoration(labelText: 'Potvrdite lozinku'),
+                      decoration:
+                          InputDecoration(labelText: 'Potvrdite lozinku'),
                       obscureText: true,
                       validator: FormBuilderValidators.compose([
-                        FormBuilderValidators.required(),
+                        FormBuilderValidators.required(
+                            errorText: 'Lozinka je obavezna.'),
                         (val) {
                           if (_userFormKey
                                   .currentState?.fields['password']?.value !=
@@ -276,7 +295,8 @@ class _RegistrationFormState extends State<RegistrationForm> {
                     child: FormBuilderDropdown<Univerzitet>(
                       name: 'univerzitet',
                       decoration: InputDecoration(labelText: 'Univerzitet'),
-                      validator: FormBuilderValidators.required(),
+                      validator: FormBuilderValidators.required(
+                            errorText: 'Univerzitet je obavezan.'),
                       onChanged: (Univerzitet? newValue) {
                         setState(() {
                           selectedUniverzitet = newValue;
@@ -285,7 +305,8 @@ class _RegistrationFormState extends State<RegistrationForm> {
                         });
                       },
                       items: univerziteti?.result
-                              .map((univerzitet) => DropdownMenuItem<Univerzitet>(
+                              .map((univerzitet) =>
+                                  DropdownMenuItem<Univerzitet>(
                                     value: univerzitet,
                                     child: Text(univerzitet.naziv ?? ''),
                                   ))
@@ -298,7 +319,8 @@ class _RegistrationFormState extends State<RegistrationForm> {
                     child: FormBuilderDropdown<Fakultet>(
                       name: 'fakultet',
                       decoration: InputDecoration(labelText: 'Fakultet'),
-                      validator: FormBuilderValidators.required(),
+                      validator: FormBuilderValidators.required(
+                            errorText: 'Fakultet je obavezan.'),
                       onChanged: (Fakultet? newValue) {
                         setState(() {
                           selectedFakultet = newValue;
@@ -319,7 +341,8 @@ class _RegistrationFormState extends State<RegistrationForm> {
                     child: FormBuilderDropdown<Smjer>(
                       name: 'smjer',
                       decoration: InputDecoration(labelText: 'Smjer'),
-                      validator: FormBuilderValidators.required(),
+                      validator: FormBuilderValidators.required(
+                            errorText: 'Smjer je obavezan.'),
                       items: smjerovi
                           .map((smjer) => DropdownMenuItem<Smjer>(
                                 value: smjer,
@@ -332,8 +355,10 @@ class _RegistrationFormState extends State<RegistrationForm> {
                     padding: const EdgeInsets.symmetric(vertical: 8.0),
                     child: FormBuilderDropdown<NacinStudiranja>(
                       name: 'nacinStudiranja',
-                      decoration: InputDecoration(labelText: 'Način Studiranja'),
-                      validator: FormBuilderValidators.required(),
+                      decoration:
+                          InputDecoration(labelText: 'Način Studiranja'),
+                      validator: FormBuilderValidators.required(
+                            errorText: 'Način Studiranja je obavezan.'),
                       items: naciniStudiranjaResult?.result
                               .map((nacinStudiranja) =>
                                   DropdownMenuItem<NacinStudiranja>(
@@ -349,7 +374,8 @@ class _RegistrationFormState extends State<RegistrationForm> {
                     child: FormBuilderTextField(
                       name: 'brojIndeksa',
                       decoration: InputDecoration(labelText: 'Broj Indeksa'),
-                      validator: FormBuilderValidators.required(),
+                      validator: FormBuilderValidators.required(
+                            errorText: 'Broj Indeksa je obavezan.'),
                     ),
                   ),
                   Padding(
@@ -357,7 +383,8 @@ class _RegistrationFormState extends State<RegistrationForm> {
                     child: FormBuilderDropdown<int>(
                       name: 'godinaStudija',
                       decoration: InputDecoration(labelText: 'Godina Studija'),
-                      validator: FormBuilderValidators.required(),
+                      validator: FormBuilderValidators.required(
+                            errorText: 'Godina Studija je obavezna.'),
                       items: [1, 2, 3, 4]
                           .map((year) => DropdownMenuItem<int>(
                                 value: year,
@@ -370,7 +397,8 @@ class _RegistrationFormState extends State<RegistrationForm> {
                     padding: const EdgeInsets.symmetric(vertical: 8.0),
                     child: FormBuilderTextField(
                       name: 'prosjecnaOcjena',
-                      decoration: InputDecoration(labelText: 'Prosječna Ocjena'),
+                      decoration:
+                          InputDecoration(labelText: 'Prosječna Ocjena'),
                       validator: FormBuilderValidators.compose([
                         FormBuilderValidators.numeric(),
                         FormBuilderValidators.min(5.0),

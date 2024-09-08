@@ -2,18 +2,9 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
-import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
-import 'package:studentoglasi_admin/models/Oglas/oglas.dart';
-import 'package:studentoglasi_admin/models/Organizacije/organizacije.dart';
-import 'package:studentoglasi_admin/models/Praksa/praksa.dart';
-import 'package:studentoglasi_admin/models/PrijavePraksa/prijave_praksa.dart';
-import 'package:studentoglasi_admin/models/StatusOglasi/statusoglasi.dart';
-import 'package:studentoglasi_admin/providers/prakse_provider.dart';
-import 'package:studentoglasi_admin/providers/prijavepraksa_provider.dart';
 
 import '../../models/PrijaveStipendija/prijave_stipendija.dart';
-import '../../models/search_result.dart';
 import '../../providers/prijavestipendija_provider.dart';
 
 class PrijavaStipendijaDetailsDialog extends StatefulWidget {

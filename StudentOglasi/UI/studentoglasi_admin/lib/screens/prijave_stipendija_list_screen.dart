@@ -1,4 +1,4 @@
-  import 'package:dropdown_button2/dropdown_button2.dart';
+import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:number_paginator/number_paginator.dart';
 import 'package:provider/provider.dart';
@@ -21,26 +21,27 @@ class PrijaveStipendijaListScreen extends StatefulWidget {
   const PrijaveStipendijaListScreen({super.key});
 
   @override
-  State<PrijaveStipendijaListScreen> createState() => _PrijaveStipendijaListScreen();
+  State<PrijaveStipendijaListScreen> createState() =>
+      _PrijaveStipendijaListScreen();
 }
 
 class _PrijaveStipendijaListScreen extends State<PrijaveStipendijaListScreen> {
   late PrijaveStipendijaProvider _prijaveStipendijaProvider;
   late StatusPrijaveProvider _statusProvider;
   late StudentiProvider _studentProvider;
-   late StipendijeProvider _stipendijaProvider;
-    SearchResult<PrijaveStipendija>? result;
+  late StipendijeProvider _stipendijaProvider;
+  SearchResult<PrijaveStipendija>? result;
   SearchResult<StatusPrijave>? statusResult;
   SearchResult<Student>? studentResult;
   SearchResult<Stipendije>? stipendijaResult;
   StatusPrijave? selectedStatusPrijave;
   TextEditingController _brojIndeksaController = new TextEditingController();
   TextEditingController _imeController = new TextEditingController();
- int _currentPage = 0;
+  int _currentPage = 0;
   int _totalItems = 0;
   late NumberPaginatorController _pageController;
 
-@override
+  @override
   void initState() {
     // TODO: implement initState
     super.initState();
@@ -49,15 +50,14 @@ class _PrijaveStipendijaListScreen extends State<PrijaveStipendijaListScreen> {
     _studentProvider = context.read<StudentiProvider>();
     _stipendijaProvider = context.read<StipendijeProvider>();
     _pageController = NumberPaginatorController();
-       _fetchData();
+    _fetchData();
     _fetchStatusPrijave();
     _fetchStudenti();
     _fetchStipendije();
   }
 
-   @override
+  @override
   Widget build(BuildContext context) {
-    
     int numberPages = calculateNumberPages(_totalItems, 5);
     return MasterScreenWidget(
       title: "Prijave stipendija",
@@ -77,19 +77,23 @@ class _PrijaveStipendijaListScreen extends State<PrijaveStipendijaListScreen> {
       },
       child: Container(
         child: Column(
-          children: [_buildSearch(), _buildDataListView(), if(_currentPage>=0 && numberPages-1>=_currentPage)
-           CustomPaginator(
-                      numberPages: numberPages,
-                      initialPage: _currentPage,
-                      onPageChange: (int index) {
-                        setState(() {
-                          _currentPage = index;
-                          _fetchData();
-                        });
-                      },
-                      pageController: _pageController,
-                      fetchData: _fetchData,
-                    ),],
+          children: [
+            _buildSearch(),
+            _buildDataListView(),
+            if (_currentPage >= 0 && numberPages - 1 >= _currentPage)
+              CustomPaginator(
+                numberPages: numberPages,
+                initialPage: _currentPage,
+                onPageChange: (int index) {
+                  setState(() {
+                    _currentPage = index;
+                    _fetchData();
+                  });
+                },
+                pageController: _pageController,
+                fetchData: _fetchData,
+              ),
+          ],
         ),
       ),
     );
@@ -108,7 +112,7 @@ class _PrijaveStipendijaListScreen extends State<PrijaveStipendijaListScreen> {
     });
     setState(() {
       result = data;
-       _totalItems = data.count;
+      _totalItems = data.count;
       int numberPages = calculateNumberPages(_totalItems, 5);
       if (_currentPage >= numberPages) {
         _currentPage = numberPages - 1;
@@ -118,7 +122,6 @@ class _PrijaveStipendijaListScreen extends State<PrijaveStipendijaListScreen> {
       }
       print(
           "Total items: $_totalItems, Number of pages: $numberPages, Current page after fetch: $_currentPage");
-   
     });
   }
 
@@ -140,7 +143,7 @@ class _PrijaveStipendijaListScreen extends State<PrijaveStipendijaListScreen> {
     });
   }
 
-    void _fetchStudenti() async {
+  void _fetchStudenti() async {
     var studentData = await _studentProvider.get();
     setState(() {
       studentResult = studentData;
@@ -209,6 +212,7 @@ class _PrijaveStipendijaListScreen extends State<PrijaveStipendijaListScreen> {
           ],
         ));
   }
+
   Widget _buildDataListView() {
     return Expanded(
         child: SingleChildScrollView(
@@ -217,8 +221,8 @@ class _PrijaveStipendijaListScreen extends State<PrijaveStipendijaListScreen> {
                 child: IntrinsicWidth(
                   stepWidth: double.infinity,
                   child: DataTable(
-                      columns: [
-                        const DataColumn(
+                      columns: const [
+                        DataColumn(
                           label: Expanded(
                             child: Text(
                               'Ime i prezime',
@@ -227,7 +231,7 @@ class _PrijaveStipendijaListScreen extends State<PrijaveStipendijaListScreen> {
                             ),
                           ),
                         ),
-                        const DataColumn(
+                        DataColumn(
                           label: Expanded(
                             child: Text(
                               'Broj indeksa',
@@ -236,7 +240,7 @@ class _PrijaveStipendijaListScreen extends State<PrijaveStipendijaListScreen> {
                             ),
                           ),
                         ),
-                         const DataColumn(
+                        DataColumn(
                           label: Expanded(
                             child: Text(
                               'Naslov',
@@ -245,7 +249,7 @@ class _PrijaveStipendijaListScreen extends State<PrijaveStipendijaListScreen> {
                             ),
                           ),
                         ),
-                        const DataColumn(
+                        DataColumn(
                           label: Expanded(
                             child: Text(
                               'Dokumentacija',
@@ -254,7 +258,7 @@ class _PrijaveStipendijaListScreen extends State<PrijaveStipendijaListScreen> {
                             ),
                           ),
                         ),
-                        const DataColumn(
+                        DataColumn(
                           label: Expanded(
                             child: Text(
                               'Status',
@@ -263,7 +267,7 @@ class _PrijaveStipendijaListScreen extends State<PrijaveStipendijaListScreen> {
                             ),
                           ),
                         ),
-                        const DataColumn(
+                        DataColumn(
                           label: Expanded(
                             child: Text(
                               'Prosjek ocjena',
@@ -272,7 +276,7 @@ class _PrijaveStipendijaListScreen extends State<PrijaveStipendijaListScreen> {
                             ),
                           ),
                         ),
-                        const DataColumn(
+                        DataColumn(
                           label: Expanded(
                             child: Text(
                               'Akcije',
@@ -286,21 +290,25 @@ class _PrijaveStipendijaListScreen extends State<PrijaveStipendijaListScreen> {
                               .map((PrijaveStipendija e) => DataRow(cells: [
                                     DataCell(Center(
                                         child: Text(
-                                            "${e.student?.idNavigation.ime?? ""}  ${e.student?.idNavigation.prezime?? ""}",
+                                            "${e.student?.idNavigation.ime ?? ""}  ${e.student?.idNavigation.prezime ?? ""}",
                                             style: TextStyle(
                                                 fontWeight: FontWeight.bold)))),
                                     DataCell(Center(
-                                        child: Text(e.student?.brojIndeksa ?? ""))),
+                                        child: Text(
+                                            e.student?.brojIndeksa ?? ""))),
                                     DataCell(Center(
-                                        child: Text(e.stipendija?.idNavigation?.naslov?? ""))),
+                                        child: Text(e.stipendija?.idNavigation
+                                                ?.naslov ??
+                                            ""))),
                                     DataCell(Center(
                                         child: Text(e.dokumentacija ?? ""))),
                                     DataCell(Center(
                                         child: Text(e.status?.naziv ?? ""))),
                                     DataCell(Center(
                                         child:
-                                            Text(e.prosjekOcjena.toString()))), DataCell(
-                                     Row(
+                                            Text(e.prosjekOcjena.toString()))),
+                                    DataCell(
+                                      Row(
                                         mainAxisAlignment:
                                             MainAxisAlignment.center,
                                         children: [
@@ -315,11 +323,10 @@ class _PrijaveStipendijaListScreen extends State<PrijaveStipendijaListScreen> {
                                                   builder: (BuildContext
                                                           context) =>
                                                       PrijavaStipendijaDetailsDialog(
-                                                          title:
-                                                              'Detalji prijava stipendije',
-                                                          prijaveStipendija: e,
-                                                          )).then(
-                                                  (value) {
+                                                        title:
+                                                            'Detalji prijava stipendije',
+                                                        prijaveStipendija: e,
+                                                      )).then((value) {
                                                 if (value != null && value) {
                                                   _fetchData();
                                                 }

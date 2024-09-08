@@ -314,7 +314,6 @@ class _ApplicationsScreenState extends State<ApplicationsScreen> {
                 SizedBox(width: 8.0),
                 ElevatedButton(
                   onPressed: () {
-                    // Navigate to OglasScreen with the ad's title
                     Navigator.push(
                       context,
                       MaterialPageRoute(

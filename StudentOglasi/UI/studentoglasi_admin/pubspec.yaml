@@ -38,10 +38,11 @@ dependencies:
   http: ^1.2.1
   provider: ^6.1.2
   json_annotation: ^4.8.1
-  intl: ^0.19.0
+  intl: ^0.18.1
   dropdown_button2: ^2.3.8
   flutter_form_builder: ^9.2.1
   file_picker: ^8.0.2
+  form_builder_validators: ^9.1.0
   number_paginator: ^0.4.1
 
 dev_dependencies:

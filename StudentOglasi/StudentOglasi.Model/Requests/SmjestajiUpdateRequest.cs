@@ -9,8 +9,12 @@ namespace StudentOglasi.Model.Requests
 {
     public class SmjestajiUpdateRequest
     {
+        [Required(ErrorMessage = "Naziv is required.")]
+        [StringLength(100, ErrorMessage = "Naziv can't be longer than 100 characters.")]
         public string Naziv { get; set; } = null!;
 
+        [Required(ErrorMessage = "Adresa is required.")]
+        [StringLength(200, ErrorMessage = "Adresa can't be longer than 200 characters.")]
         public string Adresa { get; set; } = null!;
 
         public string? DodatneUsluge { get; set; }
@@ -27,6 +31,7 @@ namespace StudentOglasi.Model.Requests
 
         public bool? UslugePrijevoza { get; set; }
 
+        [Required(ErrorMessage = "GradId is required.")]
         public int GradId { get; set; }
 
         public int? TipSmjestajaId { get; set; }

@@ -21,7 +21,7 @@ namespace StudentOglasi.Model.Requests
         [Required]
         public string KorisnickoIme { get; set; } = null!;
         [Required]
-        // [RegularExpressionAttribute(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,15}$", ErrorMessage = "Password not strong enough")]
+        [RegularExpressionAttribute(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,15}$", ErrorMessage = "Password not strong enough")]
         public string Password { get; set; }
         [Required]
         [Compare("Password", ErrorMessage = "Passwords do not match.")]

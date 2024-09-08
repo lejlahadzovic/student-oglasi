@@ -5,6 +5,7 @@ import 'dart:io';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
+import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:http/http.dart';
 import 'package:provider/provider.dart';
 import 'package:studentoglasi_admin/models/Kategorija/kategorija.dart';
@@ -172,6 +173,13 @@ class _ObjaveDetailsDialogState extends State<ObjaveDetailsDialog> {
                             borderRadius: BorderRadius.all(Radius.circular(10)),
                           ),
                         ),
+                        validator: FormBuilderValidators.compose([
+                          FormBuilderValidators.required(
+                              errorText: 'Naslov je obavezan'),
+                          FormBuilderValidators.maxLength(100,
+                              errorText:
+                                  'Naslov može imati najviše 100 znakova'),
+                        ]),
                       ),
                     ),
                   ),
@@ -192,6 +200,8 @@ class _ObjaveDetailsDialogState extends State<ObjaveDetailsDialog> {
                                   ))
                               .toList() ??
                           [],
+                      validator: FormBuilderValidators.required(
+                          errorText: 'Kategorija je obavezna'),
                     ),
                   ),
                 ],
@@ -206,6 +216,12 @@ class _ObjaveDetailsDialogState extends State<ObjaveDetailsDialog> {
                     borderRadius: BorderRadius.all(Radius.circular(10)),
                   ),
                 ),
+                validator: FormBuilderValidators.compose([
+                  FormBuilderValidators.required(
+                      errorText: 'Sadržaj je obavezan'),
+                  FormBuilderValidators.minLength(10,
+                      errorText: 'Sadržaj mora imati najmanje 10 znakova'),
+                ]),
               ),
             ],
           ),
@@ -248,8 +264,7 @@ class _ObjaveDetailsDialogState extends State<ObjaveDetailsDialog> {
               showDialog(
                   context: context,
                   builder: (BuildContext context) => AlertDialog(
-                        title: Text("Error"),
-                        content: Text(e.toString()),
+                        content: Text("Došlo je do greške. Molimo pokušajte opet!"),
                         actions: [
                           TextButton(
                               onPressed: () => Navigator.pop(context),

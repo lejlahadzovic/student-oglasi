@@ -1,12 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:studentoglasi_admin/models/Praksa/praksa.dart';
-import 'package:studentoglasi_admin/models/PrijavePraksa/prijave_praksa.dart';
-import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:intl/intl.dart';
 import 'package:studentoglasi_admin/models/PrijaveStipendija/prijave_stipendija.dart';
 import 'package:studentoglasi_admin/models/Stipendija/stipendija.dart';
 import 'package:studentoglasi_admin/models/search_result.dart';
-import 'package:studentoglasi_admin/providers/prijavepraksa_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:studentoglasi_admin/providers/prijavestipendija_provider.dart';
 
