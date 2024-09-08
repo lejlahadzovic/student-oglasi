@@ -207,6 +207,10 @@ public partial class StudentoglasiContext : DbContext
 
             entity.ToTable("Obavijesti");
 
+            entity.HasIndex(e => e.OglasiId, "IX_Obavijesti_OglasiId");
+
+            entity.HasIndex(e => e.SmjestajiId, "IX_Obavijesti_SmjestajiId");
+
             entity.Property(e => e.DatumKreiranja)
                 .HasDefaultValueSql("(getdate())")
                 .HasColumnType("datetime");
@@ -393,9 +397,15 @@ public partial class StudentoglasiContext : DbContext
 
         modelBuilder.Entity<Rezervacije>(entity =>
         {
-            entity.HasKey(e => e.RezervacijaId).HasName("PK__Rezervac__CABA44DDB20D5066");
+            entity.HasKey(e => e.Id).HasName("PK__Rezervac__CABA44DDB20D5066");
 
             entity.ToTable("Rezervacije");
+
+            entity.HasIndex(e => e.SmjestajnaJedinicaId, "IX_Rezervacije_SmjestajnaJedinicaId");
+
+            entity.HasIndex(e => e.StatusId, "IX_Rezervacije_StatusId");
+
+            entity.HasIndex(e => e.StudentId, "IX_Rezervacije_StudentId");
 
             entity.Property(e => e.Cijena).HasColumnType("decimal(10, 2)");
             entity.Property(e => e.DatumOdjave).HasColumnType("datetime");

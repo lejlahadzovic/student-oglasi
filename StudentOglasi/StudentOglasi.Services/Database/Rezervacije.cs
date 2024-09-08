@@ -5,11 +5,11 @@ namespace StudentOglasi.Services.Database;
 
 public partial class Rezervacije
 {
-    public int RezervacijaId { get; set; }
-
-    public int StudentId { get; set; }
+    public int Id { get; set; }
 
     public int SmjestajnaJedinicaId { get; set; }
+
+    public int StudentId { get; set; }
 
     public DateTime DatumPrijave { get; set; }
 

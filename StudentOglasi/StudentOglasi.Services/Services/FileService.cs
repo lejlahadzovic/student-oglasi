@@ -13,14 +13,12 @@ namespace StudentOglasi.Services.Services
 {
     public class FileService
     {
-        private readonly IConfiguration _configuration;
         private readonly BlobContainerClient _fileContainer;
 
-        public FileService(IConfiguration configuration)
+        public FileService()
         {
-            _configuration = configuration;
-            var storageAccountName = _configuration["AzureBlobStorage:StorageAccountName"];
-            var accessKey = _configuration["AzureBlobStorage:AccessKey"];
+            var storageAccountName = Environment.GetEnvironmentVariable("AZURE_STORAGE_ACCOUNT_NAME");
+            var accessKey = Environment.GetEnvironmentVariable("AZURE_STORAGE_ACCESS_KEY");
 
             var credetials = new StorageSharedKeyCredential(storageAccountName, accessKey);
             var blobUri = $"https://{storageAccountName}.blob.core.windows.net";
