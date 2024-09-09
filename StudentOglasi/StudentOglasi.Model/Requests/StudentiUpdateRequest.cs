@@ -11,11 +11,8 @@ namespace StudentOglasi.Model.Requests
     public class StudentiUpdateRequest
     {
         [Required(ErrorMessage = "Korisnici details are required.")]
-        public virtual KorisniciInsertRequest IdNavigation { get; set; } = null!;
-
-        [Required(ErrorMessage = "Broj indeksa is required.")]
-        [StringLength(20, ErrorMessage = "Broj indeksa can't be longer than 20 characters.")]
-        public string BrojIndeksa { get; set; } = null!;
+        public virtual KorisniciUpdateRequest IdNavigation { get; set; } = null!;
+        public string? BrojIndeksa { get; set; }
 
         [Range(1, int.MaxValue, ErrorMessage = "Godina studija must be at least 1.")]
         public int GodinaStudija { get; set; }
