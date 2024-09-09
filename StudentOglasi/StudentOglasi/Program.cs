@@ -135,6 +135,13 @@ app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
 
+
+using (var scope = app.Services.CreateScope())
+{
+    var dbContext = scope.ServiceProvider.GetRequiredService<StudentoglasiContext>();
+    dbContext.Database.Migrate();
+}
+
 app.MapControllers();
 
 app.Run();

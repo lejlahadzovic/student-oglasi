@@ -1,0 +1,36 @@
+version: '3'
+services:
+#mssql docker
+  student-oglasi-sql:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    restart: unless-stopped
+    environment:
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=QWElkj132!
+      - MSSQL_PID=Developer
+    ports:
+      - 1401:1433
+    expose:
+      - 1433
+    networks:
+      - studentoglasi2024
+
+  eprodaja-api:
+    restart: unless-stopped
+    build:
+      context: .
+    environment:
+      - ConnectionStrings:DefaultConnection=Server=student-oglasi-sql, 1433;Database=200062_200090;User=sa;Password=QWElkj132!;ConnectRetryCount=0;TrustServerCertificate=True
+      - ASPNETCORE_ENVIRONMENT=Development
+    ports:
+      - 7198:7198
+    networks:
+      - studentoglasi2024
+    links:
+      - student-oglasi-sql
+    depends_on:
+      - student-oglasi-sql
+      
+networks:
+  studentoglasi2024:
+    driver: bridge      
