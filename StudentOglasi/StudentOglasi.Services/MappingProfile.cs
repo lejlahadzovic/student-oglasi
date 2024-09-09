@@ -40,7 +40,8 @@ namespace StudentOglasi.Services
             CreateMap<Database.NacinStudiranja, Model.NacinStudiranja>();
             CreateMap<Database.Smjerovi, Model.Smjerovi>();
             CreateMap<Model.Requests.StudentiInsertRequest, Database.Studenti>();
-            CreateMap<Model.Requests.StudentiUpdateRequest, Database.Studenti>();
+            CreateMap<Model.Requests.StudentiUpdateRequest, Database.Studenti>()
+                .ForMember(dest => dest.BrojIndeksa, opt => opt.Condition(src => src.BrojIndeksa != null)); ;
             CreateMap<Database.Univerziteti, Model.Univerziteti>();
             CreateMap<Database.Smjestaji, Model.Smjestaji>();
             CreateMap<Database.Smjestaji, Model.SmjestajiBasic>()

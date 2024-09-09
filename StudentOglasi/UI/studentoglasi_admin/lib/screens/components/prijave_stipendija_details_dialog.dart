@@ -38,11 +38,11 @@ class _PrijavaStipendijaDetailsDialogState
       'cv': widget.prijaveStipendija?.cv,
       'prosjekOcjena': widget.prijaveStipendija?.prosjekOcjena.toString(),
       'student.brojIndeksa': widget.prijaveStipendija?.student?.brojIndeksa,
-      'student.fakultet': widget.prijaveStipendija?.student?.fakultet.naziv,
-      'student.ime': widget.prijaveStipendija?.student?.idNavigation.ime,
+      'student.fakultet': widget.prijaveStipendija?.student?.fakultet?.naziv,
+      'student.ime': widget.prijaveStipendija?.student?.idNavigation?.ime,
       'student.prezime':
-          widget.prijaveStipendija?.student?.idNavigation.prezime,
-      'student.email': widget.prijaveStipendija?.student?.idNavigation.email,
+          widget.prijaveStipendija?.student?.idNavigation?.prezime,
+      'student.email': widget.prijaveStipendija?.student?.idNavigation?.email,
     };
   }
 

@@ -35,6 +35,7 @@ class _StudentDetailsDialogState extends State<StudentUpdateDialog> {
   String? _imageUrl;
   Univerzitet? selectedUniverzitet;
   Fakultet? selectedFakultet;
+  Smjer? selectedSmjer;
   final List<int> godine = [1, 2, 3, 4];
   int? selectedGodina;
   final List<Map<String, dynamic>> statusStudenta = [
@@ -51,29 +52,18 @@ class _StudentDetailsDialogState extends State<StudentUpdateDialog> {
     if (widget.univerzitetiResult != null && widget.student != null) {
       selectedUniverzitet = widget.univerzitetiResult!.result.firstWhere(
         (univerzitet) =>
-            univerzitet.id == widget.student!.fakultet.univerzitetId,
+            univerzitet.id == widget.student!.fakultet?.univerzitetId,
       );
       selectedFakultet = selectedUniverzitet!.fakultetis?.firstWhere(
-        (fakultet) => fakultet.id == widget.student?.fakultet.id,
+        (fakultet) => fakultet.id == widget.student?.fakultet?.id,
       );
-      if (widget.student!.idNavigation.slika != null) {
+      selectedSmjer = selectedFakultet?.smjerovi!
+          .firstWhere((s) => s.id == widget.student?.smjer?.id);
+      if (widget.student!.idNavigation?.slika != null) {
         _imageUrl =
-            FilePathManager.constructUrl(widget.student!.idNavigation.slika!);
+            FilePathManager.constructUrl(widget.student!.idNavigation!.slika!);
       }
     }
-
-    _initialValue = {
-      'idNavigation.ime': widget.student?.idNavigation.ime,
-      'idNavigation.prezime': widget.student?.idNavigation.prezime,
-      'idNavigation.email': widget.student?.idNavigation.email,
-      'univerzitetId': widget.student?.fakultet.univerzitetId.toString(),
-      'smjerId': widget.student?.smjer.id.toString(),
-      'nacinStudiranjaId': widget.student?.nacinStudiranja.id.toString(),
-      'fakultetId': widget.student?.fakultet.id.toString(),
-      'godinaStudija': widget.student?.godinaStudija,
-      'status': widget.student?.status,
-      'prosjecnaOcjena': widget.student?.prosjecnaOcjena.toString()
-    };
   }
 
   @override
@@ -85,7 +75,19 @@ class _StudentDetailsDialogState extends State<StudentUpdateDialog> {
           width: 700,
           child: FormBuilder(
             key: _formKey,
-            initialValue: _initialValue,
+            initialValue: {
+              'idNavigation.ime': widget.student?.idNavigation?.ime,
+              'idNavigation.prezime': widget.student?.idNavigation?.prezime,
+              'idNavigation.email': widget.student?.idNavigation?.email,
+              'univerzitetId': selectedUniverzitet?.id.toString(),
+              'smjerId': selectedSmjer?.id.toString(),
+              'nacinStudiranjaId':
+                  widget.student?.nacinStudiranja?.id.toString(),
+              'fakultetId': selectedFakultet?.id.toString(),
+              'godinaStudija': widget.student?.godinaStudija,
+              'status': widget.student?.status,
+              'prosjecnaOcjena': widget.student?.prosjecnaOcjena.toString()
+            },
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -248,6 +250,7 @@ class _StudentDetailsDialogState extends State<StudentUpdateDialog> {
                                         univerzitet.id.toString() ==
                                         selectedUniverzitetId);
                                 selectedFakultet = null;
+                                selectedSmjer = null;
                               });
                             },
                           ),
@@ -268,6 +271,15 @@ class _StudentDetailsDialogState extends State<StudentUpdateDialog> {
                                         ))
                                     .toList() ??
                                 [],
+                            onChanged: (selectedSmjerId) {
+                              setState(() {
+                                selectedSmjer =
+                                    selectedFakultet?.smjerovi?.firstWhere(
+                                  (smjer) =>
+                                      smjer.id.toString() == selectedSmjerId,
+                                );
+                              });
+                            },
                           ),
                           SizedBox(
                             height: 20,
@@ -328,6 +340,7 @@ class _StudentDetailsDialogState extends State<StudentUpdateDialog> {
                                       fakultet.id.toString() ==
                                       selectedFakultetId,
                                 );
+                                selectedSmjer = null;
                               });
                             },
                           ),
@@ -406,6 +419,9 @@ class _StudentDetailsDialogState extends State<StudentUpdateDialog> {
             _formKey.currentState?.saveAndValidate();
             var request =
                 Map<String, dynamic>.from(_formKey.currentState!.value);
+
+            request['idNavigation.korisnickoIme'] =
+                widget.student?.idNavigation?.korisnickoIme;
 
             try {
               await _studentProvider.updateWithImage(

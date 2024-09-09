@@ -115,7 +115,24 @@ class _PrijaveStipendijeReportDialogState
                 );
               }
             } else {
-              // Show some error
+              showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return AlertDialog(
+                    title: Text('Greška'),
+                    content: Text(
+                        'Molimo popunite sva neophodna polja za generisanje izvještaja.'),
+                    actions: [
+                      TextButton(
+                        child: Text('U redu'),
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                      ),
+                    ],
+                  );
+                },
+              );
             }
           },
         ),
@@ -234,7 +251,7 @@ class _PrijaveStipendijeReportDialogState
                                   child: Text(e.student?.brojIndeksa ?? ""))),
                               DataCell(Center(
                                   child: Text(
-                                      '${e.student?.idNavigation.ime} ${e.student?.idNavigation.prezime}'))),
+                                      '${e.student?.idNavigation?.ime} ${e.student?.idNavigation?.prezime}'))),
                               DataCell(Center(child: Text(e.cv ?? ""))),
                               DataCell(Center(
                                   child: Text(e.prosjekOcjena.toString()))),

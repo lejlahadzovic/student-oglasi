@@ -131,13 +131,14 @@ class _RezervacijeReportDialogState extends State<RezervacijeReportDialog> {
                         border: OutlineInputBorder(),
                       ),
                       initialDate: DateTime.now(),
-                      firstDate: DateTime(2000),
+                      firstDate: startDate ?? DateTime(2000),
                       lastDate: DateTime(2101),
                       onChanged: (val) {
                         setState(() {
                           endDate = val;
                         });
                       },
+                      enabled: startDate != null,
                     ),
                   ),
                 ],
@@ -197,7 +198,24 @@ class _RezervacijeReportDialogState extends State<RezervacijeReportDialog> {
                 );
               }
             } else {
-              // Show some error
+              showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return AlertDialog(
+                    title: Text('Greška'),
+                    content: Text(
+                        'Molimo popunite sva neophodna polja za generisanje izvještaja.'),
+                    actions: [
+                      TextButton(
+                        child: Text('U redu'),
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                      ),
+                    ],
+                  );
+                },
+              );
             }
           },
         ),
@@ -217,10 +235,11 @@ class _RezervacijeReportDialogState extends State<RezervacijeReportDialog> {
   }
 
   Widget _buildReportDataTable(SearchResult<Rezervacije> reportData) {
-    // Calculate total revenue
-    double totalRevenue = reportData.result
-        .map((e) => e.cijena ?? 0.0)
-        .reduce((value, element) => value + element);
+    double totalRevenue = reportData.result.isNotEmpty
+        ? reportData.result
+            .map((e) => e.cijena ?? 0.0)
+            .reduce((value, element) => value + element)
+        : 0.0;
 
     return Container(
       width: 794,
@@ -264,50 +283,50 @@ class _RezervacijeReportDialogState extends State<RezervacijeReportDialog> {
                   child: DataTable(
                     columns: [
                       const DataColumn(
-                          label: Expanded(
-                            child: Text(
-                              'Broj indeksa',
-                              style: TextStyle(fontStyle: FontStyle.italic),
-                              textAlign: TextAlign.center,
-                            ),
+                        label: Expanded(
+                          child: Text(
+                            'Broj indeksa',
+                            style: TextStyle(fontStyle: FontStyle.italic),
+                            textAlign: TextAlign.center,
                           ),
                         ),
+                      ),
                       const DataColumn(
-                          label: Expanded(
-                            child: Text(
-                              'Ime i prezime',
-                              style: TextStyle(fontStyle: FontStyle.italic),
-                              textAlign: TextAlign.center,
-                            ),
+                        label: Expanded(
+                          child: Text(
+                            'Ime i prezime',
+                            style: TextStyle(fontStyle: FontStyle.italic),
+                            textAlign: TextAlign.center,
                           ),
                         ),
+                      ),
                       const DataColumn(
-                          label: Expanded(
-                            child: Text(
-                              'Datum prijave',
-                              style: TextStyle(fontStyle: FontStyle.italic),
-                              textAlign: TextAlign.center,
-                            ),
+                        label: Expanded(
+                          child: Text(
+                            'Datum prijave',
+                            style: TextStyle(fontStyle: FontStyle.italic),
+                            textAlign: TextAlign.center,
                           ),
                         ),
+                      ),
                       const DataColumn(
-                          label: Expanded(
-                            child: Text(
-                              'Datum odjave',
-                              style: TextStyle(fontStyle: FontStyle.italic),
-                              textAlign: TextAlign.center,
-                            ),
+                        label: Expanded(
+                          child: Text(
+                            'Datum odjave',
+                            style: TextStyle(fontStyle: FontStyle.italic),
+                            textAlign: TextAlign.center,
                           ),
                         ),
+                      ),
                       const DataColumn(
-                          label: Expanded(
-                            child: Text(
-                              'Cijena',
-                              style: TextStyle(fontStyle: FontStyle.italic),
-                              textAlign: TextAlign.center,
-                            ),
+                        label: Expanded(
+                          child: Text(
+                            'Cijena',
+                            style: TextStyle(fontStyle: FontStyle.italic),
+                            textAlign: TextAlign.center,
                           ),
                         ),
+                      ),
                     ],
                     rows: reportData.result
                         .map((Rezervacije e) => DataRow(cells: [
@@ -315,7 +334,7 @@ class _RezervacijeReportDialogState extends State<RezervacijeReportDialog> {
                                   child: Text(e.student?.brojIndeksa ?? ""))),
                               DataCell(Center(
                                   child: Text(
-                                      '${e.student?.idNavigation.ime} ${e.student?.idNavigation.prezime}'))),
+                                      '${e.student?.idNavigation?.ime} ${e.student?.idNavigation?.prezime}'))),
                               DataCell(Center(
                                   child: Text(e.datumPrijave != null
                                       ? DateFormat('dd.MM.yyyy')

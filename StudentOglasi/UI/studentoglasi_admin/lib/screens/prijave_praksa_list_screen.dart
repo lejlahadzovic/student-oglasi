@@ -279,7 +279,7 @@ class _PrijavePraksaListScreen extends State<PrijavePraksaListScreen> {
                               .map((PrijavePraksa e) => DataRow(cells: [
                                     DataCell(Center(
                                         child: Text(
-                                            "${e.student?.idNavigation.ime ?? ""}  ${e.student?.idNavigation.prezime ?? ""}",
+                                            "${e.student?.idNavigation?.ime ?? ""}  ${e.student?.idNavigation?.prezime ?? ""}",
                                             style: TextStyle(
                                                 fontWeight: FontWeight.bold)))),
                                     DataCell(Center(

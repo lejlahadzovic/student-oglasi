@@ -46,10 +46,10 @@ class _PrijavaPraksaDetailsDialogState
       'cv': widget.prijavePraksa?.cv,
       'certifikati': widget.prijavePraksa?.certifikati,
       'student.brojIndeksa': widget.prijavePraksa?.student?.brojIndeksa,
-      'student.fakultet': widget.prijavePraksa?.student?.fakultet.naziv,
-      'student.ime': widget.prijavePraksa?.student?.idNavigation.ime,
-      'student.prezime': widget.prijavePraksa?.student?.idNavigation.prezime,
-      'student.email': widget.prijavePraksa?.student?.idNavigation.email,
+      'student.fakultet': widget.prijavePraksa?.student?.fakultet?.naziv,
+      'student.ime': widget.prijavePraksa?.student?.idNavigation?.ime,
+      'student.prezime': widget.prijavePraksa?.student?.idNavigation?.prezime,
+      'student.email': widget.prijavePraksa?.student?.idNavigation?.email,
     };
   }
 

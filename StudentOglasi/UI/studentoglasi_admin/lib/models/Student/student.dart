@@ -13,10 +13,10 @@ class Student {
   int? godinaStudija;
   double? prosjecnaOcjena;
   bool? status;
-  Fakultet fakultet;
-  Korisnik idNavigation;
-  NacinStudiranja nacinStudiranja;
-  Smjer smjer;
+  Fakultet? fakultet;
+  Korisnik? idNavigation;
+  NacinStudiranja? nacinStudiranja;
+  Smjer? smjer;
 
   Student(
       this.id, this.brojIndeksa, this.godinaStudija, this.prosjecnaOcjena, this.status, this.fakultet, this.idNavigation, this.nacinStudiranja, this.smjer);

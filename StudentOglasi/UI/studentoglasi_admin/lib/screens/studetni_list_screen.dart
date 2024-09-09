@@ -301,9 +301,9 @@ class _StudentiListScreenState extends State<StudentiListScreen> {
                             ))),
                             DataCell(Center(
                                 child: Text(
-                                    '${e.idNavigation.ime} ${e.idNavigation.prezime}'))),
+                                    '${e.idNavigation?.ime} ${e.idNavigation?.prezime}'))),
                             DataCell(
-                                Center(child: Text(e.fakultet.naziv ?? ""))),
+                                Center(child: Text(e.fakultet?.naziv ?? ""))),
                             DataCell(Center(
                                 child: Text('${e.godinaStudija}. godina'))),
                             DataCell(

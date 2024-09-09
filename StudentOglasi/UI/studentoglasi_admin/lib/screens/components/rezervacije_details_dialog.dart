@@ -54,10 +54,10 @@ class _RezervacijeDetailsDialogState extends State<RezervacijeDetailsDialog> {
       'napomena': widget.rezervacija?.napomena,
       'cijena': widget.rezervacija?.cijena.toString(),
       'student.brojIndeksa': widget.rezervacija?.student?.brojIndeksa,
-      'student.fakultet': widget.rezervacija?.student?.fakultet.naziv,
+      'student.fakultet': widget.rezervacija?.student?.fakultet?.naziv,
       'student.imePrezime':
-          '${widget.rezervacija?.student?.idNavigation.ime} ${widget.rezervacija?.student?.idNavigation.prezime}',
-      'student.email': widget.rezervacija?.student?.idNavigation.email,
+          '${widget.rezervacija?.student?.idNavigation?.ime} ${widget.rezervacija?.student?.idNavigation?.prezime}',
+      'student.email': widget.rezervacija?.student?.idNavigation?.email,
     };
   }
 
