@@ -14,7 +14,7 @@ abstract class BaseProvider<T> with ChangeNotifier {
   BaseProvider(String endPoint) {
     _endPoint = endPoint;
     _baseUrl = const String.fromEnvironment("baseUrl",
-        defaultValue: "https://10.0.2.2:7198/");
+        defaultValue: "http://10.0.2.2:7198/");
     _ioClient = IOClient(createHttpClient());
   }
 

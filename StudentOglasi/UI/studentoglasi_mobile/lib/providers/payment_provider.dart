@@ -15,7 +15,7 @@ class PaymentProvider {
 
   Future<void> createPaymentIntent(double amount) async {
     final paymentIntentRes = await _ioClient.post(
-      Uri.parse('https://10.0.2.2:7198/Payment/create-payment-intent'),
+      Uri.parse('http://10.0.2.2:7198/Payment/create-payment-intent'),
       headers: {'Content-Type': 'application/json'},
       body: json.encode({
         'amount': amount,
