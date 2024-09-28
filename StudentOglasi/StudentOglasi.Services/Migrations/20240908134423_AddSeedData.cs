@@ -128,9 +128,9 @@ namespace StudentOglasi.Services.Migrations
                 columns: new[] { "ID", "BrojTelefona", "Email", "Ime", "KorisnickoIme", "LozinkaHash", "LozinkaSalt", "Prezime", "Slika", "UlogaID" },
                 values: new object[,]
                 {
-                    { 1, null, "kh@example.com", "Kemal", "admin", "JfJzsL3ngGWki+Dn67C+8WLy73I=", "7TUJfmgkkDvcY3PB/M4fhg==", "Hajdarpasic", null, 1 },
-                    { 2, null, "lh@example.com", "Lejla", "lejla", "ug0GgEnT5hKaHsfTn1l1kiGvZAg=", "qh31pfpS2ox1h96QPhmR/Q==", "Hadzovic", null, 2 },
-                    { 3, null, "kh@example.com", "Kemal", "kemal", "ug0GgEnT5hKaHsfTn1l1kiGvZAg=", "qh31pfpS2ox1h96QPhmR/Q==", "Hajdarpasic", null, 2 },
+                    { 1, null, "kemal.hajdarpasic@edu.fit.ba", "Kemal", "admin", "JfJzsL3ngGWki+Dn67C+8WLy73I=", "7TUJfmgkkDvcY3PB/M4fhg==", "Hajdarpasic", null, 1 },
+                    { 2, null, "lejla.hadzovic@edu.fit.ba", "Lejla", "lejla", "ug0GgEnT5hKaHsfTn1l1kiGvZAg=", "qh31pfpS2ox1h96QPhmR/Q==", "Hadzovic", null, 2 },
+                    { 3, null, "kemal.hajdarpasic@edu.fit.ba", "Kemal", "kemal", "ug0GgEnT5hKaHsfTn1l1kiGvZAg=", "qh31pfpS2ox1h96QPhmR/Q==", "Hajdarpasic", null, 2 },
                     { 4, null, "amir@example.com", "Amir", "amir", "ug0GgEnT5hKaHsfTn1l1kiGvZAg=", "qh31pfpS2ox1h96QPhmR/Q==", "Bajric", null, 2 },
                     { 5, null, "jasmina@example.com", "Jasmina", "jasmina", "ug0GgEnT5hKaHsfTn1l1kiGvZAg=", "qh31pfpS2ox1h96QPhmR/Q==", "Nalic", null, 2 },
                     { 6, null, "nina@example.com", "Nina", "nina", "ug0GgEnT5hKaHsfTn1l1kiGvZAg=", "qh31pfpS2ox1h96QPhmR/Q==", "Milic", null, 2 },

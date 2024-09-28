@@ -24,6 +24,7 @@
 	  <PackageReference Include="Microsoft.ML" Version="3.0.1" />
 	  <PackageReference Include="Microsoft.ML.Recommender" Version="0.21.1" />
 	  <PackageReference Include="Microsoft.VisualStudio.Services.Client" Version="19.225.1" />
+	  <PackageReference Include="RabbitMQ.Client" Version="6.8.1" />
 	  <PackageReference Include="Stripe.net" Version="45.11.0" /> </ItemGroup>
 
   <ItemGroup>
