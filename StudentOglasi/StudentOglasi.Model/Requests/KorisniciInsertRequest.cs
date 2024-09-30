@@ -10,10 +10,10 @@ namespace StudentOglasi.Model.Requests
     public class KorisniciInsertRequest
     {
         [Required]
-        [StringLength(50, MinimumLength = 3)]
+        [StringLength(50, MinimumLength = 2)]
         public string Ime { get; set; } = null!;
         [Required]
-        [StringLength(50, MinimumLength = 3)]
+        [StringLength(50, MinimumLength = 2)]
         public string Prezime { get; set; } = null!;
         [Required]
         [EmailAddress]

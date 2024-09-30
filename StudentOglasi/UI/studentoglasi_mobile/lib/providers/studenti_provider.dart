@@ -29,19 +29,31 @@ class StudentiProvider extends BaseProvider<Student> {
     }
   }
 
-    Future<bool> changePassword(int id, dynamic request) async {
+  Future<bool> changePassword(int id, dynamic request) async {
     var url = "${BaseProvider.baseUrl}${endPoint}/$id/change-Password";
     var uri = Uri.parse(url);
     var headers = createHeaders();
 
     var jsonRequest = jsonEncode(request, toEncodable: myDateSerializer);
-    var response =
-        await ioClient.put(uri, headers: headers, body: jsonRequest);
+    var response = await ioClient.put(uri, headers: headers, body: jsonRequest);
 
     if (isValidResponse(response)) {
       return true;
     } else {
       return false;
+    }
+  }
+
+  Future<bool> isUsernameTaken(String username) async {
+    var url = "${BaseProvider.baseUrl}${endPoint}/check-username/$username";
+    var uri = Uri.parse(url);
+
+    var response = await ioClient.get(uri, headers: createHeaders());
+
+    if (response.statusCode == 200) {
+      return false;
+    } else {
+      return true;
     }
   }
 }

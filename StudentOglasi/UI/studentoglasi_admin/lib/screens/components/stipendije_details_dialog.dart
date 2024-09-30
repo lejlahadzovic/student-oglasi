@@ -466,31 +466,34 @@ class _StipendijeDetailsDialogState extends State<StipendijeDetailsDialog> {
             ]),
         ElevatedButton(
           onPressed: () async {
-            _formKey.currentState?.saveAndValidate();
-            var request = Map<String, dynamic>.from(_formKey.currentState!.value);
+            if (_formKey.currentState!.saveAndValidate()) {
+              var request =
+                  Map<String, dynamic>.from(_formKey.currentState!.value);
 
-            try {
-              widget.stipendija == null
-                  ? await _StipendijaProvider.insertWithImage(request)
-                  : await _StipendijaProvider.updateWithImage(
-                      widget.stipendija!.id!, request);
+              try {
+                widget.stipendija == null
+                    ? await _StipendijaProvider.insertWithImage(request)
+                    : await _StipendijaProvider.updateWithImage(
+                        widget.stipendija!.id!, request);
 
-              Navigator.pop(context, true);
-              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                content: Text('Podaci su uspješno sačuvani!'),
-                backgroundColor: Colors.lightGreen,
-              ));
-            } on Exception catch (e) {
-              showDialog(
-                  context: context,
-                  builder: (BuildContext context) => AlertDialog(
-                        content: Text("Došlo je do greške. Molimo pokušajte opet!"),
-                        actions: [
-                          TextButton(
-                              onPressed: () => Navigator.pop(context),
-                              child: Text("OK"))
-                        ],
-                      ));
+                Navigator.pop(context, true);
+                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                  content: Text('Podaci su uspješno sačuvani!'),
+                  backgroundColor: Colors.lightGreen,
+                ));
+              } on Exception catch (e) {
+                showDialog(
+                    context: context,
+                    builder: (BuildContext context) => AlertDialog(
+                          content: Text(
+                              "Došlo je do greške. Molimo pokušajte opet!"),
+                          actions: [
+                            TextButton(
+                                onPressed: () => Navigator.pop(context),
+                                child: Text("OK"))
+                          ],
+                        ));
+              }
             }
           },
           child: Text('Sačuvaj'),

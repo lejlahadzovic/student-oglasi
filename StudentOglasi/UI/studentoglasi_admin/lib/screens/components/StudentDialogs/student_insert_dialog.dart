@@ -400,6 +400,9 @@ class _StudentDetailsDialogState extends State<StudentInsertDialog> {
                             validator: FormBuilderValidators.compose([
                               FormBuilderValidators.required(
                                   errorText: 'Prosječna ocjena je obavezna'),
+                              FormBuilderValidators.numeric(
+                                  errorText:
+                                      'Prosječna ocjena mora biti numerička vrijednost'),
                               FormBuilderValidators.min(6.0,
                                   errorText: 'Ocjena mora biti najmanje 6.0'),
                               FormBuilderValidators.max(10.0,
@@ -515,29 +518,40 @@ class _StudentDetailsDialogState extends State<StudentInsertDialog> {
             ]),
         ElevatedButton(
           onPressed: () async {
-            _formKey.currentState?.saveAndValidate();
-            var request =
-                Map<String, dynamic>.from(_formKey.currentState!.value);
+            final isValid = _formKey.currentState?.saveAndValidate() ?? false;
 
-            try {
-              await _studentProvider.insertWithImage(request);
-              Navigator.pop(context, true);
-              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                content: Text('Podaci su uspješno sačuvani!'),
-                backgroundColor: Colors.lightGreen,
-              ));
-            } on Exception catch (e) {
-              showDialog(
-                  context: context,
-                  builder: (BuildContext context) => AlertDialog(
-                        content:
-                            Text("Došlo je do greške. Molimo pokušajte opet!"),
-                        actions: [
-                          TextButton(
-                              onPressed: () => Navigator.pop(context),
-                              child: Text("OK"))
-                        ],
-                      ));
+            if (isValid) {
+              var request =
+                  Map<String, dynamic>.from(_formKey.currentState!.value);
+              final username = request['idNavigation.korisnickoIme'];
+              final isTaken = await _studentProvider.isUsernameTaken(username);
+
+              if (isTaken) {
+                _formKey.currentState!.fields['idNavigation.korisnickoIme']!
+                    .invalidate('Korisničko ime je već zauzeto!');
+              } else {
+                try {
+                  await _studentProvider.insertWithImage(request);
+                  Navigator.pop(context, true);
+                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                    content: Text('Podaci su uspješno sačuvani!'),
+                    backgroundColor: Colors.lightGreen,
+                  ));
+                } catch (e) {
+                  showDialog(
+                    context: context,
+                    builder: (BuildContext context) => AlertDialog(
+                      content:
+                          Text("Došlo je do greške. Molimo pokušajte opet!"),
+                      actions: [
+                        TextButton(
+                            onPressed: () => Navigator.pop(context),
+                            child: Text("OK")),
+                      ],
+                    ),
+                  );
+                }
+              }
             }
           },
           child: Text('Sačuvaj'),

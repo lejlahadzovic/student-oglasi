@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
+import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:provider/provider.dart';
 import 'package:studentoglasi_admin/models/Fakultet/fakultet.dart';
 import 'package:studentoglasi_admin/models/NacinStudiranja/nacin_studiranja.dart';
@@ -178,6 +179,15 @@ class _StudentDetailsDialogState extends State<StudentUpdateDialog> {
                                     BorderRadius.all(Radius.circular(10)),
                               ),
                             ),
+                            validator: FormBuilderValidators.compose([
+                              FormBuilderValidators.required(
+                                  errorText: 'Ime je obavezno'),
+                              FormBuilderValidators.minLength(2,
+                                  errorText: 'Ime mora imati najmanje 2 znaka'),
+                              FormBuilderValidators.maxLength(50,
+                                  errorText:
+                                      'Ime može imati najviše 50 znakova'),
+                            ]),
                           ),
                           SizedBox(height: 20),
                           FormBuilderTextField(
@@ -189,6 +199,16 @@ class _StudentDetailsDialogState extends State<StudentUpdateDialog> {
                                     BorderRadius.all(Radius.circular(10)),
                               ),
                             ),
+                            validator: FormBuilderValidators.compose([
+                              FormBuilderValidators.required(
+                                  errorText: 'Prezime je obavezno'),
+                              FormBuilderValidators.minLength(2,
+                                  errorText:
+                                      'Prezime mora imati najmanje 2 znaka'),
+                              FormBuilderValidators.maxLength(50,
+                                  errorText:
+                                      'Prezime može imati najviše 50 znakova'),
+                            ]),
                           ),
                           SizedBox(height: 20),
                           FormBuilderTextField(
@@ -200,6 +220,12 @@ class _StudentDetailsDialogState extends State<StudentUpdateDialog> {
                                     BorderRadius.all(Radius.circular(10)),
                               ),
                             ),
+                            validator: FormBuilderValidators.compose([
+                              FormBuilderValidators.required(
+                                  errorText: 'Email je obavezan'),
+                              FormBuilderValidators.email(
+                                  errorText: 'Neispravan format email adrese'),
+                            ]),
                           ),
                           SizedBox(height: 20),
                           FormBuilderTextField(
@@ -210,6 +236,17 @@ class _StudentDetailsDialogState extends State<StudentUpdateDialog> {
                                 borderRadius: BorderRadius.circular(10),
                               ),
                             ),
+                            validator: FormBuilderValidators.compose([
+                              FormBuilderValidators.required(
+                                  errorText: 'Prosječna ocjena je obavezna'),
+                              FormBuilderValidators.numeric(
+                                  errorText:
+                                      'Prosječna ocjena mora biti numerička vrijednost'),
+                              FormBuilderValidators.min(6.0,
+                                  errorText: 'Ocjena mora biti najmanje 6.0'),
+                              FormBuilderValidators.max(10.0,
+                                  errorText: 'Ocjena može biti najviše 10.0'),
+                            ]),
                           ),
                         ],
                       ),
@@ -234,6 +271,8 @@ class _StudentDetailsDialogState extends State<StudentUpdateDialog> {
                                 borderRadius: BorderRadius.circular(10),
                               ),
                             ),
+                            validator: FormBuilderValidators.required(
+                                errorText: 'Univerzitet je obavezan'),
                             items: widget.univerzitetiResult?.result
                                     .map((Univerzitet univerzitet) =>
                                         DropdownMenuItem(
@@ -263,6 +302,8 @@ class _StudentDetailsDialogState extends State<StudentUpdateDialog> {
                                 borderRadius: BorderRadius.circular(10),
                               ),
                             ),
+                            validator: FormBuilderValidators.required(
+                                errorText: 'Smjer je obavezan'),
                             enabled: selectedFakultet != null,
                             items: (selectedFakultet?.smjerovi ?? [])
                                     .map((Smjer smjer) => DropdownMenuItem(
@@ -292,6 +333,8 @@ class _StudentDetailsDialogState extends State<StudentUpdateDialog> {
                                 borderRadius: BorderRadius.circular(10),
                               ),
                             ),
+                            validator: FormBuilderValidators.required(
+                                errorText: 'Način studiranja je obavezan'),
                             items: widget.naciniStudiranjaResult?.result
                                     .map((NacinStudiranja nacinStudiranja) =>
                                         DropdownMenuItem(
@@ -323,6 +366,8 @@ class _StudentDetailsDialogState extends State<StudentUpdateDialog> {
                                 borderRadius: BorderRadius.circular(10),
                               ),
                             ),
+                            validator: FormBuilderValidators.required(
+                                errorText: 'Fakultet je obavezan'),
                             enabled: selectedUniverzitet != null,
                             items: (selectedUniverzitet?.fakultetis ?? [])
                                     .map(
@@ -355,6 +400,8 @@ class _StudentDetailsDialogState extends State<StudentUpdateDialog> {
                                 borderRadius: BorderRadius.circular(10),
                               ),
                             ),
+                            validator: FormBuilderValidators.required(
+                                errorText: 'Godina studija je obavezna'),
                             items: godine
                                 .map((godina) => DropdownMenuItem<int>(
                                       value: godina,
@@ -376,6 +423,8 @@ class _StudentDetailsDialogState extends State<StudentUpdateDialog> {
                                 borderRadius: BorderRadius.circular(10),
                               ),
                             ),
+                            validator: FormBuilderValidators.required(
+                                errorText: 'Status studenta je obavezan'),
                             items: statusStudenta
                                 .map((status) => DropdownMenuItem<bool>(
                                       value: status['value'] as bool,
@@ -416,33 +465,34 @@ class _StudentDetailsDialogState extends State<StudentUpdateDialog> {
             ]),
         ElevatedButton(
           onPressed: () async {
-            _formKey.currentState?.saveAndValidate();
-            var request =
-                Map<String, dynamic>.from(_formKey.currentState!.value);
+            if (_formKey.currentState!.saveAndValidate()) {
+              var request =
+                  Map<String, dynamic>.from(_formKey.currentState!.value);
 
-            request['idNavigation.korisnickoIme'] =
-                widget.student?.idNavigation?.korisnickoIme;
+              request['idNavigation.korisnickoIme'] =
+                  widget.student?.idNavigation?.korisnickoIme;
 
-            try {
-              await _studentProvider.updateWithImage(
-                  widget.student!.id!, request);
-              Navigator.pop(context, true);
-              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                content: Text('Podaci su uspješno sačuvani!'),
-                backgroundColor: Colors.lightGreen,
-              ));
-            } on Exception catch (e) {
-              showDialog(
-                  context: context,
-                  builder: (BuildContext context) => AlertDialog(
-                        title: Text("Error"),
-                        content: Text(e.toString()),
-                        actions: [
-                          TextButton(
-                              onPressed: () => Navigator.pop(context),
-                              child: Text("OK"))
-                        ],
-                      ));
+              try {
+                await _studentProvider.updateWithImage(
+                    widget.student!.id!, request);
+                Navigator.pop(context, true);
+                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                  content: Text('Podaci su uspješno sačuvani!'),
+                  backgroundColor: Colors.lightGreen,
+                ));
+              } on Exception catch (e) {
+                showDialog(
+                    context: context,
+                    builder: (BuildContext context) => AlertDialog(
+                          title: Text("Došlo je do greške. Molimo pokušajte ponovo!"),
+                          content: Text(e.toString()),
+                          actions: [
+                            TextButton(
+                                onPressed: () => Navigator.pop(context),
+                                child: Text("OK"))
+                          ],
+                        ));
+              }
             }
           },
           child: Text('Sačuvaj'),

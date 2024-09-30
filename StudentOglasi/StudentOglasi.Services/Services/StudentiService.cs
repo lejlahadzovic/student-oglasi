@@ -188,5 +188,10 @@ namespace StudentOglasi.Services.Services
             }
             return filteredQuery;
         }
+        public async Task<bool> IsUsernameTaken(string username)
+        {
+            return await _context.Korisnicis.AnyAsync(k => k.KorisnickoIme == username);
+        }
+
     }
 }

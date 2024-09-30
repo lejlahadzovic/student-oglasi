@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
+import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:provider/provider.dart';
 import 'package:studentoglasi_mobile/models/Fakultet/fakultet.dart';
 import 'package:studentoglasi_mobile/models/NacinStudiranja/nacin_studiranja.dart';
@@ -97,13 +98,39 @@ class _ProfileScreenState extends State<ProfileScreen>
     if (_formKey.currentState!.saveAndValidate()) {
       var request = Map<String, dynamic>.from(_formKey.currentState!.value);
 
+      String newUsername = request['idNavigation.korisnickoIme'];
+
+      bool isUsernameTaken =
+          await _studentiProvider.isUsernameTaken(newUsername);
+      if (isUsernameTaken &&
+          newUsername != _currentStudent?.idNavigation.korisnickoIme) {
+        setState(() {
+          _formKey.currentState!.fields['idNavigation.korisnickoIme']
+              ?.invalidate('Korisničko ime je zauzeto.');
+          _tabController.animateTo(0);
+        });
+        return;
+      }
+
+      request['brojIndeksa'] ??= _currentStudent?.brojIndeksa;
+      request['godinaStudija'] ??= _currentStudent?.godinaStudija;
+      request['prosjecnaOcjena'] ??=
+          _currentStudent?.prosjecnaOcjena.toString();
+      request['univerzitetId'] ??= _selectedUniverzitet?.id.toString();
+      request['fakultetId'] ??= _selectedFakultet?.id.toString();
+      request['smjerId'] ??= _selectedSmjer?.id.toString();
+      request['nacinStudiranjaId'] ??=
+          _currentStudent?.nacinStudiranja.id.toString();
+
       try {
         await _studentiProvider.updateMultipartData(
             _currentStudent!.id!, request);
 
-        Authorization.username = request['idNavigation.korisnickoIme'];
+        setState(() {
+          Authorization.username = request['idNavigation.korisnickoIme'];
+          _isEditing = false;
+        });
 
-        Navigator.pop(context, true);
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           content: Text('Podaci su uspješno sačuvani!'),
           backgroundColor: Colors.lightGreen,
@@ -112,7 +139,7 @@ class _ProfileScreenState extends State<ProfileScreen>
         showDialog(
           context: context,
           builder: (BuildContext context) => AlertDialog(
-            title: Text("Error"),
+            title: Text("Greška"),
             content: Text(e.toString()),
             actions: [
               TextButton(
@@ -125,7 +152,7 @@ class _ProfileScreenState extends State<ProfileScreen>
       }
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Please complete the form properly')),
+        SnackBar(content: Text('Molimo vas da ispravno popunite formu')),
       );
     }
   }
@@ -138,9 +165,8 @@ class _ProfileScreenState extends State<ProfileScreen>
         bottom: TabBar(
           controller: _tabController,
           tabs: [Tab(text: 'Osnovni podaci'), Tab(text: 'Podaci o studijama')],
-          labelColor: Colors.white, 
-          unselectedLabelColor: Colors
-              .white70,
+          labelColor: Colors.white,
+          unselectedLabelColor: Colors.white70,
           indicatorColor: Colors.white,
         ),
       ),
@@ -282,46 +308,76 @@ class _ProfileScreenState extends State<ProfileScreen>
           SizedBox(height: 16),
           FormBuilderTextField(
             name: 'idNavigation.ime',
-            readOnly: !_isEditing,
+            enabled: _isEditing,
             decoration: InputDecoration(
               labelText: 'Ime',
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(10),
               ),
             ),
+            validator: FormBuilderValidators.compose([
+              FormBuilderValidators.required(errorText: 'Ime je obavezno'),
+              FormBuilderValidators.minLength(2,
+                  errorText: 'Ime mora imati najmanje 2 znaka'),
+              FormBuilderValidators.maxLength(50,
+                  errorText: 'Ime može imati najviše 50 znakova'),
+            ]),
           ),
           SizedBox(height: 16),
           FormBuilderTextField(
             name: 'idNavigation.prezime',
-            readOnly: !_isEditing,
+            enabled: _isEditing,
             decoration: InputDecoration(
               labelText: 'Prezime',
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(10),
               ),
             ),
+            validator: FormBuilderValidators.compose([
+              FormBuilderValidators.required(errorText: 'Prezime je obavezno'),
+              FormBuilderValidators.minLength(2,
+                  errorText: 'Prezime mora imati najmanje 2 znaka'),
+              FormBuilderValidators.maxLength(50,
+                  errorText: 'Prezime može imati najviše 50 znakova'),
+            ]),
           ),
           SizedBox(height: 16),
           FormBuilderTextField(
             name: 'idNavigation.korisnickoIme',
-            readOnly: !_isEditing,
+            enabled: _isEditing,
             decoration: InputDecoration(
               labelText: 'Korisničko Ime',
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(10),
               ),
             ),
+            validator: FormBuilderValidators.compose([
+              FormBuilderValidators.required(
+                  errorText: 'Korisničko ime je obavezno'),
+              FormBuilderValidators.minLength(5,
+                  errorText: 'Korisničko ime mora imati najmanje 5 znakova'),
+              FormBuilderValidators.maxLength(50,
+                  errorText: 'Korisničko ime može imati najviše 50 znakova'),
+            ]),
           ),
           SizedBox(height: 16),
           FormBuilderTextField(
             name: 'idNavigation.email',
-            readOnly: !_isEditing,
+            enabled: _isEditing,
             decoration: InputDecoration(
               labelText: 'Email',
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(10),
               ),
             ),
+            validator: FormBuilderValidators.compose([
+              FormBuilderValidators.required(
+                errorText: 'Email je obavezan.',
+              ),
+              FormBuilderValidators.email(
+                errorText: 'Unesite ispravan format email adrese.',
+              ),
+            ]),
           ),
         ],
       ),
@@ -342,6 +398,8 @@ class _ProfileScreenState extends State<ProfileScreen>
                 borderRadius: BorderRadius.circular(10),
               ),
             ),
+            validator: FormBuilderValidators.required(
+                errorText: 'Univerzitet je obavezan'),
             items: _univerziteti?.result
                     .map((univerzitet) => DropdownMenuItem(
                           value: univerzitet.id.toString(),
@@ -369,6 +427,8 @@ class _ProfileScreenState extends State<ProfileScreen>
                 borderRadius: BorderRadius.circular(10),
               ),
             ),
+            validator: FormBuilderValidators.required(
+                errorText: 'Fakultet je obavezan'),
             items: _selectedUniverzitet?.fakultetis
                     ?.map((fakultet) => DropdownMenuItem(
                           value: fakultet.id.toString(),
@@ -395,6 +455,8 @@ class _ProfileScreenState extends State<ProfileScreen>
                 borderRadius: BorderRadius.circular(10),
               ),
             ),
+            validator:
+                FormBuilderValidators.required(errorText: 'Smjer je obavezan'),
             items: _selectedFakultet?.smjerovi
                     ?.map((smjer) => DropdownMenuItem(
                           value: smjer.id.toString(),
@@ -406,13 +468,19 @@ class _ProfileScreenState extends State<ProfileScreen>
           SizedBox(height: 16),
           FormBuilderTextField(
             name: 'brojIndeksa',
-            readOnly: !_isEditing,
+            enabled: _isEditing,
             decoration: InputDecoration(
               labelText: 'Broj Indeksa',
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(10),
               ),
             ),
+            validator: FormBuilderValidators.compose([
+              FormBuilderValidators.required(
+                  errorText: 'Broj indeksa je obavezan'),
+              FormBuilderValidators.maxLength(20,
+                  errorText: 'Broj indeksa može imati najviše 20 znakova'),
+            ]),
           ),
           SizedBox(height: 16),
           FormBuilderDropdown<int>(
@@ -424,6 +492,8 @@ class _ProfileScreenState extends State<ProfileScreen>
                 borderRadius: BorderRadius.circular(10),
               ),
             ),
+            validator: FormBuilderValidators.required(
+                errorText: 'Godina studija je obavezna'),
             items: godineStudija
                 .map((godina) => DropdownMenuItem(
                       value: godina,
@@ -434,23 +504,40 @@ class _ProfileScreenState extends State<ProfileScreen>
           SizedBox(height: 16),
           FormBuilderTextField(
             name: 'prosjecnaOcjena',
-            readOnly: !_isEditing,
+            enabled: _isEditing,
             decoration: InputDecoration(
               labelText: 'Prosječna Ocjena',
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(10),
               ),
             ),
+            validator: FormBuilderValidators.compose([
+              FormBuilderValidators.numeric(
+                errorText: 'Unesena vrijednost mora biti numerička.',
+              ),
+              FormBuilderValidators.min(
+                6.0,
+                errorText: 'Unesena vrijednost mora biti najmanje 6.0.',
+              ),
+              FormBuilderValidators.max(
+                10.0,
+                errorText: 'Unesena vrijednost ne smije biti veća od 10.0.',
+              ),
+            ]),
+            keyboardType: TextInputType.number,
           ),
           SizedBox(height: 16),
           FormBuilderDropdown<String>(
             name: 'nacinStudiranjaId',
+            enabled: _isEditing,
             decoration: InputDecoration(
               labelText: 'Način studiranja',
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(10),
               ),
             ),
+            validator: FormBuilderValidators.required(
+                errorText: 'Način studiranja je obavezan'),
             items: _naciniStudiranja?.result
                     .map((NacinStudiranja nacinStudiranja) => DropdownMenuItem(
                           value: nacinStudiranja.id.toString(),

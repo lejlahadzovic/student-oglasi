@@ -30,8 +30,10 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
 
       if (userId != null) {
         try {
-          await context.read<StudentiProvider>().changePassword(userId, request);
-              
+          await context
+              .read<StudentiProvider>()
+              .changePassword(userId, request);
+
           Authorization.password = values['newPassword'];
 
           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
@@ -41,7 +43,8 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
           Navigator.pop(context);
         } catch (e) {
           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-            content: Text('Promjena šifre nije uspjela. Molimo provjerite vašu trenutnu šifru i pokušajte ponovo.'),
+            content: Text(
+                'Promjena šifre nije uspjela. Molimo provjerite vašu trenutnu šifru i pokušajte ponovo.'),
             backgroundColor: Colors.red,
           ));
         }
@@ -80,9 +83,22 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(10),
                   ),
+                  errorMaxLines: 3,
                 ),
                 obscureText: true,
-                validator: FormBuilderValidators.required(),
+                validator: FormBuilderValidators.compose([
+                  FormBuilderValidators.required(
+                      errorText: 'Lozinka je obavezna.'),
+                  FormBuilderValidators.minLength(8,
+                      errorText: 'Lozinka mora imati najmanje 8 znakova.'),
+                  FormBuilderValidators.maxLength(15,
+                      errorText: 'Lozinka može imati najviše 15 znakova.'),
+                  FormBuilderValidators.match(
+                    r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,15}$',
+                    errorText:
+                        'Lozinka mora sadržavati barem jedno veliko slovo, jedno malo slovo i jednu znamenku.',
+                  ),
+                ]),
               ),
               SizedBox(height: 16),
               FormBuilderTextField(

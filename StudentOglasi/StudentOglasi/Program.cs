@@ -16,8 +16,12 @@ using StudentOglasi.Services.StateMachines.PrakseStateMachine;
 using StudentOglasi.Services.StateMachines.PrijavePrakseStateMachine;
 using StudentOglasi.Services.StateMachines.PrijaveStipendijaStateMachine;
 using StudentOglasi.Services.StateMachines.RezervacijeStateMachine;
+using System.Globalization;
 
 var builder = WebApplication.CreateBuilder(args);
+
+CultureInfo.DefaultThreadCurrentCulture = new CultureInfo("en-US");
+CultureInfo.DefaultThreadCurrentUICulture = new CultureInfo("en-US");
 
 // Add services to the container.
 builder.Services.AddHttpContextAccessor();

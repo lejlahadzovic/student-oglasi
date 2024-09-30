@@ -13,5 +13,6 @@ namespace StudentOglasi.Services.Interfaces
     {
         Task<Studenti> GetStudentByUsername(string username);
         Task<bool> ChangePassword(int id, ChangePasswordRequest request);
+        Task<bool> IsUsernameTaken(string username);
     }
 }

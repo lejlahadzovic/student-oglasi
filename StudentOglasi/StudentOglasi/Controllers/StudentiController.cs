@@ -58,5 +58,19 @@ namespace StudentOglasi.Controllers
             }
             return Ok(new { message = "Password changed successfully." });
         }
+
+        [AllowAnonymous]
+        [HttpGet("check-username/{username}")]
+        public async Task<IActionResult> CheckUsername(string username)
+        {
+            var isUsernameTaken = await _studentiService.IsUsernameTaken(username);
+
+            if (isUsernameTaken)
+            {
+                return BadRequest(new { message = "Korisničko ime je zauzeto." });
+            }
+
+            return Ok(new { message = "Korisničko ime je dostupno." });
+        }
     }
 }
