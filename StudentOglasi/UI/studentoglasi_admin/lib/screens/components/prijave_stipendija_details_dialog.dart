@@ -3,6 +3,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:provider/provider.dart';
+import 'package:studentoglasi_admin/utils/file_downloader.dart';
+import 'package:studentoglasi_admin/utils/util.dart';
 
 import '../../models/PrijaveStipendija/prijave_stipendija.dart';
 import '../../providers/prijavestipendija_provider.dart';
@@ -91,17 +93,35 @@ class _PrijavaStipendijaDetailsDialogState
                   Expanded(
                     child: Container(
                       width: 400,
-                      child: FormBuilderTextField(
-                        name: 'dokumentacija',
-                        decoration: InputDecoration(
-                          labelText: 'Dokumentacija',
-                          labelStyle: TextStyle(color: Colors.blue),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.all(Radius.circular(10)),
+                      child: Stack(
+                        alignment: Alignment.centerRight,
+                        children: [
+                          FormBuilderTextField(
+                            name: 'dokumentacija',
+                            decoration: InputDecoration(
+                              labelText: 'Dokumentacija',
+                              labelStyle: TextStyle(color: Colors.blue),
+                              border: OutlineInputBorder(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(10)),
+                              ),
+                            ),
+                            enabled: false,
+                            style: TextStyle(color: Colors.black),
                           ),
-                        ),
-                        enabled: false,
-                        style: TextStyle(color: Colors.black),
+                          IconButton(
+                            icon: Icon(Icons.download,
+                                color: Colors.blue),
+                            onPressed: () {
+                              String fileUrl = FilePathManager.constructUrl(
+                                  widget.prijaveStipendija?.dokumentacija ?? '');
+                              String fileName =
+                                  widget.prijaveStipendija?.dokumentacija ?? '';
+
+                              downloadDocument(context, fileUrl, fileName);
+                            },
+                          ),
+                        ],
                       ),
                     ),
                   ),
@@ -109,17 +129,34 @@ class _PrijavaStipendijaDetailsDialogState
                   Expanded(
                     child: Container(
                       width: 400,
-                      child: FormBuilderTextField(
-                        name: 'cv',
-                        decoration: InputDecoration(
-                          labelText: 'CV',
-                          labelStyle: TextStyle(color: Colors.blue),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.all(Radius.circular(10)),
+                      child: Stack(
+                        alignment: Alignment.centerRight,
+                        children: [
+                          FormBuilderTextField(
+                            name: 'cv',
+                            decoration: InputDecoration(
+                              labelText: 'CV',
+                              labelStyle: TextStyle(color: Colors.blue),
+                              border: OutlineInputBorder(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(10)),
+                              ),
+                            ),
+                            enabled: false,
+                            style: TextStyle(color: Colors.black),
                           ),
-                        ),
-                        enabled: false,
-                        style: TextStyle(color: Colors.black),
+                          IconButton(
+                            icon: Icon(Icons.download,
+                                color: Colors.blue),
+                            onPressed: () {
+                              String fileUrl =
+                                  FilePathManager.constructUrl(widget.prijaveStipendija?.cv ?? '');
+                              String fileName = widget.prijaveStipendija?.cv ?? '';
+
+                              downloadDocument(context, fileUrl, fileName);
+                            },
+                          ),
+                        ],
                       ),
                     ),
                   ),

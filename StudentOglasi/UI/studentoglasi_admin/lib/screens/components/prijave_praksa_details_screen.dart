@@ -5,6 +5,8 @@ import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:provider/provider.dart';
 import 'package:studentoglasi_admin/models/PrijavePraksa/prijave_praksa.dart';
 import 'package:studentoglasi_admin/providers/prijavepraksa_provider.dart';
+import 'package:studentoglasi_admin/utils/file_downloader.dart';
+import 'package:studentoglasi_admin/utils/util.dart';
 
 
 class PrijavaPraksaDetailsDialog extends StatefulWidget {
@@ -98,17 +100,34 @@ class _PrijavaPraksaDetailsDialogState
                   Expanded(
                     child: Container(
                       width: 400,
-                      child: FormBuilderTextField(
-                        name: 'propratnoPismo',
-                        decoration: InputDecoration(
-                          labelText: 'Propratno pismo',
-                          labelStyle: TextStyle(color: Colors.blue),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.all(Radius.circular(10)),
+                      child: Stack(
+                        alignment: Alignment.centerRight,
+                        children: [
+                          FormBuilderTextField(
+                            name: 'propratnoPismo',
+                            decoration: InputDecoration(
+                              labelText: 'Propratno pismo',
+                              labelStyle: TextStyle(color: Colors.blue),
+                              border: OutlineInputBorder(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(10)),
+                              ),
+                            ),
+                            enabled: false,
+                            style: TextStyle(color: Colors.black),
                           ),
-                        ),
-                        enabled: false,
-                        style: TextStyle(color: Colors.black),
+                          IconButton(
+                            icon: Icon(Icons.download,
+                                color: Colors.blue),
+                            onPressed: () {
+                              String fileUrl =
+                                  FilePathManager.constructUrl(widget.prijavePraksa?.propratnoPismo ?? '');
+                              String fileName = widget.prijavePraksa?.propratnoPismo?? '';
+
+                              downloadDocument(context, fileUrl, fileName);
+                            },
+                          ),
+                        ],
                       ),
                     ),
                   ),
@@ -116,17 +135,35 @@ class _PrijavaPraksaDetailsDialogState
                   Expanded(
                     child: Container(
                       width: 400,
-                      child: FormBuilderTextField(
-                        name: 'cv',
-                        decoration: InputDecoration(
-                          labelText: 'CV',
-                          labelStyle: TextStyle(color: Colors.blue),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.all(Radius.circular(10)),
+                      child: Stack(
+                        alignment: Alignment.centerRight,
+                        children: [
+                          FormBuilderTextField(
+                            name: 'cv',
+                            decoration: InputDecoration(
+                              labelText: 'CV',
+                              labelStyle: TextStyle(color: Colors.blue),
+                              border: OutlineInputBorder(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(10)),
+                              ),
+                            ),
+                            enabled: false,
+                            style: TextStyle(color: Colors.black),
                           ),
-                        ),
-                        enabled: false,
-                        style: TextStyle(color: Colors.black),
+                          IconButton(
+                            icon: Icon(Icons.download,
+                                color: Colors.blue),
+                            onPressed: () {
+                              String fileUrl = FilePathManager.constructUrl(
+                                  widget.prijavePraksa?.cv ?? '');
+                              String fileName =
+                                  widget.prijavePraksa?.cv ?? '';
+
+                              downloadDocument(context, fileUrl, fileName);
+                            },
+                          ),
+                        ],
                       ),
                     ),
                   ),
@@ -236,17 +273,34 @@ class _PrijavaPraksaDetailsDialogState
                   Expanded(
                     child: Container(
                       width: 400,
-                      child: FormBuilderTextField(
-                        name: 'certifikati',
-                        decoration: InputDecoration(
-                          labelText: 'Certifikati',
-                          labelStyle: TextStyle(color: Colors.blue),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.all(Radius.circular(10)),
+                      child: Stack(
+                        alignment: Alignment.centerRight,
+                        children: [
+                          FormBuilderTextField(
+                            name: 'certifikati',
+                            decoration: InputDecoration(
+                              labelText: 'Certifikati',
+                              labelStyle: TextStyle(color: Colors.blue),
+                              border: OutlineInputBorder(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(10)),
+                              ),
+                            ),
+                            enabled: false,
+                            style: TextStyle(color: Colors.black),
                           ),
-                        ),
-                        enabled: false,
-                        style: TextStyle(color: Colors.black),
+                          IconButton(
+                            icon: Icon(Icons.download,
+                                color: Colors.blue),
+                            onPressed: () {
+                              String fileUrl =
+                                  FilePathManager.constructUrl(widget.prijavePraksa?.certifikati ?? '');
+                              String fileName = widget.prijavePraksa?.certifikati?? '';
+
+                              downloadDocument(context, fileUrl, fileName);
+                            },
+                          ),
+                        ],
                       ),
                     ),
                   ),

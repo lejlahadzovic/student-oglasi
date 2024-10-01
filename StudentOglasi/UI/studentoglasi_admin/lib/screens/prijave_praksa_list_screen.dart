@@ -12,6 +12,8 @@ import 'package:studentoglasi_admin/providers/studenti_provider.dart';
 import 'package:studentoglasi_admin/screens/components/costum_paginator.dart';
 import 'package:studentoglasi_admin/screens/components/prijave_praksa_details_screen.dart';
 import 'package:studentoglasi_admin/screens/components/prijave_prakse_report_dialog.dart';
+import 'package:studentoglasi_admin/utils/file_downloader.dart';
+import 'package:studentoglasi_admin/utils/util.dart';
 import 'package:studentoglasi_admin/widgets/master_screen.dart';
 
 import '../models/StatusPrijave/statusprijave.dart';
@@ -285,14 +287,54 @@ class _PrijavePraksaListScreen extends State<PrijavePraksaListScreen> {
                                     DataCell(Center(
                                         child: Text(
                                             e.student?.brojIndeksa ?? ""))),
-                                    DataCell(Center(
-                                        child: Text(e.certifikati ?? ""))),
+                                    DataCell(
+                                      InkWell(
+                                        onTap: () {
+                                          String fileUrl =
+                                              FilePathManager.constructUrl(
+                                                  e.certifikati ?? '');
+                                          String fileName =
+                                              e.certifikati ?? '';
+
+                                          downloadDocument(
+                                              context, fileUrl, fileName);
+                                        },
+                                        child: Row(
+                                          mainAxisSize: MainAxisSize.min,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            Text(
+                                              "Preuzmi dokument",
+                                              style: TextStyle(
+                                                color: Colors.blue,
+                                              ),
+                                              overflow: TextOverflow.ellipsis,
+                                            ),
+                                            SizedBox(width: 8),
+                                            Icon(Icons.download,
+                                                color: Colors.blue),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
                                     DataCell(Center(
                                         child: Text(e.status?.naziv ?? ""))),
-                                    DataCell(Center(
+                                    DataCell(
+                                      Center(
                                         child: Text(
-                                            e.praksa?.idNavigation?.naslov ??
-                                                ""))),
+                                          (e.praksa?.idNavigation?.naslov !=
+                                                      null &&
+                                                  e.praksa!.idNavigation!
+                                                          .naslov!.length >
+                                                      30)
+                                              ? '${e.praksa!.idNavigation!.naslov!.substring(0, 30)}...'
+                                              : e.praksa?.idNavigation
+                                                      ?.naslov ??
+                                                  "",
+                                        ),
+                                      ),
+                                    ),
                                     DataCell(
                                       Row(
                                         mainAxisAlignment:

@@ -1,4 +1,5 @@
 import 'package:dropdown_button2/dropdown_button2.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:number_paginator/number_paginator.dart';
 import 'package:provider/provider.dart';
@@ -13,6 +14,8 @@ import 'package:studentoglasi_admin/providers/studenti_provider.dart';
 import 'package:studentoglasi_admin/screens/components/costum_paginator.dart';
 import 'package:studentoglasi_admin/screens/components/prijave_stipendija_details_dialog.dart';
 import 'package:studentoglasi_admin/screens/components/prijave_stipendije_report_dialog.dart';
+import 'package:studentoglasi_admin/utils/file_downloader.dart';
+import 'package:studentoglasi_admin/utils/util.dart';
 import 'package:studentoglasi_admin/widgets/master_screen.dart';
 
 import '../models/search_result.dart';
@@ -290,18 +293,58 @@ class _PrijaveStipendijaListScreen extends State<PrijaveStipendijaListScreen> {
                               .map((PrijaveStipendija e) => DataRow(cells: [
                                     DataCell(Center(
                                         child: Text(
-                                            "${e.student?.idNavigation?.ime?? ""}  ${e.student?.idNavigation?.prezime?? ""}",
+                                            "${e.student?.idNavigation?.ime ?? ""}  ${e.student?.idNavigation?.prezime ?? ""}",
                                             style: TextStyle(
                                                 fontWeight: FontWeight.bold)))),
                                     DataCell(Center(
                                         child: Text(
                                             e.student?.brojIndeksa ?? ""))),
-                                    DataCell(Center(
-                                        child: Text(e.stipendija?.idNavigation
-                                                ?.naslov ??
-                                            ""))),
-                                    DataCell(Center(
-                                        child: Text(e.dokumentacija ?? ""))),
+                                    DataCell(
+                                      Center(
+                                        child: Text(
+                                          (e.stipendija?.idNavigation?.naslov !=
+                                                      null &&
+                                                  e.stipendija!.idNavigation!
+                                                          .naslov!.length >
+                                                      30)
+                                              ? '${e.stipendija!.idNavigation!.naslov!.substring(0, 30)}...'
+                                              : e.stipendija?.idNavigation
+                                                      ?.naslov ??
+                                                  "",
+                                        ),
+                                      ),
+                                    ),
+                                    DataCell(
+                                      InkWell(
+                                        onTap: () {
+                                          String fileUrl =
+                                              FilePathManager.constructUrl(
+                                                  e.dokumentacija ?? '');
+                                          String fileName =
+                                              e.dokumentacija ?? '';
+
+                                          downloadDocument(
+                                              context, fileUrl, fileName);
+                                        },
+                                        child: Row(
+                                          mainAxisSize: MainAxisSize.min,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            Text(
+                                              "Preuzmi dokument",
+                                              style: TextStyle(
+                                                color: Colors.blue,
+                                              ),
+                                              overflow: TextOverflow.ellipsis,
+                                            ),
+                                            SizedBox(width: 8),
+                                            Icon(Icons.download,
+                                                color: Colors.blue),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
                                     DataCell(Center(
                                         child: Text(e.status?.naziv ?? ""))),
                                     DataCell(Center(

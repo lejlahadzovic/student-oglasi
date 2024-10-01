@@ -956,7 +956,7 @@ protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
                 Ime = "Kemal",
                 Prezime = "Hajdarpasic",
                 KorisnickoIme = "admin",
-                Email = "kh@example.com",
+                Email = "kemal.hajdarpasic@edu.fit.ba",
                 LozinkaHash = "JfJzsL3ngGWki+Dn67C+8WLy73I=",
                 LozinkaSalt = "7TUJfmgkkDvcY3PB/M4fhg==",
                 UlogaId = 1
@@ -967,7 +967,7 @@ protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
                 Ime = "Lejla",
                 Prezime = "Hadzovic",
                 KorisnickoIme = "lejla",
-                Email = "lh@example.com",
+                Email = "lejla.hadzovic@edu.fit.ba",
                 LozinkaHash = "ug0GgEnT5hKaHsfTn1l1kiGvZAg=",
                 LozinkaSalt = "qh31pfpS2ox1h96QPhmR/Q==",
                 UlogaId = 2
@@ -978,7 +978,7 @@ protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
                 Ime = "Kemal",
                 Prezime = "Hajdarpasic",
                 KorisnickoIme = "kemal",
-                Email = "kh@example.com",
+                Email = "kemal.hajdarpasic@edu.fit.ba",
                 LozinkaHash = "ug0GgEnT5hKaHsfTn1l1kiGvZAg=",
                 LozinkaSalt = "qh31pfpS2ox1h96QPhmR/Q==",
                 UlogaId = 2
@@ -1483,7 +1483,7 @@ protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
             {
                 StudentId = 2,
                 PraksaId = 1,
-                PropratnoPismo = "Propratno pismo studenta 1 za praksu 1",
+                PropratnoPismo = "Propratno_pismo_1.pdf",
                 Cv = "CV_studenta_1.pdf",
                 Certifikati = "Certifikati_studenta_1.pdf",
                 StatusId = 2
@@ -1492,7 +1492,7 @@ protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
             {
                 StudentId = 3,
                 PraksaId = 2,
-                PropratnoPismo = "Propratno pismo studenta 2 za praksu 2",
+                PropratnoPismo = "Propratno_pismo_2.pdf",
                 Cv = "CV_studenta_2.pdf",
                 Certifikati = "Certifikati_studenta_2.pdf",
                 StatusId = 2

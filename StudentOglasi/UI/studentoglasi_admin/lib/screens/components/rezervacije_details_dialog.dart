@@ -7,7 +7,6 @@ import 'package:provider/provider.dart';
 import 'package:studentoglasi_admin/models/Rezervacije/rezervacije.dart';
 import 'package:studentoglasi_admin/providers/rezervacije_provider.dart';
 
-
 class RezervacijeDetailsDialog extends StatefulWidget {
   String? title;
   Rezervacije? rezervacija;
@@ -252,6 +251,7 @@ class _RezervacijeDetailsDialogState extends State<RezervacijeDetailsDialog> {
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.all(Radius.circular(10)),
                           ),
+                          suffixText: 'KM'
                         ),
                         enabled: false,
                         style: TextStyle(color: Colors.black),
