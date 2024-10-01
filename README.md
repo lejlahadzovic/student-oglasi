@@ -19,7 +19,9 @@
 - **Broj kartice**: 4242 4242 4242 4242
 - **Datum**: 12/34
 
-### NOTE:
-Firebase FCM obavijesti - pomoćni API:
-Obavijesti se šalju na mobilnu aplikaciju prilikom dodavanja novog oglasa za stipendije, prakse ili smještaj.
+### RabbitMQ implementacija:
+   
+Na desktop aplikaciji kod rezervacija, prijava na prakse i stipendije klikom na akciju tj. ikonicu za uređivanje i promjenom statusa prijave ili rezervacije šalje se mail korisniku kao obavijest da li je prijava otkazana ili odobrena
+- Publisher: MailService (pozvan unutar poslovne logike u StateMachines dijelu projekta, u funkcijama za odobravanje i otkazivanje prijava/rezervacija) šalje poruku RabbitMQ-u.
+- Subscriber: Konzolni projekt koji sluša poruke i obrađuje ih.
 
