@@ -234,7 +234,9 @@ class _RegistrationFormState extends State<RegistrationForm> {
                       validator: FormBuilderValidators.compose([
                         FormBuilderValidators.required(
                             errorText: 'Email je obavezan.'),
-                        FormBuilderValidators.email(),
+                        FormBuilderValidators.email(
+                          errorText: 'Unesite ispravan format email adrese.',
+                        ),
                       ]),
                     ),
                   ),

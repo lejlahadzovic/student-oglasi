@@ -207,6 +207,12 @@ class _ObjaveDetailsDialogState extends State<ObjaveDetailsDialog> {
                 ],
               ),
               SizedBox(height: 10),
+              Row(
+                children: [
+                  Expanded(
+                    child: Container(
+                      width: 400,
+                      child:
               FormBuilderTextField(
                 name: 'sadrzaj',
                 maxLines: 5,
@@ -222,6 +228,10 @@ class _ObjaveDetailsDialogState extends State<ObjaveDetailsDialog> {
                   FormBuilderValidators.minLength(10,
                       errorText: 'Sadržaj mora imati najmanje 10 znakova'),
                 ]),
+              ),
+              ),
+                  ),
+                ],
               ),
             ],
           ),

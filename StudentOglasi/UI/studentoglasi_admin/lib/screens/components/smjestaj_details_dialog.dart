@@ -109,7 +109,10 @@ class _SmjestajDetailsDialogState extends State<SmjestajDetailsDialog> {
     return AlertDialog(
       title: Text(widget.title ?? ''),
       content: ConstrainedBox(
-        constraints: BoxConstraints(minWidth: 800),
+        constraints: BoxConstraints(
+          minWidth: 800,
+          maxWidth: 800,
+        ),
         child: SingleChildScrollView(
           child: Padding(
             padding: const EdgeInsets.all(8.0),
