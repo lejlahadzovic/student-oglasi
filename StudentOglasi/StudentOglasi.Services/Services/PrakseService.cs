@@ -77,6 +77,14 @@ namespace StudentOglasi.Services.Services
             result.Result = tmp;
             return result;
         }
+
+        public override async Task<Model.Prakse> GetById(int id)
+        {
+            var entity = await _context.Set<Database.Prakse>().Include(p => p.Organizacija).Include(p => p.Status).FirstOrDefaultAsync(p => p.Id == id);
+
+            return _mapper.Map<Model.Prakse>(entity);
+        }
+
         public override async Task Delete(int id)
         {
             var query = _context.Set<Database.Prakse>().Include(p => p.IdNavigation);

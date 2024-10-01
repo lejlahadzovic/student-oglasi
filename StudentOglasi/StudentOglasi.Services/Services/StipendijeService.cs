@@ -60,6 +60,12 @@ namespace StudentOglasi.Services.Services
             result.Result = tmp;
             return result;
         }
+        public override async Task<Model.Stipendije> GetById(int id)
+        {
+            var entity = await _context.Set<Database.Stipendije>().Include(p => p.Stipenditor).Include(p => p.Status).FirstOrDefaultAsync(p => p.Id == id);
+
+            return _mapper.Map<Model.Stipendije>(entity);
+        }
         public override async Task<Model.Stipendije> Update(int id, StipendijeUpdateRequest update)
         {
             var set = _context.Set<Database.Stipendije>();

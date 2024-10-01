@@ -72,6 +72,22 @@ abstract class BaseProvider<T> with ChangeNotifier {
     }
   }
 
+Future<T> getById(int id) async {
+  var url = "$_baseUrl$_endPoint/$id"; // Construct the URL with the ID
+  
+  var uri = Uri.parse(url);
+
+  var response = await _ioClient.get(uri, headers: createHeaders());
+
+  if (isValidResponse(response)) {
+    var data = jsonDecode(response.body);
+
+    return fromJson(data); 
+  } else {
+    throw Exception("Failed to load item with ID: $id");
+  }
+}
+
   Future<T> insertJsonData(dynamic request) async {
     var url = "$_baseUrl$_endPoint";
     var uri = Uri.parse(url);
