@@ -6,7 +6,7 @@ using System.Net.Mail;
 using System.Net;
 using StudentOglasi.RabbitMQ;
 
-var hostname = "rabbitmq";
+var hostname = Environment.GetEnvironmentVariable("RABBITMQ_HOST");
 var factory = new ConnectionFactory { HostName = hostname };
 using var connection = factory.CreateConnection();
 using var channel = connection.CreateModel();

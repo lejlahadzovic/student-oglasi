@@ -12,13 +12,13 @@ namespace StudentOglasi.Services
 {
     public class MailService : IMailService
     {
-        private readonly string serverAddress = Environment.GetEnvironmentVariable("SERVER_ADDRESS") ?? "smtp.gmail.com";
-        private readonly string mailSender = Environment.GetEnvironmentVariable("MAIL_SENDER") ?? "studentoglasi.com";
-        private readonly string mailPass = Environment.GetEnvironmentVariable("MAIL_PASS") ?? "ocsnmzwxcraeeywi";
-        private readonly int port = int.Parse(Environment.GetEnvironmentVariable("MAIL_PORT") ?? "587");
+        private readonly string serverAddress = Environment.GetEnvironmentVariable("SERVER_ADDRESS");
+        private readonly string mailSender = Environment.GetEnvironmentVariable("MAIL_SENDER");
+        private readonly string mailPass = Environment.GetEnvironmentVariable("MAIL_PASS");
+        private readonly int port = int.Parse(Environment.GetEnvironmentVariable("MAIL_PORT"));
         public async Task startConnection(EmailObject obj)
         {
-            var hostname = "rabbitmq";
+            var hostname = Environment.GetEnvironmentVariable("RABBITMQ_HOST");
             var factory = new ConnectionFactory { HostName = hostname };
             //UserName = username, Password = password };
             using var connection = factory.CreateConnection();

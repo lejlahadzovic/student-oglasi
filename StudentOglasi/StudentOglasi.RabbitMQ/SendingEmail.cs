@@ -11,10 +11,10 @@ namespace StudentOglasi.RabbitMQ
     {
         public static void posaljiMail(EmailObject obj)
         {
-            string serverAddress = Environment.GetEnvironmentVariable("SERVER_ADDRESS") ?? "smtp.gmail.com";
-            string mailSender = Environment.GetEnvironmentVariable("MAIL_SENDER") ?? "studentoglasi@gmail.com";
-            string mailPass = Environment.GetEnvironmentVariable("MAIL_PASS") ?? "ocsnmzwxcraeeywi";
-            int port = int.Parse(Environment.GetEnvironmentVariable("MAIL_PORT") ?? "587");
+            string serverAddress = Environment.GetEnvironmentVariable("SERVER_ADDRESS");
+            string mailSender = Environment.GetEnvironmentVariable("MAIL_SENDER");
+            string mailPass = Environment.GetEnvironmentVariable("MAIL_PASS");
+            int port = int.Parse(Environment.GetEnvironmentVariable("MAIL_PORT"));
             string content = $"<p>{obj.poruka}</p>";
             string subject = obj.tema;
             var message = new MailMessage()

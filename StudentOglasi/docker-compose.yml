@@ -6,7 +6,7 @@ services:
     restart: unless-stopped
     environment:
       - ACCEPT_EULA=Y
-      - SA_PASSWORD=QWElkj132!
+      - SA_PASSWORD=${SQL_PASSWORD}
       - MSSQL_PID=Developer
     ports:
       - 1401:1433
@@ -20,8 +20,8 @@ services:
     container_name: rabbitmq_new
     restart: unless-stopped
     environment:
-      - RABBITMQ_DEFAULT_USER=guest
-      - RABBITMQ_DEFAULT_PASS=guest
+      - RABBITMQ_DEFAULT_USER=${RABBITMQ_USER}
+      - RABBITMQ_DEFAULT_PASS=${RABBITMQ_PASS}
     ports:
       - "15672:15672"
       - "5672:5672"
@@ -33,7 +33,7 @@ services:
     build:
       context: .
     environment:
-      - ConnectionStrings:DefaultConnection=Server=student-oglasi-sql, 1433;Database=200062_200090;User=sa;Password=QWElkj132!;ConnectRetryCount=0;TrustServerCertificate=True
+      - ConnectionStrings:DefaultConnection=Server=student-oglasi-sql, 1433;Database=200062_200090;User=${SQL_USER};Password=${SQL_PASSWORD};ConnectRetryCount=0;TrustServerCertificate=True
       - ASPNETCORE_ENVIRONMENT=Development
       - FIREBASE_TYPE=${FIREBASE_TYPE}
       - FIREBASE_PROJECT_ID=${FIREBASE_PROJECT_ID}
@@ -51,13 +51,13 @@ services:
       - STRIPE_PUBLISHABLE_KEY=${STRIPE_PUBLISHABLE_KEY}
       - AZURE_STORAGE_ACCOUNT_NAME=${AZURE_STORAGE_ACCOUNT_NAME}
       - AZURE_STORAGE_ACCESS_KEY=${AZURE_STORAGE_ACCESS_KEY}
-      - RABBITMQ_HOST=rabbitmq
-      - RABBITMQ_USER=guest
-      - RABBITMQ_PASS=guest
-      - SERVER_ADDRESS=smtp.gmail.com
-      - MAIL_SENDER=studentoglasi@gmail.com
-      - MAIL_PASS=ocsnmzwxcraeeywi
-      - MAIL_PORT=587
+      - RABBITMQ_HOST=${RABBITMQ_HOST}
+      - RABBITMQ_USER=${RABBITMQ_USER}
+      - RABBITMQ_PASS=${RABBITMQ_PASS}
+      - SERVER_ADDRESS=${SERVER_ADDRESS}
+      - MAIL_SENDER=${MAIL_SENDER}
+      - MAIL_PASS=${MAIL_PASS}
+      - MAIL_PORT=${MAIL_PORT}
     ports:
       - 7198:7198
     networks:
@@ -72,13 +72,13 @@ services:
     build:
       context: ./StudentOglasi.RabbitMQ
     environment:
-      - RABBITMQ_HOST=rabbitmq
-      - RABBITMQ_USER=guest
-      - RABBITMQ_PASS=guest
-      - SERVER_ADDRESS=smtp.gmail.com
-      - MAIL_SENDER=studentoglasi@gmail.com
-      - MAIL_PASS=ocsnmzwxcraeeywi
-      - MAIL_PORT=587
+      - RABBITMQ_HOST=${RABBITMQ_HOST}
+      - RABBITMQ_USER=${RABBITMQ_USER}
+      - RABBITMQ_PASS=${RABBITMQ_PASS}
+      - SERVER_ADDRESS=${SERVER_ADDRESS}
+      - MAIL_SENDER=${MAIL_SENDER}
+      - MAIL_PASS=${MAIL_PASS}
+      - MAIL_PORT=${MAIL_PORT}
     networks:
       - studentoglasi2024
     depends_on:
