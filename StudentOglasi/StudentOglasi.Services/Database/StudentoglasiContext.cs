@@ -227,6 +227,10 @@ protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
             entity.HasOne(d => d.Smjestaji).WithMany(p => p.Obavijestis)
                 .HasForeignKey(d => d.SmjestajiId)
                 .HasConstraintName("FK_Obavijesti_Smjestaji");
+
+            entity.HasOne(d => d.Objave).WithMany(p => p.Obavijestis)
+                .HasForeignKey(d => d.ObjaveId)
+                .HasConstraintName("FK_Obavijesti_Objave");
         });
 
         modelBuilder.Entity<Objave>(entity =>

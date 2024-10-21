@@ -32,7 +32,7 @@ namespace StudentOglasi.Services.Services
             var entity = await base.Insert(request);
 
             string title = entity.Naziv;
-            await _obavijestiService.SendNotificationSmjestaj("Novosti: Smještaj ", title, entity.Id,"success");
+            await _obavijestiService.SendNotificationSmjestaj("Smještaj ", title, entity.Id,"success");
 
             return entity;
         }

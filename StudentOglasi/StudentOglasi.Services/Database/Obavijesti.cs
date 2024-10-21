@@ -11,6 +11,8 @@ public partial class Obavijesti
 
     public int? OglasiId { get; set; }
 
+    public int? ObjaveId { get; set; }
+
     public string Naziv { get; set; } = null!;
 
     public string Opis { get; set; } = null!;
@@ -20,4 +22,6 @@ public partial class Obavijesti
     public virtual Oglasi? Oglasi { get; set; }
 
     public virtual Smjestaji? Smjestaji { get; set; }
+
+    public virtual Objave? Objave { get; set; }
 }

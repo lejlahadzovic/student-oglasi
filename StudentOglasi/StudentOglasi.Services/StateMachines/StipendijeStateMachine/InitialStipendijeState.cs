@@ -49,7 +49,7 @@ namespace StudentOglasi.Services.StateMachine.StipendijeStateMachine
 
             await _context.SaveChangesAsync();
             string title = entity.IdNavigation.Naslov;
-            await _obavijestiService.SendNotificationOglasi("Novosti: Stipendije", title, entity.IdNavigation.Id, "success");
+            await _obavijestiService.SendNotificationOglasi("Stipendije", title, entity.IdNavigation.Id, "success");
             return _mapper.Map<Model.Stipendije>(entity);
         }
         public override async Task<List<string>> AllowedActions()

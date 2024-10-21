@@ -16,9 +16,11 @@ namespace StudentOglasi.Services.Services
     public class ObjaveService : BaseCRUDService<Model.Objave, Database.Objave, ObjaveSearchObject, ObjaveInsertRequest, ObjaveUpdateRequest>, IObjaveService
     {
         public readonly FileService _fileService;
-        public ObjaveService(StudentoglasiContext context, IMapper mapper, FileService fileService) : base(context, mapper)
+        public readonly ObavijestiService _obavijestiService;
+        public ObjaveService(StudentoglasiContext context, IMapper mapper, FileService fileService, ObavijestiService obavijestiService) : base(context, mapper)
         {
             _fileService = fileService;
+            _obavijestiService = obavijestiService;
         }
         public override async Task BeforeInsert(Database.Objave entity, ObjaveInsertRequest insert)
         {
@@ -35,6 +37,15 @@ namespace StudentOglasi.Services.Services
                     throw new Exception("Greška pri uploadu slike");
                 }
             }
+        }
+
+        public override async Task<Model.Objave> Insert(ObjaveInsertRequest insert)
+        {
+            var entity = await base.Insert(insert);
+
+            string title = entity.Naslov;
+            await _obavijestiService.SendNotificationObjave("Novosti", title, entity.Id, "success");
+            return entity;
         }
         public override async Task BeforeDelete(Database.Objave entity)
         {

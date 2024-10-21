@@ -42,7 +42,7 @@ namespace StudentOglasi.Services.StateMachines.PrakseStateMachine
 
             await _context.SaveChangesAsync();
             string title = entity.IdNavigation.Naslov;
-            await _obavijestiService.SendNotificationOglasi("Novosti: Stipendije", title, entity.IdNavigation.Id, "success");
+            await _obavijestiService.SendNotificationOglasi("Prakse", title, entity.IdNavigation.Id, "success");
             return _mapper.Map<Model.Prakse>(entity);
         }
         public override async Task<List<string>> AllowedActions()
