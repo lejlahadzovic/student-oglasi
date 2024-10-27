@@ -56,26 +56,11 @@ namespace StudentOglasi.Services.Services
             }
             return filteredQuery;
         }
-        public override async Task<PagedResult<Model.Prakse>> Get(PrakseSearchObject? search = null)
+        public override IQueryable<Database.Prakse> AddInclude(IQueryable<Database.Prakse> query, PrakseSearchObject? search = null)
         {
-            var query = _context.Set<Database.Prakse>().Include(p => p.IdNavigation).Include(p=>p.Organizacija).Include(p => p.Status).AsQueryable();
+            query = _context.Set<Database.Prakse>().Include(p => p.IdNavigation).Include(p => p.Organizacija).Include(p => p.Status).AsQueryable();
 
-            PagedResult<Model.Prakse> result = new PagedResult<Model.Prakse>();
-
-            query = AddFilter(query, search);
-
-            result.Count = await query.CountAsync();
-
-            if (search?.Page.HasValue == true && search?.PageSize.HasValue == true)
-            {
-                query = query.Skip((search.Page.Value - 1) * search.PageSize.Value).Take(search.PageSize.Value);
-            }
-
-            var list = await query.ToListAsync();
-
-            var tmp = _mapper.Map<List<Model.Prakse>>(list);
-            result.Result = tmp;
-            return result;
+            return base.AddInclude(query, search);
         }
 
         public override async Task<Model.Prakse> GetById(int id)
@@ -93,23 +78,20 @@ namespace StudentOglasi.Services.Services
             if (entity == null)
                 throw new Exception("Objekat nije pronađen");
 
-
-            if (entity.IdNavigation.Slika != null)
+            var oglasi = entity.IdNavigation;
+            if (oglasi != null)
             {
-                try
-                {
-                    await _fileService.DeleteAsync(entity.IdNavigation.Slika);
-                }
-                catch (Exception ex)
-                {
-                    throw new Exception("Greška pri brisanju slike.", ex);
-                }
+                var relatedObavijesti = _context.Obavijestis.Where(o => o.OglasiId == oglasi.Id);
+                _context.Obavijestis.RemoveRange(relatedObavijesti);
+
+                _context.Oglasis.Remove(oglasi);
             }
-            _context.Oglasis.Remove(entity.IdNavigation);
 
             _context.Prakses.Remove(entity);
+
             await _context.SaveChangesAsync();
         }
+
         public override async Task<Model.Prakse> Update(int id, PrakseUpdateRequest update)
         {
             var set = _context.Set<Database.Prakse>();

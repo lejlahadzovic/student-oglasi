@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:open_file/open_file.dart';
 import 'package:studentoglasi_admin/models/Praksa/praksa.dart';
 import 'package:studentoglasi_admin/models/PrijavePraksa/prijave_praksa.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
@@ -19,7 +20,14 @@ class PrijavePrakseReportDialog extends StatefulWidget {
 
 class _PrijavePrakseReportDialogState extends State<PrijavePrakseReportDialog> {
   Praksa? selectedPraksa;
+ late PrijavePraksaProvider _prijavaPraksaProvider;
 
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _prijavaPraksaProvider = context.read<PrijavePraksaProvider>();
+  }
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
@@ -67,10 +75,32 @@ class _PrijavePrakseReportDialogState extends State<PrijavePrakseReportDialog> {
       ),
       actions: [
         ElevatedButton(
-          child: Text('Otkaži'),
-          onPressed: () {
-            Navigator.of(context).pop();
+          onPressed: () async {
+            await _prijavaPraksaProvider.printReport(selectedPraksa!.id!);
           },
+          child: Text('Isprintaj'),
+        ),
+        ElevatedButton(
+          onPressed: () async {
+            try {
+              final file = await _prijavaPraksaProvider.downloadReport(
+                  selectedPraksa!.id!);
+
+              if (file != null) {
+                OpenFile.open(file.path);
+              }
+            } catch (e) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text('Failed to download report')));
+            }
+          },
+          child: Text('Preuzmi izvjestaj'),
+          style: ButtonStyle(
+            backgroundColor: MaterialStateProperty.all<Color>(Color.fromARGB(255, 19, 201, 65)),
+            foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
+            textStyle: MaterialStateProperty.all<TextStyle>(
+                TextStyle(fontWeight: FontWeight.bold)),
+          ),
         ),
         ElevatedButton(
           child: Text('Generiši'),
@@ -83,8 +113,8 @@ class _PrijavePrakseReportDialogState extends State<PrijavePrakseReportDialog> {
           ),
           onPressed: () async {
             if (selectedPraksa != null) {
-              var reportData =
-                  await _fetchReportData(context.read<PrijavePraksaProvider>());
+              var reportData = await _fetchReportData(
+                  context.read<PrijavePraksaProvider>());
               if (reportData != null) {
                 showDialog(
                   context: context,

@@ -28,6 +28,8 @@ namespace StudentOglasi.Model
 
         public virtual StatusOglasi Status { get; set; } = null!;
 
+        //public virtual ICollection<PrijaveStipendija> PrijaveStipendijas { get; set; } = new List<PrijaveStipendija>();
+
         public virtual Stipenditori Stipenditor { get; set; } = null!;
     }
 }

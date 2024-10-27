@@ -48,6 +48,5 @@ namespace StudentOglasi.Controllers
         {
            await _service.Delete(id);
         }
-
     }
 }

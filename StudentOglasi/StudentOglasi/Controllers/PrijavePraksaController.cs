@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.ML;
 using StudentOglasi.Model;
 using StudentOglasi.Model.Requests;
 using StudentOglasi.Model.SearchObjects;
@@ -50,6 +51,25 @@ namespace StudentOglasi.Controllers
         public async Task<List<PrijavePraksa>> GetByStudentId(int studentId)
         {
             return await (_service as IPrijavePraksaService).GetByStudentIdAsync(studentId);
+        }
+
+        [HttpGet("report/download/{praksaId}")]
+        public async Task<IActionResult> DownloadReport(int praksaId)
+        {
+            try
+            {
+                var pdfReport = await _prijavePraksaService.DownloadReportAsync(praksaId);
+
+                var contentType = "application/pdf";
+                var fileName = $"InternshipReport_{praksaId}.pdf";
+                Response.Headers.Add("Content-Disposition", $"attachment; filename={fileName}");
+
+                return File(pdfReport, contentType, fileName);
+            }
+            catch (Exception ex)
+            {
+                return NotFound(ex.Message);
+            }
         }
     }
 }

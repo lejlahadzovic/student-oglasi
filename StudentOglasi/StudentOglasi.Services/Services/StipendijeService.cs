@@ -39,26 +39,11 @@ namespace StudentOglasi.Services.Services
             }
             return filteredQuery;
         }
-        public override async Task<PagedResult<Model.Stipendije>> Get(StipendijeSearchObject? search = null)
+        public override IQueryable<Database.Stipendije> AddInclude(IQueryable<Database.Stipendije> query, StipendijeSearchObject? search = null)
         {
-            var query = _context.Set<Database.Stipendije>().Include(p => p.IdNavigation).Include(p => p.Status).Include(p=>p.Stipenditor).AsQueryable();
+            query = _context.Set<Database.Stipendije>().Include(p => p.IdNavigation).Include(p => p.Status).Include(p => p.Stipenditor).AsQueryable();
 
-            PagedResult<Model.Stipendije> result = new PagedResult<Model.Stipendije>();
-
-            query = AddFilter(query, search);
-
-            result.Count = await query.CountAsync();
-
-            if (search?.Page.HasValue == true && search?.PageSize.HasValue == true)
-            {
-                query = query.Skip((search.Page.Value - 1) * search.PageSize.Value).Take(search.PageSize.Value);
-            }
-
-            var list = await query.ToListAsync();
-
-            var tmp = _mapper.Map<List<Model.Stipendije>>(list);
-            result.Result = tmp;
-            return result;
+            return base.AddInclude(query, search);
         }
         public override async Task<Model.Stipendije> GetById(int id)
         {
@@ -83,18 +68,13 @@ namespace StudentOglasi.Services.Services
 
             if (entity == null)
                 throw new Exception("Objekat nije pronađen");
-
-
-            if (entity.IdNavigation.Slika != null)
+            var oglasi = entity.IdNavigation;
+            if (oglasi != null)
             {
-                try
-                {
-                    await _fileService.DeleteAsync(entity.IdNavigation.Slika);
-                }
-                catch (Exception ex)
-                {
-                    throw new Exception("Greška pri brisanju slike.", ex);
-                }
+                var relatedObavijesti = _context.Obavijestis.Where(o => o.OglasiId == oglasi.Id);
+                _context.Obavijestis.RemoveRange(relatedObavijesti);
+
+                _context.Oglasis.Remove(oglasi);
             }
             _context.Oglasis.Remove(entity.IdNavigation);
 

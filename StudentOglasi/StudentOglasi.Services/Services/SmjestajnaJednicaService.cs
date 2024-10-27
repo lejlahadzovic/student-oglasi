@@ -41,7 +41,9 @@ namespace StudentOglasi.Services.Services
 
                 foreach (var slika in slike)
                 {
-                    await _slikeService.Delete(slika.SlikaId);
+                    await _context.Slikes.FindAsync(slika.SlikaId);
+                    _context.Slikes.Remove(slika);
+                    await _context.SaveChangesAsync();
                 }
             }
         }

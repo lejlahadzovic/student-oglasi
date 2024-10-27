@@ -45,9 +45,9 @@ class _StipendijeListScreenState extends State<StipendijeListScreen> {
     // TODO: implement didChangeDependencies
     super.didChangeDependencies();
     _stipendijeProvider = context.read<StipendijeProvider>();
-    _oglasiProvider=context.read<OglasiProvider>();
-    _statusProvider=context.read<StatusOglasiProvider>();
-    _stipenditorProvider=context.read<StipenditoriProvider>();
+    _oglasiProvider = context.read<OglasiProvider>();
+    _statusProvider = context.read<StatusOglasiProvider>();
+    _stipenditorProvider = context.read<StipenditoriProvider>();
     _pageController = NumberPaginatorController();
     _fetchData();
     _fetchOglasi();
@@ -69,7 +69,7 @@ class _StipendijeListScreenState extends State<StipendijeListScreen> {
     });
   }
 
- void _fetchStipenditori() async {
+  void _fetchStipenditori() async {
     var stipenditoriData = await _stipenditorProvider.get();
     setState(() {
       stipenditoriResult = stipenditoriData;
@@ -97,19 +97,23 @@ class _StipendijeListScreenState extends State<StipendijeListScreen> {
       },
       child: Container(
         child: Column(
-          children: [_buildSearch(), _buildDataListView(), if(_currentPage>=0 && numberPages-1>=_currentPage)
-           CustomPaginator(
-                      numberPages: numberPages,
-                      initialPage: _currentPage,
-                      onPageChange: (int index) {
-                        setState(() {
-                          _currentPage = index;
-                          _fetchData();
-                        });
-                      },
-                      pageController: _pageController,
-                      fetchData: _fetchData,
-                    ),],
+          children: [
+            _buildSearch(),
+            _buildDataListView(),
+            if (_currentPage >= 0 && numberPages - 1 >= _currentPage)
+              CustomPaginator(
+                numberPages: numberPages,
+                initialPage: _currentPage,
+                onPageChange: (int index) {
+                  setState(() {
+                    _currentPage = index;
+                    _fetchData();
+                  });
+                },
+                pageController: _pageController,
+                fetchData: _fetchData,
+              ),
+          ],
         ),
       ),
     );
@@ -119,11 +123,12 @@ class _StipendijeListScreenState extends State<StipendijeListScreen> {
     print("login proceed");
     // Navigator.of(context).pop();
 
-    var data = await _stipendijeProvider
-        .get(filter: {'naslov': _naslovController.text,
+    var data = await _stipendijeProvider.get(filter: {
+      'naslov': _naslovController.text,
       'stipenditor': selectedStipenditor?.id,
       'page': _currentPage + 1, // pages are 1-indexed in the backend
-      'pageSize': 5,});
+      'pageSize': 5,
+    });
     setState(() {
       result = data;
       _totalItems = data.count;
@@ -136,7 +141,6 @@ class _StipendijeListScreenState extends State<StipendijeListScreen> {
       }
       print(
           "Total items: $_totalItems, Number of pages: $numberPages, Current page after fetch: $_currentPage");
-    
     });
     print("data: ${data.result[0].id}");
   }
@@ -175,13 +179,14 @@ class _StipendijeListScreenState extends State<StipendijeListScreen> {
                       selectedStipenditor = newValue;
                     });
                   },
-                  items: stipenditoriResult?.result.map((Stipenditor stipenditor) {
-                        return DropdownMenuItem<Stipenditor>(
-                          value: stipenditor,
-                          child: Text(stipenditor.naziv ?? ''),
-                        );
-                      }).toList() ??
-                      [],
+                  items:
+                      stipenditoriResult?.result.map((Stipenditor stipenditor) {
+                            return DropdownMenuItem<Stipenditor>(
+                              value: stipenditor,
+                              child: Text(stipenditor.naziv ?? ''),
+                            );
+                          }).toList() ??
+                          [],
                 ),
               ),
             ),
@@ -297,7 +302,8 @@ class _StipendijeListScreenState extends State<StipendijeListScreen> {
                                               Icons.edit,
                                               color: Colors.blue,
                                             ),
-                                            onPressed: () {showDialog(
+                                            onPressed: () {
+                                              showDialog(
                                                   context: context,
                                                   builder: (BuildContext
                                                           context) =>
@@ -313,19 +319,62 @@ class _StipendijeListScreenState extends State<StipendijeListScreen> {
                                                 if (value != null && value) {
                                                   _fetchData();
                                                 }
-                                              });},
-                                          ),
-                                          IconButton(
-                                            icon: Icon(
-                                              Icons.delete,
-                                              color: Colors.red,
-                                            ),
-                                            onPressed: () async {
-                                              await _stipendijeProvider
-                                                  .delete(e.id);
-                                              await _fetchData();
+                                              });
                                             },
                                           ),
+                                         IconButton(
+                                    icon: Icon(
+                                      Icons.delete,
+                                      color: Colors.red,
+                                    ),
+                                    onPressed: () async {
+                                      bool confirmDelete = await showDialog(
+                                        context: context,
+                                        builder: (BuildContext context) {
+                                          return AlertDialog(
+                                            title: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              children: [
+                                                Text("Potvrda brisanja"),
+                                                IconButton(
+                                                  icon: Icon(Icons.close),
+                                                  onPressed: () {
+                                                    Navigator.of(context).pop(
+                                                        false); 
+                                                  },
+                                                ),
+                                              ],
+                                            ),
+                                            content: Text(
+                                                "Da li ste sigurni da želite izbrisati?"),
+                                            actions: [
+                                              TextButton(
+                                                onPressed: () {
+                                                  Navigator.of(context).pop(
+                                                      false); 
+                                                },
+                                                child: Text("Ne"),
+                                              ),
+                                              TextButton(
+                                                onPressed: () {
+                                                  Navigator.of(context).pop(
+                                                      true);  
+                                                },
+                                                child: Text("Da"),
+                                              ),
+                                            ],
+                                          );
+                                        },
+                                      );
+
+                                      if (confirmDelete == true) {
+                                        await _stipendijeProvider.delete(e.id);
+                                        await _fetchData();
+                                      }
+                                    },
+                                  ),
                                         ],
                                       ),
                                     ),

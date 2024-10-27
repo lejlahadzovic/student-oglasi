@@ -26,6 +26,7 @@ namespace StudentOglasi.Services.Services
         {
             Env.Load();
 
+            // Check if Firebase App is already initialized
             if (FirebaseApp.DefaultInstance == null)
             {
                 string projectId = Environment.GetEnvironmentVariable("FIREBASE_PROJECT_ID");
@@ -78,21 +79,18 @@ namespace StudentOglasi.Services.Services
             var messaging = FirebaseMessaging.DefaultInstance;
             try
             {
-                // Send the notification and log the message ID
                 var result = await messaging.SendAsync(notificationMessage);
                 Console.WriteLine($"Successfully sent message: {result}");
                 return result;
             }
             catch (FirebaseMessagingException ex)
             {
-                // Handle Firebase messaging errors
                 Console.WriteLine($"Error sending message: {ex.Message}");
                 Console.WriteLine($"Error details: {ex.ErrorCode}");
                 return null;
             }
             catch (Exception e)
             {
-                // Handle other exceptions
                 Console.WriteLine($"An unexpected error occurred: {e.Message}");
                 return null;
             }
@@ -108,11 +106,9 @@ namespace StudentOglasi.Services.Services
                 DatumKreiranja = DateTime.Now
             };
 
-            // Save the notification to the database
             _context.Obavijestis.Add(obavijest);
             await _context.SaveChangesAsync();
 
-            // Create a new notification message
             return await SendFirebaseNotification(title, message, notificationType);
         }
         public async Task<string> SendNotificationSmjestaj(string title, string message, int id, string notificationType)
@@ -125,11 +121,9 @@ namespace StudentOglasi.Services.Services
                 DatumKreiranja=DateTime.Now
             };
 
-            // Save the notification to the database
             _context.Obavijestis.Add(obavijest);
             await _context.SaveChangesAsync();
 
-            // Create a new notification message
             return await SendFirebaseNotification(title, message, notificationType);
         }
 
@@ -143,11 +137,9 @@ namespace StudentOglasi.Services.Services
                 DatumKreiranja = DateTime.Now
             };
 
-            // Save the notification to the database
             _context.Obavijestis.Add(obavijest);
             await _context.SaveChangesAsync();
 
-            // Create a new notification message
             return await SendFirebaseNotification(title, message, notificationType);
         }
 

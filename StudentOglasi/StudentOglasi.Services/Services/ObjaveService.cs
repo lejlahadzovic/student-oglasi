@@ -38,7 +38,7 @@ namespace StudentOglasi.Services.Services
                 }
             }
         }
-
+        
         public override async Task<Model.Objave> Insert(ObjaveInsertRequest insert)
         {
             var entity = await base.Insert(insert);

@@ -3,6 +3,7 @@ using StudentOglasi.Model;
 using StudentOglasi.Model.Requests;
 using StudentOglasi.Model.SearchObjects;
 using StudentOglasi.Services.Interfaces;
+using StudentOglasi.Services.Services;
 
 namespace StudentOglasi.Controllers
 {
@@ -43,6 +44,25 @@ namespace StudentOglasi.Controllers
         public async Task<List<Rezervacije>> GetByStudentId(int studentId)
         {
             return await (_service as IRezervacijeService).GetByStudentIdAsync(studentId);
+        }
+
+        [HttpGet("report/download/{smjestajId}")]
+        public async Task<IActionResult> DownloadReport(int smjestajId, int smjestajnaJedinicaId, DateTime pocetniDatum, DateTime krajnjiDatum)
+        {
+            try
+            {
+                var pdfReport = await (_service as IRezervacijeService).DownloadReportAsync(smjestajId, smjestajnaJedinicaId, pocetniDatum, krajnjiDatum);
+
+                var contentType = "application/pdf";
+                var fileName = $"ReservationReport_{smjestajId}.pdf";
+                Response.Headers.Add("Content-Disposition", $"attachment; filename={fileName}");
+
+                return File(pdfReport, contentType, fileName);
+            }
+            catch (Exception ex)
+            {
+                return NotFound(ex.Message);
+            }
         }
     }
 }

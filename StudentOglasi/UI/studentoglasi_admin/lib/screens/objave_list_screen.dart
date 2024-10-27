@@ -35,7 +35,6 @@ class _ObjaveListScreenState extends State<ObjaveListScreen> {
   late NumberPaginatorController _pageController;
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     _objaveProvider = context.read<ObjaveProvider>();
     _kategorijeProvider = context.read<KategorijaProvider>();
@@ -51,7 +50,6 @@ class _ObjaveListScreenState extends State<ObjaveListScreen> {
     
     int numberPages = calculateNumberPages(_totalItems, 5);
     return MasterScreenWidget(
-      //title_widget: Text("Novosti"),
       title: "Novosti",
       addButtonLabel: "Dodaj objavu",
       onAddButtonPressed: () {
@@ -91,7 +89,7 @@ class _ObjaveListScreenState extends State<ObjaveListScreen> {
     var data = await _objaveProvider.get(filter: {
       'naslov': _naslovController.text,
       'kategorijaID': selectedKategorija?.id,
-      'page': _currentPage + 1, // pages are 1-indexed in the backend
+      'page': _currentPage + 1, 
       'pageSize': 5,
     });
     setState(() {
@@ -259,8 +257,51 @@ class _ObjaveListScreenState extends State<ObjaveListScreen> {
                                       color: Colors.red,
                                     ),
                                     onPressed: () async {
-                                      await _objaveProvider.delete(e.id);
-                                      await _fetchData();
+                                      bool confirmDelete = await showDialog(
+                                        context: context,
+                                        builder: (BuildContext context) {
+                                          return AlertDialog(
+                                            title: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              children: [
+                                                Text("Potvrda brisanja"),
+                                                IconButton(
+                                                  icon: Icon(Icons.close),
+                                                  onPressed: () {
+                                                    Navigator.of(context).pop(
+                                                        false); 
+                                                  },
+                                                ),
+                                              ],
+                                            ),
+                                            content: Text(
+                                                "Da li ste sigurni da želite izbrisati?"),
+                                            actions: [
+                                              TextButton(
+                                                onPressed: () {
+                                                  Navigator.of(context).pop(
+                                                      false); 
+                                                },
+                                                child: Text("Ne"),
+                                              ),
+                                              TextButton(
+                                                onPressed: () {
+                                                  Navigator.of(context).pop(
+                                                      true);  
+                                                },
+                                                child: Text("Da"),
+                                              ),
+                                            ],
+                                          );
+                                        },
+                                      );
+
+                                      if (confirmDelete == true) {
+                                        await _objaveProvider.delete(e.id);
+                                        await _fetchData();
+                                      }
                                     },
                                   ),
                                 ],

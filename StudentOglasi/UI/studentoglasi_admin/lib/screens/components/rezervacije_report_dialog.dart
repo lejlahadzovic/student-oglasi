@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:open_file/open_file.dart';
 import 'package:studentoglasi_admin/models/Rezervacije/rezervacije.dart';
 import 'package:studentoglasi_admin/models/Smjestaj/smjestaj.dart';
 import 'package:studentoglasi_admin/models/SmjestajnaJedinica/smjestajna_jedinica.dart';
@@ -23,7 +24,14 @@ class _RezervacijeReportDialogState extends State<RezervacijeReportDialog> {
   SmjestajnaJedinica? selectedSmjestajnaJedinica;
   DateTime? startDate;
   DateTime? endDate;
+ late RezervacijeProvider _RezervacijaProvider;
 
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _RezervacijaProvider = context.read<RezervacijeProvider>();
+  }
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
@@ -149,10 +157,32 @@ class _RezervacijeReportDialogState extends State<RezervacijeReportDialog> {
       ),
       actions: [
         ElevatedButton(
-          child: Text('Otkaži'),
-          onPressed: () {
-            Navigator.of(context).pop();
+          onPressed: () async {
+            await _RezervacijaProvider.printReport(selectedSmjestaj!.id!,selectedSmjestajnaJedinica?.id,startDate,endDate);
           },
+          child: Text('Isprintaj'),
+        ),
+        ElevatedButton(
+          onPressed: () async {
+            try {
+              final file = await _RezervacijaProvider.downloadReport(
+                  selectedSmjestaj!.id!,selectedSmjestajnaJedinica?.id,startDate,endDate);
+
+              if (file != null) {
+                OpenFile.open(file.path);
+              }
+            } catch (e) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text('Failed to download report')));
+            }
+          },
+          child: Text('Preuzmi izvjestaj'),
+          style: ButtonStyle(
+            backgroundColor: MaterialStateProperty.all<Color>(Color.fromARGB(255, 19, 201, 65)),
+            foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
+            textStyle: MaterialStateProperty.all<TextStyle>(
+                TextStyle(fontWeight: FontWeight.bold)),
+          ),
         ),
         ElevatedButton(
           child: Text('Generiši'),
@@ -164,11 +194,9 @@ class _RezervacijeReportDialogState extends State<RezervacijeReportDialog> {
                 TextStyle(fontWeight: FontWeight.bold)),
           ),
           onPressed: () async {
-            if (selectedSmjestaj != null &&
-                startDate != null &&
-                endDate != null) {
-              var reportData =
-                  await _fetchReportData(context.read<RezervacijeProvider>());
+            if (selectedSmjestaj != null) {
+              var reportData = await _fetchReportData(
+                  context.read<RezervacijeProvider>());
               if (reportData != null) {
                 showDialog(
                   context: context,

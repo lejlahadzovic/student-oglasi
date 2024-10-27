@@ -1,5 +1,9 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:open_file/open_file.dart';
+import 'package:printing/printing.dart';
 import 'package:studentoglasi_admin/models/PrijaveStipendija/prijave_stipendija.dart';
 import 'package:studentoglasi_admin/models/Stipendija/stipendija.dart';
 import 'package:studentoglasi_admin/models/search_result.dart';
@@ -19,6 +23,14 @@ class PrijaveStipendijeReportDialog extends StatefulWidget {
 class _PrijaveStipendijeReportDialogState
     extends State<PrijaveStipendijeReportDialog> {
   Stipendije? selectedStipendija;
+  late PrijaveStipendijaProvider _PrijavaStipendijaProvider;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _PrijavaStipendijaProvider = context.read<PrijaveStipendijaProvider>();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -68,10 +80,32 @@ class _PrijaveStipendijeReportDialogState
       ),
       actions: [
         ElevatedButton(
-          child: Text('Otkaži'),
-          onPressed: () {
-            Navigator.of(context).pop();
+          onPressed: () async {
+            await _PrijavaStipendijaProvider.printReport(selectedStipendija!.id!);
           },
+          child: Text('Isprintaj'),
+        ),
+        ElevatedButton(
+          onPressed: () async {
+            try {
+              final file = await _PrijavaStipendijaProvider.downloadReport(
+                  selectedStipendija!.id!);
+
+              if (file != null) {
+                OpenFile.open(file.path);
+              }
+            } catch (e) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text('Failed to download report')));
+            }
+          },
+          child: Text('Preuzmi izvjestaj'),
+          style: ButtonStyle(
+            backgroundColor: MaterialStateProperty.all<Color>(Color.fromARGB(255, 19, 201, 65)),
+            foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
+            textStyle: MaterialStateProperty.all<TextStyle>(
+                TextStyle(fontWeight: FontWeight.bold)),
+          ),
         ),
         ElevatedButton(
           child: Text('Generiši'),
@@ -184,7 +218,7 @@ class _PrijaveStipendijeReportDialogState
                     fontSize: 16,
                   ),
                 ),
-              )
+              ),
             ],
           ),
           SizedBox(height: 16),
@@ -306,3 +340,4 @@ class _PrijaveStipendijeReportDialogState
     );
   }
 }
+

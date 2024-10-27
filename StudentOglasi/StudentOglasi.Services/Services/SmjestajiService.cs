@@ -73,20 +73,31 @@ namespace StudentOglasi.Services.Services
 
             if (smjestajWithRelations != null)
             {
-                var slike = smjestajWithRelations.Slikes.ToList();
-
-                foreach (var slika in slike)
+                if (smjestajWithRelations != null)
                 {
-                    await _slikeService.Delete(slika.SlikaId);
-                }
+                    var relatedObavijesti = _context.Obavijestis.Where(o => o.SmjestajiId == smjestajWithRelations.Id);
+                    _context.Obavijestis.RemoveRange(relatedObavijesti);
 
+                }
+                var slike = smjestajWithRelations.Slikes.ToList();
+                if (slike != null)
+                {
+                    foreach (var slika in slike)
+                    {
+                        await _context.Slikes.FindAsync(slika.SlikaId);
+                        _context.Slikes.Remove(slika);
+                        await _context.SaveChangesAsync();
+                    }
+                }
                 var smjestajneJedinice = smjestajWithRelations.SmjestajnaJedinicas.ToList();
 
-                // Obriši sve smještajne jedinice i njihove slike
+                if(smjestajneJedinice!= null) { 
                 foreach (var jedinica in smjestajneJedinice)
                 {
                     await _smjestajneJediniceService.Delete(jedinica.Id);
                 }
+                }
+               
             }
         }
         public async Task<List<Model.Smjestaji>> GetRecommendedSmjestaji(int studentId)

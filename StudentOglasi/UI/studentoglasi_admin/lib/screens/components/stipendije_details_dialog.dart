@@ -210,7 +210,7 @@ class _StipendijeDetailsDialogState extends State<StipendijeDetailsDialog> {
                       child: FormBuilderTextField(
                           name: 'uslovi',
                           decoration: InputDecoration(
-                            labelText: 'uslovi',
+                            labelText: 'Uslovi',
                             border: OutlineInputBorder(
                               borderRadius:
                                   BorderRadius.all(Radius.circular(10)),
@@ -228,15 +228,26 @@ class _StipendijeDetailsDialogState extends State<StipendijeDetailsDialog> {
                     child: Container(
                       width: 400,
                       child: FormBuilderTextField(
-                          name: 'iznos',
-                          decoration: InputDecoration(
-                            labelText: 'iznos',
-                            border: OutlineInputBorder(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(10)),
-                            ),
+                        name: 'iznos',
+                        decoration: InputDecoration(
+                          labelText: 'Iznos',
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.all(Radius.circular(10)),
                           ),
-                          validator: validateText),
+                        ),
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Unesite vrijednost u polje.'; // Field cannot be empty
+                          }
+                          final number = double.tryParse(value);
+                          if (number == null) {
+                            return 'Unesite važeći iznos'; // Enter a valid amount
+                          }
+                          return null;
+                        },
+                        keyboardType:
+                            TextInputType.numberWithOptions(decimal: true),
+                      ),
                     ),
                   ),
                   SizedBox(width: 20),
@@ -246,7 +257,7 @@ class _StipendijeDetailsDialogState extends State<StipendijeDetailsDialog> {
                       child: FormBuilderTextField(
                           name: 'kriterij',
                           decoration: InputDecoration(
-                            labelText: 'kriterij',
+                            labelText: 'Kriterij',
                             border: OutlineInputBorder(
                               borderRadius:
                                   BorderRadius.all(Radius.circular(10)),
@@ -309,7 +320,7 @@ class _StipendijeDetailsDialogState extends State<StipendijeDetailsDialog> {
                       child: FormBuilderTextField(
                           name: 'potrebnaDokumentacija',
                           decoration: InputDecoration(
-                            labelText: 'potrebnaDokumentacija',
+                            labelText: 'Potrebna dokumentacija',
                             border: OutlineInputBorder(
                               borderRadius:
                                   BorderRadius.all(Radius.circular(10)),
@@ -325,7 +336,7 @@ class _StipendijeDetailsDialogState extends State<StipendijeDetailsDialog> {
                       child: FormBuilderTextField(
                           name: 'izvor',
                           decoration: InputDecoration(
-                            labelText: 'izvor',
+                            labelText: 'Izvor',
                             border: OutlineInputBorder(
                               borderRadius:
                                   BorderRadius.all(Radius.circular(10)),
@@ -343,15 +354,25 @@ class _StipendijeDetailsDialogState extends State<StipendijeDetailsDialog> {
                     child: Container(
                       width: 400,
                       child: FormBuilderTextField(
-                          name: 'brojStipendisata',
-                          decoration: InputDecoration(
-                            labelText: 'brojStipendisata',
-                            border: OutlineInputBorder(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(10)),
-                            ),
+                        name: 'brojStipendisata',
+                        decoration: InputDecoration(
+                          labelText: 'Broj stipendisata',
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.all(Radius.circular(10)),
                           ),
-                          validator: validateText),
+                        ),
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Unesite vrijednost u polje.';
+                          }
+                          final number = int.tryParse(value);
+                          if (number == null) {
+                            return 'Unesite važeći broj';
+                          }
+                          return null;
+                        },
+                        keyboardType: TextInputType.number,
+                      ),
                     ),
                   ),
                   SizedBox(width: 20),
@@ -361,7 +382,7 @@ class _StipendijeDetailsDialogState extends State<StipendijeDetailsDialog> {
                       child: FormBuilderTextField(
                           name: 'nivoObrazovanja',
                           decoration: InputDecoration(
-                            labelText: 'nivoObrazovanja',
+                            labelText: 'Nivo obrazovanja',
                             border: OutlineInputBorder(
                               borderRadius:
                                   BorderRadius.all(Radius.circular(10)),

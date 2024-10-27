@@ -87,9 +87,8 @@ namespace StudentOglasi.Services.Services
         public async Task<BlobResponseDto> DeleteAsync(string blobFilename)
         {
             BlobClient file = _fileContainer.GetBlobClient(blobFilename);
-
+           
             await file.DeleteAsync();
-
             return new BlobResponseDto { Error = false, Status = $"File: {blobFilename} has been successfully deleted." };
         }
     }

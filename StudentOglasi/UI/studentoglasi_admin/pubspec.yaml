@@ -45,6 +45,10 @@ dependencies:
   form_builder_validators: ^9.1.0
   number_paginator: ^0.4.1
   path_provider: ^2.1.2
+  open_file: ^3.2.1
+  dio: ^5.0.10
+  printing: ^5.10.0
+  pdf: ^3.9.0
 
 dev_dependencies:
   json_serializable: ^6.7.1

@@ -15,5 +15,7 @@ namespace StudentOglasi.Services.Interfaces
         Task<Model.PrijavePraksa> Cancel(int studentId, int praksaId);
         Task<List<string>> AllowedActions(int studentId, int praksaId);
         Task<List<PrijavePraksa>> GetByStudentIdAsync(int studentId);
+        byte[] GeneratePDFReport(List<PrijavePraksa> prijave, Model.Prakse praksa);
+        Task<byte[]> DownloadReportAsync(int praksaId);
     }
 }

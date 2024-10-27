@@ -23,8 +23,6 @@ namespace StudentOglasi.Services.Services
         {
             entity.LozinkaSalt = GenerateSalt();
             entity.LozinkaHash = GenerateHash(entity.LozinkaSalt, insert.Password);
-            //entity.UlogaId = 1;
-            //entity.Uloga = _context.Uloges.Where(x=>x.Id==entity.UlogaId).ToList().First();
 
             entity.Uloga = _context.Uloges.SingleOrDefault(x => x.Naziv == "Student")!;
 

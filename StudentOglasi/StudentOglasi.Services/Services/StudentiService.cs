@@ -141,17 +141,9 @@ namespace StudentOglasi.Services.Services
 
             if (entity != null )
             {
-                if (entity.IdNavigation.Slika != null)
-                {
-                    try
-                    {
-                        await _fileService.DeleteAsync(entity.IdNavigation.Slika);
-                    }
-                    catch (Exception ex)
-                    {
-                        throw new Exception("Greška pri brisanju slike.", ex);
-                    }
-                }
+              
+                var ocjeneToDelete = _context.Ocjenes.Where(o => o.StudentId == id);
+                _context.Ocjenes.RemoveRange(ocjeneToDelete);
                 await _korisniciService.Delete(entity.IdNavigation.Id);
             }
         }

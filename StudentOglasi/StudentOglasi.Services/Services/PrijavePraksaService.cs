@@ -16,6 +16,8 @@ using StudentOglasi.Services.StateMachines.PrijavePrakseStateMachine;
 using System.Drawing.Printing;
 using PrijavePraksa = StudentOglasi.Model.PrijavePraksa;
 using Microsoft.VisualStudio.Services.Identity;
+using iTextSharp.text.pdf;
+using iTextSharp.text;
 
 namespace StudentOglasi.Services.Services
 {
@@ -33,20 +35,20 @@ namespace StudentOglasi.Services.Services
         }
         public async Task<List<PrijavePraksa>> GetByStudentIdAsync(int studentId)
         {
-            var entity =await _context.PrijavePraksas.Where(x => x.StudentId == studentId)
-                .Include(p=>p.Praksa)
+            var entity = await _context.PrijavePraksas.Where(x => x.StudentId == studentId)
+                .Include(p => p.Praksa)
                 .Include(p => p.Praksa.IdNavigation)
                 .Include(p => p.Praksa.Organizacija)
                 .Include(p => p.Praksa.Status)
-                .Include(p=>p.Student)
-                .Include(p=>p.Student.Fakultet)
+                .Include(p => p.Student)
+                .Include(p => p.Student.Fakultet)
                 .Include(p => p.Student.NacinStudiranja)
                 .Include(p => p.Student.Smjer)
                 .Include(p => p.Student.IdNavigation)
                 .Include(p => p.Status).ToListAsync();
 
             return _mapper.Map<List<Model.PrijavePraksa>>(entity);
-           
+
         }
         public override IQueryable<Database.PrijavePraksa> AddFilter(IQueryable<Database.PrijavePraksa> query, PrijavePraksaSearchObject? search = null)
         {
@@ -71,11 +73,11 @@ namespace StudentOglasi.Services.Services
 
             return filteredQuery;
         }
-        public override async Task<PagedResult<Model.PrijavePraksa>> Get(PrijavePraksaSearchObject? search = null)
+        public override IQueryable<Database.PrijavePraksa> AddInclude(IQueryable<Database.PrijavePraksa> query, PrijavePraksaSearchObject? search = null)
         {
-            var query = _context.Set<Database.PrijavePraksa>()
+            query = _context.Set<Database.PrijavePraksa>()
                 .Include(p => p.Praksa)
-                .Include(p=>p.Praksa.IdNavigation)
+                .Include(p => p.Praksa.IdNavigation)
                 .Include(p => p.Student)
                 .Include(p => p.Student.Fakultet)
                 .Include(p => p.Student.Smjer)
@@ -83,22 +85,7 @@ namespace StudentOglasi.Services.Services
                 .Include(p => p.Student.IdNavigation)
                 .Include(p => p.Status).AsQueryable();
 
-            PagedResult<Model.PrijavePraksa> result = new PagedResult<Model.PrijavePraksa>();
-
-            query = AddFilter(query, search);
-
-            result.Count = await query.CountAsync();
-
-            if (search?.Page.HasValue == true && search?.PageSize.HasValue == true)
-            {
-                query = query.Skip((search.Page.Value - 1) * search.PageSize.Value).Take(search.PageSize.Value);
-            }
-
-            var list = await query.ToListAsync();
-
-            var tmp = _mapper.Map<List<Model.PrijavePraksa>>(list);
-            result.Result = tmp;
-            return result;
+            return base.AddInclude(query, search);
         }
         public async Task<Model.PrijavePraksa> Cancel(int studentId, int praksaId)
         {
@@ -131,6 +118,108 @@ namespace StudentOglasi.Services.Services
             return await state.AllowedActions();
         }
 
+        public async Task<byte[]> DownloadReportAsync(int praksaId)
+        {
+            var prijave = await _context.PrijavePraksas
+                .Include(p => p.Student)
+                .Include(p => p.Student.IdNavigation)
+                .Include(p => p.Student.Fakultet)
+                .Include(p => p.Student.Smjer)
+                .Include(p => p.Status)
+                .Include(p => p.Praksa)
+                .Include(p => p.Praksa.IdNavigation)
+                .Where(p => p.PraksaId == praksaId)
+                .ToListAsync();
 
+            var praksa = await _context.Prakses
+                .Include(s => s.IdNavigation)
+                .Include(s => s.Organizacija)
+                .FirstOrDefaultAsync(s => s.Id == praksaId);
+
+            if (prijave == null || !prijave.Any())
+            {
+                throw new Exception("No applications found for the internship.");
+            }
+
+            var prijaveDto = _mapper.Map<List<Model.PrijavePraksa>>(prijave);
+            var praksaDto = _mapper.Map<Model.Prakse>(praksa);
+
+            return GeneratePDFReport(prijaveDto, praksaDto);
+        }
+
+        public byte[] GeneratePDFReport(List<PrijavePraksa> prijave, Model.Prakse praksa)
+        {
+            using (var stream = new MemoryStream())
+            {
+                var document = new iTextSharp.text.Document();
+                var writer = PdfWriter.GetInstance(document, stream);
+                document.Open();
+
+                var title = new Paragraph("Izvještaj", FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 18))
+                {
+                    Alignment = Element.ALIGN_CENTER,
+                    SpacingAfter = 10f
+                };
+                document.Add(title);
+
+                var subtitle = new Paragraph($"Naziv prakse:{praksa.IdNavigation.Naslov}", FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 12))
+                {
+                    Alignment = Element.ALIGN_CENTER,
+                    SpacingAfter = 5f
+                };
+                document.Add(subtitle);
+                var stipenditor = new Paragraph($"Naziv organizacije:{praksa.Organizacija.Naziv}", FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 12))
+                {
+                    Alignment = Element.ALIGN_CENTER,
+                    SpacingAfter = 15f
+                };
+                document.Add(stipenditor);
+
+                var table = new PdfPTable(5)
+                {
+                    WidthPercentage = 100,
+                    SpacingBefore = 10f,
+                    SpacingAfter = 15f
+                };
+
+                table.AddCell("Broj indeksa");
+                table.AddCell("Ime i prezime");
+                table.AddCell("CV");
+                table.AddCell("Certifikati");
+                table.AddCell("Propratno pismo");
+
+                foreach (var prijava in prijave)
+                {
+                    table.AddCell(prijava.Student.BrojIndeksa);
+                    table.AddCell($"{prijava.Student.IdNavigation.Ime} {prijava.Student.IdNavigation.Prezime}");
+                    table.AddCell(prijava.Cv ?? "N/A");
+                    table.AddCell(prijava.Certifikati?.ToString() ?? "N/A");
+                    table.AddCell(prijava.PropratnoPismo?.ToString() ?? "N/A");
+                }
+
+                document.Add(table);
+
+                int ukupnoPrijava = prijave.Count;
+                int prihvacenihPrijava = prijave.Count(p => p.Status.Naziv == "Odobrena");
+                int odbijenihPrijava = prijave.Count(p => p.Status.Naziv == "Otkazana");
+                int naCekanjuPrijava = prijave.Count(p => p.Status.Naziv == "Na cekanju");
+                string datumKreiranja = DateTime.Now.ToString("dd.MM.yyyy");
+
+                var footer = new Paragraph($"Ukupan broj prijava: {ukupnoPrijava}\n"
+                                           + $"Ukupan broj odobrenih prijava: {prihvacenihPrijava}\n"
+                                           + $"Ukupan broj odbijenih prijava: {odbijenihPrijava}\n"
+                                           + $"Ukupan broj prijava na cekanju: {naCekanjuPrijava}\n"
+                                           + $"Datum kreiranja izvještaja: {datumKreiranja}", FontFactory.GetFont(FontFactory.HELVETICA, 10))
+                {
+                    Alignment = Element.ALIGN_LEFT,
+                    SpacingBefore = 20f
+                };
+                document.Add(footer);
+
+                document.Close();
+
+                return stream.ToArray();
+            }
+        }
     }
 }

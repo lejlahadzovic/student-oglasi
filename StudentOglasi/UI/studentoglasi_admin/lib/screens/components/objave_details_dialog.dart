@@ -6,12 +6,10 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
-import 'package:http/http.dart';
 import 'package:provider/provider.dart';
 import 'package:studentoglasi_admin/models/Kategorija/kategorija.dart';
 import 'package:studentoglasi_admin/models/Objava/objava.dart';
 import 'package:studentoglasi_admin/models/search_result.dart';
-import 'package:studentoglasi_admin/providers/kategorije_provider.dart';
 import 'package:studentoglasi_admin/providers/objave_provider.dart';
 import 'package:studentoglasi_admin/utils/util.dart';
 
@@ -207,12 +205,6 @@ class _ObjaveDetailsDialogState extends State<ObjaveDetailsDialog> {
                 ],
               ),
               SizedBox(height: 10),
-              Row(
-                children: [
-                  Expanded(
-                    child: Container(
-                      width: 400,
-                      child:
               FormBuilderTextField(
                 name: 'sadrzaj',
                 maxLines: 5,
@@ -228,10 +220,6 @@ class _ObjaveDetailsDialogState extends State<ObjaveDetailsDialog> {
                   FormBuilderValidators.minLength(10,
                       errorText: 'Sadržaj mora imati najmanje 10 znakova'),
                 ]),
-              ),
-              ),
-                  ),
-                ],
               ),
             ],
           ),

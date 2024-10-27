@@ -294,8 +294,51 @@ class _SmjestajiListScreenState extends State<SmjestajiListScreen> {
                                       color: Colors.red,
                                     ),
                                     onPressed: () async {
-                                      await _smjestajiProvider.delete(e.id);
-                                      await _fetchData();
+                                      bool confirmDelete = await showDialog(
+                                        context: context,
+                                        builder: (BuildContext context) {
+                                          return AlertDialog(
+                                            title: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              children: [
+                                                Text("Potvrda brisanja"),
+                                                IconButton(
+                                                  icon: Icon(Icons.close),
+                                                  onPressed: () {
+                                                    Navigator.of(context).pop(
+                                                        false); 
+                                                  },
+                                                ),
+                                              ],
+                                            ),
+                                            content: Text(
+                                                "Da li ste sigurni da želite izbrisati?"),
+                                            actions: [
+                                              TextButton(
+                                                onPressed: () {
+                                                  Navigator.of(context).pop(
+                                                      false); 
+                                                },
+                                                child: Text("Ne"),
+                                              ),
+                                              TextButton(
+                                                onPressed: () {
+                                                  Navigator.of(context).pop(
+                                                      true);  
+                                                },
+                                                child: Text("Da"),
+                                              ),
+                                            ],
+                                          );
+                                        },
+                                      );
+
+                                      if (confirmDelete == true) {
+                                        await _smjestajiProvider.delete(e.id);
+                                        await _fetchData();
+                                      }
                                     },
                                   ),
                                 ],

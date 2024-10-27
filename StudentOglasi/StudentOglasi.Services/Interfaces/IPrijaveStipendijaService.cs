@@ -1,4 +1,5 @@
-﻿using StudentOglasi.Model;
+﻿using Microsoft.AspNetCore.Mvc;
+using StudentOglasi.Model;
 using StudentOglasi.Model.Requests;
 using StudentOglasi.Model.SearchObjects;
 using System;
@@ -15,5 +16,7 @@ namespace StudentOglasi.Services.Interfaces
         Task<Model.PrijaveStipendija> Cancel(int studentId, int stipendijaId);
         Task<List<string>> AllowedActions(int studentId, int stipendijaId);
         Task<List<PrijaveStipendija>> GetByStudentIdAsync(int studentId);
+        byte[] GeneratePDFReport(List<PrijaveStipendija> prijave, Model.Stipendije stipendija);
+        Task<byte[]> DownloadReportAsync(int stipendijaId);
     }
 }

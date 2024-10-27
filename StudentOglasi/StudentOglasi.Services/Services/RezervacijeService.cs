@@ -12,6 +12,8 @@ using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using Azure.Storage.Blobs.Models;
 using StudentOglasi.Services.StateMachines.RezervacijeStateMachine;
+using iTextSharp.text.pdf;
+using iTextSharp.text;
 
 namespace StudentOglasi.Services.Services
 {
@@ -133,7 +135,7 @@ namespace StudentOglasi.Services.Services
         public async Task<List<Model.Rezervacije>> GetByStudentIdAsync(int studentId)
         {
             var entity = _context.Rezervacijes.Where(x => x.StudentId == studentId)
-                .Include(p=>p.SmjestajnaJedinica)
+                .Include(p => p.SmjestajnaJedinica)
                 .Include(p => p.SmjestajnaJedinica.Smjestaj)
                 .Include(p => p.Student)
                 .Include(p => p.Student.Fakultet)
@@ -145,6 +147,126 @@ namespace StudentOglasi.Services.Services
 
             return _mapper.Map<List<Model.Rezervacije>>(entity);
 
+        }
+        public async Task<byte[]> DownloadReportAsync(int smjestajId, int? smjestajnaJedinicaId, DateTime? pocetniDatum, DateTime? krajnjiDatum)
+        {
+            var search = new RezervacijeSearchObject
+            {
+                SmjestajId = smjestajId,
+                SmjestajnaJedinicaId = smjestajnaJedinicaId,
+                PocetniDatum = pocetniDatum,
+                KrajnjiDatum = krajnjiDatum,
+            };
+            
+            var query = _context.Set<Database.Rezervacije>()
+               .Include(r => r.SmjestajnaJedinica)
+                   .ThenInclude(sj => sj.Smjestaj)
+                       .ThenInclude(s => s.Grad)
+                .Include(r => r.SmjestajnaJedinica)
+                   .ThenInclude(sj => sj.Smjestaj)
+                       .ThenInclude(s => s.TipSmjestaja)
+               .Include(r => r.Student)
+               .Include(r => r.Student.Fakultet)
+               .Include(r => r.Student.Smjer)
+               .Include(r => r.Student.NacinStudiranja)
+               .Include(r => r.Student.IdNavigation)
+               .Include(r => r.Status).AsQueryable();
+
+            var prijave = AddFilter(query, search);
+
+            var smjestaj = await _context.SmjestajnaJedinicas
+                .Include(s => s.Smjestaj)
+                .FirstOrDefaultAsync(s => s.SmjestajId == smjestajId);
+
+            if (prijave == null || !prijave.Any())
+            {
+                throw new Exception("No reservations found for the specified criteria.");
+            }
+
+            if (smjestaj == null)
+            {
+                throw new Exception("Accommodation not found for the specified SmjestajId.");
+            }
+
+            var prijaveDto = _mapper.Map<List<Model.Rezervacije>>(prijave);
+            var smjestajDto = _mapper.Map<Model.SmjestajnaJedinica>(smjestaj);
+
+            return GeneratePDFReport(prijaveDto, smjestajDto);
+        }
+
+        public byte[] GeneratePDFReport(List<Model.Rezervacije> prijave, Model.SmjestajnaJedinica smjestaj)
+        {
+            using (var stream = new MemoryStream())
+            {
+                var document = new iTextSharp.text.Document();
+                var writer = PdfWriter.GetInstance(document, stream);
+                document.Open();
+
+                var title = new Paragraph("Izvještaj", FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 18))
+                {
+                    Alignment = Element.ALIGN_CENTER,
+                    SpacingAfter = 10f
+                };
+                document.Add(title);
+
+                var subtitle = new Paragraph($"Naziv smjestajne jedinice:{smjestaj.Naziv}", FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 12))
+                {
+                    Alignment = Element.ALIGN_CENTER,
+                    SpacingAfter = 5f
+                };
+                document.Add(subtitle);
+                var stipenditor = new Paragraph($"Opis smjestajne jedinice:{smjestaj.Opis}", FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 12))
+                {
+                    Alignment = Element.ALIGN_CENTER,
+                    SpacingAfter = 15f
+                };
+                document.Add(stipenditor);
+
+                var table = new PdfPTable(5)
+                {
+                    WidthPercentage = 100,
+                    SpacingBefore = 10f,
+                    SpacingAfter = 15f
+                };
+
+                table.AddCell("Broj indeksa");
+                table.AddCell("Ime i prezime");
+                table.AddCell("Datum prijave");
+                table.AddCell("Datum odjave");
+                table.AddCell("Broj osoba");
+
+                foreach (var prijava in prijave)
+                {
+                    table.AddCell(prijava.Student.BrojIndeksa);
+                    table.AddCell($"{prijava.Student.IdNavigation.Ime} {prijava.Student.IdNavigation.Prezime}");
+                    table.AddCell(prijava.DatumPrijave.ToString() ?? "N/A");
+                    table.AddCell(prijava.DatumOdjave.ToString() ?? "N/A");
+                    table.AddCell(prijava.BrojOsoba?.ToString() ?? "N/A");
+                }
+
+                document.Add(table);
+
+                int ukupnoPrijava = prijave.Count;
+                int prihvacenihPrijava = prijave.Count(p => p.Status.Naziv == "Odobrena");
+                int odbijenihPrijava = prijave.Count(p => p.Status.Naziv == "Otkazana");
+                int naCekanjuPrijava = prijave.Count(p => p.Status.Naziv == "Na cekanju");
+                string datumKreiranja = DateTime.Now.ToString("dd.MM.yyyy");
+
+                var footer = new Paragraph($"Ukupan broj prijava: {ukupnoPrijava}\n"
+                                           + $"Ukupan broj odobrenih prijava: {prihvacenihPrijava}\n"
+                                           + $"Ukupan broj odbijenih prijava: {odbijenihPrijava}\n"
+                                           + $"Ukupan broj prijava na cekanju: {naCekanjuPrijava}\n"
+                                           + $"Datum kreiranja izvještaja: {datumKreiranja}", FontFactory.GetFont(FontFactory.HELVETICA, 10))
+                {
+                    Alignment = Element.ALIGN_LEFT,
+                    SpacingBefore = 20f
+                };
+                document.Add(footer);
+
+                document.Close();
+
+                return stream.ToArray();
+            }
         }
     }
 }
