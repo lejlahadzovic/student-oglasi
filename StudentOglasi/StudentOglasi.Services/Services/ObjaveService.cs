@@ -47,19 +47,19 @@ namespace StudentOglasi.Services.Services
             await _obavijestiService.SendNotificationObjave("Novosti", title, entity.Id, "success");
             return entity;
         }
-        public override async Task BeforeDelete(Database.Objave entity)
+        public override async Task Delete(int id)
         {
-            if (entity.Slika != null)
-            {
-                try
-                {
-                    await _fileService.DeleteAsync(entity.Slika);
-                }
-                catch (Exception ex)
-                {
-                    throw new Exception("Greška pri brisanju slike.", ex);
-                }
-            }
+            var entity = await _context.Objaves.FindAsync(id);
+
+            if (entity == null)
+                throw new Exception("Objekat nije pronađen");
+
+            var relatedObavijesti = _context.Obavijestis.Where(o => o.ObjaveId == id);
+            _context.Obavijestis.RemoveRange(relatedObavijesti);
+
+            _context.Objaves.Remove(entity);
+
+            await _context.SaveChangesAsync();
         }
         public override async Task BeforeUpdate(Database.Objave entity, ObjaveUpdateRequest update)
         {

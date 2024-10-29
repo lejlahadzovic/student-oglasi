@@ -68,6 +68,7 @@ namespace StudentOglasi.Services.Services
 
             if (entity == null)
                 throw new Exception("Objekat nije pronađen");
+
             var oglasi = entity.IdNavigation;
             if (oglasi != null)
             {
@@ -76,7 +77,6 @@ namespace StudentOglasi.Services.Services
 
                 _context.Oglasis.Remove(oglasi);
             }
-            _context.Oglasis.Remove(entity.IdNavigation);
 
             _context.Stipendijes.Remove(entity);
             await _context.SaveChangesAsync();
