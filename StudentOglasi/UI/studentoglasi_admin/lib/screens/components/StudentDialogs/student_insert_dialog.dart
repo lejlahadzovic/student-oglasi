@@ -65,6 +65,36 @@ class _StudentDetailsDialogState extends State<StudentInsertDialog> {
             type: StepperType.horizontal,
             elevation: 0,
             currentStep: _currentStep,
+            onStepTapped: (int step) async {
+              bool canProceed = false;
+
+              if (_currentStep == 0) {
+                if (_basicInfoFormKey.currentState?.saveAndValidate() ??
+                    false) {
+                  var request = Map<String, dynamic>.from(
+                      _basicInfoFormKey.currentState!.value);
+                  final username = request['idNavigation.korisnickoIme'];
+                  final isTaken =
+                      await _studentProvider.isUsernameTaken(username);
+
+                  if (isTaken) {
+                    _basicInfoFormKey
+                        .currentState!.fields['idNavigation.korisnickoIme']!
+                        .invalidate('Korisničko ime je zauzeto!');
+                  } else {
+                    canProceed = true;
+                  }
+                }
+              } else {
+                canProceed = step < _currentStep;
+              }
+
+              if (canProceed) {
+                setState(() {
+                  _currentStep = step;
+                });
+              }
+            },
             onStepContinue: () async {
               if (_currentStep == 0) {
                 if (_basicInfoFormKey.currentState?.saveAndValidate() ??
@@ -289,7 +319,7 @@ class _StudentDetailsDialogState extends State<StudentInsertDialog> {
                                   name: 'idNavigation.email',
                                   decoration: InputDecoration(
                                     labelText: 'Email',
-                                    hintText: 'korisnik@email.com', 
+                                    hintText: 'korisnik@email.com',
                                     border: OutlineInputBorder(
                                       borderRadius:
                                           BorderRadius.all(Radius.circular(10)),
@@ -334,6 +364,7 @@ class _StudentDetailsDialogState extends State<StudentInsertDialog> {
                                       borderRadius:
                                           BorderRadius.all(Radius.circular(10)),
                                     ),
+                                    errorMaxLines: 3,
                                     suffixIcon: Tooltip(
                                       message:
                                           'Šifra mora sadržavati barem jedno veliko slovo, jedno malo slovo i jednu znamenku.',
@@ -369,13 +400,13 @@ class _StudentDetailsDialogState extends State<StudentInsertDialog> {
                                   ),
                                   obscureText: true,
                                   validator: (val) {
-                                    if (val != null &&
-                                        val !=
-                                            _basicInfoFormKey
-                                                .currentState
-                                                ?.fields[
-                                                    'idNavigation.password']
-                                                ?.value) {
+                                    if (val == null || val.isEmpty) {
+                                      return 'Potvrda šifre je obavezna.';
+                                    } else if (val !=
+                                        _basicInfoFormKey
+                                            .currentState
+                                            ?.fields['idNavigation.password']
+                                            ?.value) {
                                       return 'Šifra se ne podudara.';
                                     }
                                     return null;
@@ -443,10 +474,10 @@ class _StudentDetailsDialogState extends State<StudentInsertDialog> {
                                             'Prosječna ocjena mora biti numerička vrijednost'),
                                     FormBuilderValidators.min(6.0,
                                         errorText:
-                                            'Ocjena mora biti najmanje 6.0'),
+                                            'Prosječna ocjena mora biti najmanje 6.0'),
                                     FormBuilderValidators.max(10.0,
                                         errorText:
-                                            'Ocjena može biti najviše 10.0'),
+                                            'Prosječna ocjena može biti najviše 10.0'),
                                   ]),
                                 ),
                               ),
