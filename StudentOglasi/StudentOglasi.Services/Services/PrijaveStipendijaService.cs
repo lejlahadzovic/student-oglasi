@@ -53,8 +53,7 @@ namespace StudentOglasi.Services.Services
         }
         public override IQueryable<Database.PrijaveStipendija> AddInclude(IQueryable<Database.PrijaveStipendija> query, PrijaveStipendijaSearchObject? search = null)
         {
-            query = _context.Set<Database.PrijaveStipendija>()
-                .Include(p => p.Student)
+            query = query.Include(p => p.Student)
                 .Include(p => p.Student.Fakultet)
                 .Include(p => p.Student.Smjer)
                 .Include(p => p.Student.NacinStudiranja)

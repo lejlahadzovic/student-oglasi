@@ -174,9 +174,9 @@ namespace StudentOglasi.Services.Services
             {
                 filteredQuery = filteredQuery.Where(x => x.GodinaStudija == search.GodinaStudija);
             }
-            if (search?.FakuletID != null)
+            if (search?.FakultetID != null)
             {
-                filteredQuery = filteredQuery.Where(x => x.FakultetId == search.FakuletID);
+                filteredQuery = filteredQuery.Where(x => x.FakultetId == search.FakultetID);
             }
             return filteredQuery;
         }

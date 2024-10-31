@@ -174,9 +174,10 @@ namespace StudentOglasi.Services.Services
 
             var prijave = AddFilter(query, search);
 
-            var smjestaj = await _context.SmjestajnaJedinicas
-                .Include(s => s.Smjestaj)
-                .FirstOrDefaultAsync(s => s.SmjestajId == smjestajId);
+            var smjestaj = await _context.Smjestajis
+                .Include(s => s.Grad)
+                .Include(s => s.TipSmjestaja)
+                .FirstOrDefaultAsync(s => s.Id == smjestajId);
 
             if (prijave == null || !prijave.Any())
             {
@@ -189,12 +190,12 @@ namespace StudentOglasi.Services.Services
             }
 
             var prijaveDto = _mapper.Map<List<Model.Rezervacije>>(prijave);
-            var smjestajDto = _mapper.Map<Model.SmjestajnaJedinica>(smjestaj);
+            var smjestajDto = _mapper.Map<Model.Smjestaji>(smjestaj);
 
-            return GeneratePDFReport(prijaveDto, smjestajDto);
+            return GeneratePDFReport(prijaveDto, smjestajDto, smjestajnaJedinicaId, pocetniDatum, krajnjiDatum);
         }
 
-        public byte[] GeneratePDFReport(List<Model.Rezervacije> prijave, Model.SmjestajnaJedinica smjestaj)
+        public byte[] GeneratePDFReport(List<Model.Rezervacije> prijave, Model.Smjestaji smjestaj, int? smjestajnaJedinicaId, DateTime? pocetniDatum, DateTime? krajnjiDatum)
         {
             using (var stream = new MemoryStream())
             {
@@ -209,20 +210,32 @@ namespace StudentOglasi.Services.Services
                 };
                 document.Add(title);
 
-                var subtitle = new Paragraph($"Naziv smjestajne jedinice:{smjestaj.Naziv}", FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 12))
+                var subtitle = new Paragraph($"Naziv smjestaja: {smjestaj.Naziv}", FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 12))
                 {
                     Alignment = Element.ALIGN_CENTER,
                     SpacingAfter = 5f
                 };
                 document.Add(subtitle);
-                var stipenditor = new Paragraph($"Opis smjestajne jedinice:{smjestaj.Opis}", FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 12))
+                if (smjestajnaJedinicaId.HasValue)
                 {
-                    Alignment = Element.ALIGN_CENTER,
-                    SpacingAfter = 15f
-                };
-                document.Add(stipenditor);
+                    var jedinicaSubtitle = new Paragraph($"Naziv smještajne jedinice: {prijave.FirstOrDefault()?.SmjestajnaJedinica.Naziv}", FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 12))
+                    {
+                        Alignment = Element.ALIGN_CENTER,
+                        SpacingAfter = 5f
+                    };
+                    document.Add(jedinicaSubtitle);
+                }
+                if (pocetniDatum.HasValue && krajnjiDatum.HasValue)
+                {
+                    var period = new Paragraph($"Period: {pocetniDatum.Value.ToString("dd.MM.yyyy")} - {krajnjiDatum.Value.ToString("dd.MM.yyyy")}", FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 10))
+                    {
+                        Alignment = Element.ALIGN_CENTER,
+                        SpacingAfter = 10f
+                    };
+                    document.Add(period);
+                }
 
-                var table = new PdfPTable(5)
+                var table = smjestajnaJedinicaId.HasValue ? new PdfPTable(5) : new PdfPTable(6)
                 {
                     WidthPercentage = 100,
                     SpacingBefore = 10f,
@@ -235,13 +248,23 @@ namespace StudentOglasi.Services.Services
                 table.AddCell("Datum odjave");
                 table.AddCell("Broj osoba");
 
+                if (!smjestajnaJedinicaId.HasValue)
+                {
+                    table.AddCell("Smještajna jedinica"); 
+                }
+
                 foreach (var prijava in prijave)
                 {
                     table.AddCell(prijava.Student.BrojIndeksa);
                     table.AddCell($"{prijava.Student.IdNavigation.Ime} {prijava.Student.IdNavigation.Prezime}");
-                    table.AddCell(prijava.DatumPrijave.ToString() ?? "N/A");
-                    table.AddCell(prijava.DatumOdjave.ToString() ?? "N/A");
+                    table.AddCell(prijava.DatumPrijave.ToString("dd.MM.yyyy") ?? "N/A");
+                    table.AddCell(prijava.DatumOdjave.ToString("dd.MM.yyyy") ?? "N/A");
                     table.AddCell(prijava.BrojOsoba?.ToString() ?? "N/A");
+
+                    if (!smjestajnaJedinicaId.HasValue)
+                    {
+                        table.AddCell(prijava.SmjestajnaJedinica.Naziv ?? "N/A");
+                    }
                 }
 
                 document.Add(table);

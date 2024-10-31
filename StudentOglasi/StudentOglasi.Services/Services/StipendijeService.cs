@@ -41,7 +41,7 @@ namespace StudentOglasi.Services.Services
         }
         public override IQueryable<Database.Stipendije> AddInclude(IQueryable<Database.Stipendije> query, StipendijeSearchObject? search = null)
         {
-            query = _context.Set<Database.Stipendije>().Include(p => p.IdNavigation).Include(p => p.Status).Include(p => p.Stipenditor).AsQueryable();
+            query = query.Include(p => p.IdNavigation).Include(p => p.Status).Include(p => p.Stipenditor).AsQueryable();
 
             return base.AddInclude(query, search);
         }

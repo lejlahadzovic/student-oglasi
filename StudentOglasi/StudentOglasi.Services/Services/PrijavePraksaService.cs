@@ -75,8 +75,7 @@ namespace StudentOglasi.Services.Services
         }
         public override IQueryable<Database.PrijavePraksa> AddInclude(IQueryable<Database.PrijavePraksa> query, PrijavePraksaSearchObject? search = null)
         {
-            query = _context.Set<Database.PrijavePraksa>()
-                .Include(p => p.Praksa)
+            query = query.Include(p => p.Praksa)
                 .Include(p => p.Praksa.IdNavigation)
                 .Include(p => p.Student)
                 .Include(p => p.Student.Fakultet)
