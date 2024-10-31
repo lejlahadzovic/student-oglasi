@@ -10,7 +10,7 @@ namespace StudentOglasi.Model.SearchObjects
     {
         public string? BrojIndeksa { get; set; }
         public string? ImePrezime { get; set; }
-        public int? FakuletID { get; set; }
+        public int? FakultetID { get; set; }
         public int? GodinaStudija { get; set; }
     }
 }
