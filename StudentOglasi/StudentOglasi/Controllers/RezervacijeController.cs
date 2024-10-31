@@ -47,7 +47,7 @@ namespace StudentOglasi.Controllers
         }
 
         [HttpGet("report/download/{smjestajId}")]
-        public async Task<IActionResult> DownloadReport(int smjestajId, int smjestajnaJedinicaId, DateTime pocetniDatum, DateTime krajnjiDatum)
+        public async Task<IActionResult> DownloadReport(int smjestajId, int? smjestajnaJedinicaId, DateTime? pocetniDatum, DateTime? krajnjiDatum)
         {
             try
             {

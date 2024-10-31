@@ -24,7 +24,9 @@ class _RezervacijeReportDialogState extends State<RezervacijeReportDialog> {
   SmjestajnaJedinica? selectedSmjestajnaJedinica;
   DateTime? startDate;
   DateTime? endDate;
- late RezervacijeProvider _RezervacijaProvider;
+  late RezervacijeProvider _RezervacijaProvider;
+
+  final _formKey = GlobalKey<FormState>();
 
   @override
   void initState() {
@@ -32,6 +34,7 @@ class _RezervacijeReportDialogState extends State<RezervacijeReportDialog> {
     super.initState();
     _RezervacijaProvider = context.read<RezervacijeProvider>();
   }
+
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
@@ -39,164 +42,180 @@ class _RezervacijeReportDialogState extends State<RezervacijeReportDialog> {
       content: Container(
         width: 600,
         child: SingleChildScrollView(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Row(
-                children: [
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text('Naziv smještaja'),
-                        SizedBox(height: 8),
-                        DropdownButtonFormField<Smjestaj>(
-                          decoration: InputDecoration(
-                            labelText: 'Smještaj',
-                            border: OutlineInputBorder(),
+          child: Form(
+            key: _formKey,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Row(
+                  children: [
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            children: [
+                              Text('Naziv smještaja'),
+                              Text(
+                                ' *',
+                                style: TextStyle(color: Colors.red),
+                              ),
+                            ],
                           ),
-                          value: selectedSmjestaj,
-                          onChanged: (Smjestaj? newValue) {
-                            setState(() {
-                              selectedSmjestaj = newValue;
-                              selectedSmjestajnaJedinica = null;
-                            });
-                          },
-                          items: widget.smjestaji.map((Smjestaj smjestaj) {
-                            return DropdownMenuItem<Smjestaj>(
-                              value: smjestaj,
-                              child: Text(smjestaj.naziv ?? ''),
-                            );
-                          }).toList(),
-                        ),
-                      ],
-                    ),
-                  ),
-                  SizedBox(width: 16),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text('Smještajna jedinica'),
-                        SizedBox(height: 8),
-                        DropdownButtonFormField<SmjestajnaJedinica>(
-                          decoration: InputDecoration(
-                            labelText: 'Smještajna jedinica (opcionalno)',
-                            border: OutlineInputBorder(),
+                          SizedBox(height: 8),
+                          DropdownButtonFormField<Smjestaj>(
+                            decoration: InputDecoration(
+                              labelText: 'Smještaj',
+                              border: OutlineInputBorder(),
+                            ),
+                            value: selectedSmjestaj,
+                            onChanged: (Smjestaj? newValue) {
+                              setState(() {
+                                selectedSmjestaj = newValue;
+                                selectedSmjestajnaJedinica = null;
+                              });
+                            },
+                            items: widget.smjestaji.map((Smjestaj smjestaj) {
+                              return DropdownMenuItem<Smjestaj>(
+                                value: smjestaj,
+                                child: Text(smjestaj.naziv ?? ''),
+                              );
+                            }).toList(),
+                            validator: (value) {
+                              if (value == null) {
+                                return 'Molimo odaberite smještaj.';
+                              }
+                              return null;
+                            },
                           ),
-                          value: selectedSmjestajnaJedinica,
-                          onChanged: (SmjestajnaJedinica? newValue) {
-                            setState(() {
-                              selectedSmjestajnaJedinica = newValue;
-                            });
-                          },
-                          items: selectedSmjestaj?.smjestajnaJedinicas
-                              ?.map((SmjestajnaJedinica jedinica) {
-                            return DropdownMenuItem<SmjestajnaJedinica>(
-                              value: jedinica,
-                              child: Text(jedinica.naziv ?? ''),
-                            );
-                          }).toList(),
+                        ],
+                      ),
+                    ),
+                    SizedBox(width: 16),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text('Smještajna jedinica (opcionalno)'),
+                          SizedBox(height: 8),
+                          DropdownButtonFormField<SmjestajnaJedinica>(
+                            decoration: InputDecoration(
+                              labelText: 'Smještajna jedinica',
+                              border: OutlineInputBorder(),
+                            ),
+                            value: selectedSmjestajnaJedinica,
+                            onChanged: (SmjestajnaJedinica? newValue) {
+                              setState(() {
+                                selectedSmjestajnaJedinica = newValue;
+                              });
+                            },
+                            items: selectedSmjestaj?.smjestajnaJedinicas
+                                ?.map((SmjestajnaJedinica jedinica) {
+                              return DropdownMenuItem<SmjestajnaJedinica>(
+                                value: jedinica,
+                                child: Text(jedinica.naziv ?? ''),
+                              );
+                            }).toList(),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(height: 16),
+                Divider(),
+                Text('Period od - do (opcionalno)'),
+                SizedBox(height: 8),
+                Row(
+                  children: [
+                    Expanded(
+                      child: FormBuilderDateTimePicker(
+                        name: 'startDate',
+                        inputType: InputType.date,
+                        format: DateFormat('dd.MM.yyyy'),
+                        decoration: InputDecoration(
+                          labelText: 'Početni datum',
+                          border: OutlineInputBorder(),
                         ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-              SizedBox(height: 16),
-              Divider(),
-              Text('Period od - do'),
-              SizedBox(height: 8),
-              Row(
-                children: [
-                  Expanded(
-                    child: FormBuilderDateTimePicker(
-                      name: 'startDate',
-                      inputType: InputType.date,
-                      format: DateFormat('dd.MM.yyyy'),
-                      decoration: InputDecoration(
-                        labelText: 'Početni datum',
-                        border: OutlineInputBorder(),
+                        initialDate: DateTime.now(),
+                        firstDate: DateTime(2000),
+                        lastDate: DateTime(2101),
+                        onChanged: (val) {
+                          setState(() {
+                            startDate = val;
+                          });
+                        },
                       ),
-                      initialDate: DateTime.now(),
-                      firstDate: DateTime(2000),
-                      lastDate: DateTime(2101),
-                      onChanged: (val) {
-                        setState(() {
-                          startDate = val;
-                        });
-                      },
                     ),
-                  ),
-                  SizedBox(width: 16),
-                  Expanded(
-                    child: FormBuilderDateTimePicker(
-                      name: 'endDate',
-                      inputType: InputType.date,
-                      format: DateFormat('dd.MM.yyyy'),
-                      decoration: InputDecoration(
-                        labelText: 'Krajnji datum',
-                        border: OutlineInputBorder(),
+                    SizedBox(width: 16),
+                    Expanded(
+                      child: FormBuilderDateTimePicker(
+                        name: 'endDate',
+                        inputType: InputType.date,
+                        format: DateFormat('dd.MM.yyyy'),
+                        decoration: InputDecoration(
+                          labelText: 'Krajnji datum',
+                          border: OutlineInputBorder(),
+                        ),
+                        initialDate: DateTime.now(),
+                        firstDate: startDate ?? DateTime(2000),
+                        lastDate: DateTime(2101),
+                        onChanged: (val) {
+                          setState(() {
+                            endDate = val;
+                          });
+                        },
+                        enabled: startDate != null,
                       ),
-                      initialDate: DateTime.now(),
-                      firstDate: startDate ?? DateTime(2000),
-                      lastDate: DateTime(2101),
-                      onChanged: (val) {
-                        setState(() {
-                          endDate = val;
-                        });
-                      },
-                      enabled: startDate != null,
                     ),
-                  ),
-                ],
-              ),
-            ],
+                  ],
+                ),
+              ],
+            ),
           ),
         ),
       ),
       actions: [
         ElevatedButton(
           onPressed: () async {
-            await _RezervacijaProvider.printReport(selectedSmjestaj!.id!,selectedSmjestajnaJedinica?.id,startDate,endDate);
+            await _RezervacijaProvider.printReport(selectedSmjestaj!.id!,
+                selectedSmjestajnaJedinica?.id, startDate, endDate);
           },
           child: Text('Isprintaj'),
         ),
         ElevatedButton(
           onPressed: () async {
-            try {
-              final file = await _RezervacijaProvider.downloadReport(
-                  selectedSmjestaj!.id!,selectedSmjestajnaJedinica?.id,startDate,endDate);
+            if (_formKey.currentState!.validate()) {
+              try {
+                final file = await _RezervacijaProvider.downloadReport(
+                    selectedSmjestaj!.id!,
+                    selectedSmjestajnaJedinica?.id,
+                    startDate,
+                    endDate);
 
-              if (file != null) {
-                OpenFile.open(file.path);
+                if (file != null) {
+                  OpenFile.open(file.path);
+                }
+              } catch (e) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text('Failed to download report')));
               }
-            } catch (e) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text('Failed to download report')));
             }
           },
           child: Text('Preuzmi izvjestaj'),
           style: ButtonStyle(
-            backgroundColor: MaterialStateProperty.all<Color>(Color.fromARGB(255, 19, 201, 65)),
+            backgroundColor: MaterialStateProperty.all<Color>(
+                Color.fromARGB(255, 19, 201, 65)),
             foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
             textStyle: MaterialStateProperty.all<TextStyle>(
                 TextStyle(fontWeight: FontWeight.bold)),
           ),
         ),
         ElevatedButton(
-          child: Text('Generiši'),
-          style: ButtonStyle(
-            backgroundColor:
-                MaterialStateProperty.all<Color>(Colors.blue.shade800),
-            foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
-            textStyle: MaterialStateProperty.all<TextStyle>(
-                TextStyle(fontWeight: FontWeight.bold)),
-          ),
           onPressed: () async {
-            if (selectedSmjestaj != null) {
-              var reportData = await _fetchReportData(
-                  context.read<RezervacijeProvider>());
+            if (_formKey.currentState!.validate()) {
+              var reportData =
+                  await _fetchReportData(context.read<RezervacijeProvider>());
               if (reportData != null) {
                 showDialog(
                   context: context,
@@ -225,27 +244,9 @@ class _RezervacijeReportDialogState extends State<RezervacijeReportDialog> {
                   },
                 );
               }
-            } else {
-              showDialog(
-                context: context,
-                builder: (BuildContext context) {
-                  return AlertDialog(
-                    title: Text('Greška'),
-                    content: Text(
-                        'Molimo popunite sva neophodna polja za generisanje izvještaja.'),
-                    actions: [
-                      TextButton(
-                        child: Text('U redu'),
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                        },
-                      ),
-                    ],
-                  );
-                },
-              );
             }
           },
+          child: Text('Generiši'),
         ),
       ],
     );
@@ -256,8 +257,11 @@ class _RezervacijeReportDialogState extends State<RezervacijeReportDialog> {
     var reportData = await rezervacijeProvider.get(filter: {
       'smjestajId': selectedSmjestaj!.id,
       'smjestajnaJedinicaId': selectedSmjestajnaJedinica?.id,
-      'pocetniDatum': DateFormat('yyyy-MM-dd').format(startDate!),
-      'krajnjiDatum': DateFormat('yyyy-MM-dd').format(endDate!),
+      'pocetniDatum': startDate != null
+          ? DateFormat('yyyy-MM-dd').format(startDate!)
+          : null,
+      'krajnjiDatum':
+          endDate != null ? DateFormat('yyyy-MM-dd').format(endDate!) : null,
     });
     return reportData;
   }
@@ -292,7 +296,7 @@ class _RezervacijeReportDialogState extends State<RezervacijeReportDialog> {
               ),
             ),
           Text(
-            'Period: ${DateFormat('dd.MM.yyyy').format(startDate!)} - ${DateFormat('dd.MM.yyyy').format(endDate!)}',
+            'Period: ${startDate != null ? DateFormat('dd.MM.yyyy').format(startDate!) : 'Nije odabrano'} - ${endDate != null ? DateFormat('dd.MM.yyyy').format(endDate!) : 'Nije odabrano'}',
             style: TextStyle(
               fontWeight: FontWeight.bold,
               fontSize: 16,
