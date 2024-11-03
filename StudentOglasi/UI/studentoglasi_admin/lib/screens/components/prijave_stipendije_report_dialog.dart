@@ -25,6 +25,8 @@ class _PrijaveStipendijeReportDialogState
   Stipendije? selectedStipendija;
   late PrijaveStipendijaProvider _PrijavaStipendijaProvider;
 
+  final _formKey = GlobalKey<FormState>();
+
   @override
   void initState() {
     // TODO: implement initState
@@ -39,69 +41,85 @@ class _PrijaveStipendijeReportDialogState
       content: Container(
         width: 600,
         child: SingleChildScrollView(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Row(
-                children: [
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text('Naziv stipendije'),
-                        SizedBox(height: 8),
-                        DropdownButtonFormField<Stipendije>(
-                          decoration: InputDecoration(
-                            labelText: 'Stipendija',
-                            border: OutlineInputBorder(),
+          child: Form(
+            key: _formKey,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Row(
+                  children: [
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text('Naziv stipendije'),
+                          SizedBox(height: 8),
+                          DropdownButtonFormField<Stipendije>(
+                            decoration: InputDecoration(
+                              labelText: 'Stipendija',
+                              border: OutlineInputBorder(),
+                            ),
+                            value: selectedStipendija,
+                            onChanged: (Stipendije? newValue) {
+                              setState(() {
+                                selectedStipendija = newValue;
+                              });
+                            },
+                            items:
+                                widget.stipendije.map((Stipendije stipendija) {
+                              return DropdownMenuItem<Stipendije>(
+                                value: stipendija,
+                                child:
+                                    Text(stipendija.idNavigation?.naslov ?? ''),
+                              );
+                            }).toList(),
+                            validator: (value) {
+                              if (value == null) {
+                                return 'Molimo odaberite stipendiju.';
+                              }
+                              return null;
+                            },
                           ),
-                          value: selectedStipendija,
-                          onChanged: (Stipendije? newValue) {
-                            setState(() {
-                              selectedStipendija = newValue;
-                            });
-                          },
-                          items: widget.stipendije.map((Stipendije stipendija) {
-                            return DropdownMenuItem<Stipendije>(
-                              value: stipendija,
-                              child:
-                                  Text(stipendija.idNavigation?.naslov ?? ''),
-                            );
-                          }).toList(),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
-                  ),
-                ],
-              ),
-            ],
+                  ],
+                ),
+              ],
+            ),
           ),
         ),
       ),
       actions: [
         ElevatedButton(
           onPressed: () async {
-            await _PrijavaStipendijaProvider.printReport(selectedStipendija!.id!);
+            if (_formKey.currentState!.validate()) {
+            await _PrijavaStipendijaProvider.printReport(
+                selectedStipendija!.id!, context);
+            }
           },
           child: Text('Isprintaj'),
         ),
         ElevatedButton(
           onPressed: () async {
-            try {
-              final file = await _PrijavaStipendijaProvider.downloadReport(
-                  selectedStipendija!.id!);
+            if (_formKey.currentState!.validate()) {
+              try {
+                final file = await _PrijavaStipendijaProvider.downloadReport(
+                    selectedStipendija!.id!, context);
 
-              if (file != null) {
-                OpenFile.open(file.path);
+                if (file != null) {
+                  OpenFile.open(file.path);
+                }
+              } catch (e) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text('Failed to download report')));
               }
-            } catch (e) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text('Failed to download report')));
             }
           },
           child: Text('Preuzmi izvjestaj'),
           style: ButtonStyle(
-            backgroundColor: MaterialStateProperty.all<Color>(Color.fromARGB(255, 19, 201, 65)),
+            backgroundColor: MaterialStateProperty.all<Color>(
+                Color.fromARGB(255, 19, 201, 65)),
             foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
             textStyle: MaterialStateProperty.all<TextStyle>(
                 TextStyle(fontWeight: FontWeight.bold)),
@@ -117,7 +135,7 @@ class _PrijaveStipendijeReportDialogState
                 TextStyle(fontWeight: FontWeight.bold)),
           ),
           onPressed: () async {
-            if (selectedStipendija != null) {
+            if (_formKey.currentState!.validate())  {
               var reportData = await _fetchReportData(
                   context.read<PrijaveStipendijaProvider>());
               if (reportData != null) {
@@ -148,25 +166,6 @@ class _PrijaveStipendijeReportDialogState
                   },
                 );
               }
-            } else {
-              showDialog(
-                context: context,
-                builder: (BuildContext context) {
-                  return AlertDialog(
-                    title: Text('Greška'),
-                    content: Text(
-                        'Molimo popunite sva neophodna polja za generisanje izvještaja.'),
-                    actions: [
-                      TextButton(
-                        child: Text('U redu'),
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                        },
-                      ),
-                    ],
-                  );
-                },
-              );
             }
           },
         ),
@@ -222,82 +221,97 @@ class _PrijaveStipendijeReportDialogState
             ],
           ),
           SizedBox(height: 16),
-          Expanded(
-            child: SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child: ConstrainedBox(
-                constraints: BoxConstraints(
-                  minWidth: 794,
+          if (reportData.count == 0)
+            Expanded(
+              child: Center(
+                child: Text(
+                  'Nema prijava za odabranu stipendiju.',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 18,
+                    color: Colors.grey,
+                  ),
+                  textAlign: TextAlign.center,
                 ),
-                child: SingleChildScrollView(
-                  scrollDirection: Axis.vertical,
-                  child: DataTable(
-                    columns: [
-                      const DataColumn(
-                        label: Expanded(
-                          child: Text(
-                            'Broj indeksa',
-                            style: TextStyle(fontStyle: FontStyle.italic),
-                            textAlign: TextAlign.center,
+              ),
+            )
+          else
+            Expanded(
+              child: SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: ConstrainedBox(
+                  constraints: BoxConstraints(
+                    minWidth: 794,
+                  ),
+                  child: SingleChildScrollView(
+                    scrollDirection: Axis.vertical,
+                    child: DataTable(
+                      columns: [
+                        const DataColumn(
+                          label: Expanded(
+                            child: Text(
+                              'Broj indeksa',
+                              style: TextStyle(fontStyle: FontStyle.italic),
+                              textAlign: TextAlign.center,
+                            ),
                           ),
                         ),
-                      ),
-                      const DataColumn(
-                        label: Expanded(
-                          child: Text(
-                            'Ime i prezime',
-                            style: TextStyle(fontStyle: FontStyle.italic),
-                            textAlign: TextAlign.center,
+                        const DataColumn(
+                          label: Expanded(
+                            child: Text(
+                              'Ime i prezime',
+                              style: TextStyle(fontStyle: FontStyle.italic),
+                              textAlign: TextAlign.center,
+                            ),
                           ),
                         ),
-                      ),
-                      const DataColumn(
-                        label: Expanded(
-                          child: Text(
-                            'CV',
-                            style: TextStyle(fontStyle: FontStyle.italic),
-                            textAlign: TextAlign.center,
+                        const DataColumn(
+                          label: Expanded(
+                            child: Text(
+                              'CV',
+                              style: TextStyle(fontStyle: FontStyle.italic),
+                              textAlign: TextAlign.center,
+                            ),
                           ),
                         ),
-                      ),
-                      const DataColumn(
-                        label: Expanded(
-                          child: Text(
-                            'Certifikati',
-                            style: TextStyle(fontStyle: FontStyle.italic),
-                            textAlign: TextAlign.center,
+                        const DataColumn(
+                          label: Expanded(
+                            child: Text(
+                              'Certifikati',
+                              style: TextStyle(fontStyle: FontStyle.italic),
+                              textAlign: TextAlign.center,
+                            ),
                           ),
                         ),
-                      ),
-                      const DataColumn(
-                        label: Expanded(
-                          child: Text(
-                            'Propratno pismo',
-                            style: TextStyle(fontStyle: FontStyle.italic),
-                            textAlign: TextAlign.center,
+                        const DataColumn(
+                          label: Expanded(
+                            child: Text(
+                              'Propratno pismo',
+                              style: TextStyle(fontStyle: FontStyle.italic),
+                              textAlign: TextAlign.center,
+                            ),
                           ),
                         ),
-                      ),
-                    ],
-                    rows: reportData.result
-                        .map((PrijaveStipendija e) => DataRow(cells: [
-                              DataCell(Center(
-                                  child: Text(e.student?.brojIndeksa ?? ""))),
-                              DataCell(Center(
-                                  child: Text(
-                                      '${e.student?.idNavigation?.ime} ${e.student?.idNavigation?.prezime}'))),
-                              DataCell(Center(child: Text(e.cv ?? ""))),
-                              DataCell(Center(
-                                  child: Text(e.prosjekOcjena.toString()))),
-                              DataCell(
-                                  Center(child: Text(e.dokumentacija ?? ""))),
-                            ]))
-                        .toList(),
+                      ],
+                      rows: reportData.result
+                          .map((PrijaveStipendija e) => DataRow(cells: [
+                                DataCell(Center(
+                                    child: Text(e.student?.brojIndeksa ?? ""))),
+                                DataCell(Center(
+                                    child: Text(
+                                        '${e.student?.idNavigation?.ime} ${e.student?.idNavigation?.prezime}'))),
+                                DataCell(Center(child: Text(e.cv ?? ""))),
+                                DataCell(Center(
+                                    child: Text(e.prosjekOcjena.toString()))),
+                                DataCell(
+                                    Center(child: Text(e.dokumentacija ?? ""))),
+                              ]))
+                          .toList(),
+                    ),
                   ),
                 ),
               ),
             ),
-          ),
           SizedBox(height: 16),
           Align(
             alignment: Alignment.bottomLeft,
@@ -340,4 +354,3 @@ class _PrijaveStipendijeReportDialogState
     );
   }
 }
-
