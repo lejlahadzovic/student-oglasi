@@ -20,7 +20,9 @@ class PrijavePrakseReportDialog extends StatefulWidget {
 
 class _PrijavePrakseReportDialogState extends State<PrijavePrakseReportDialog> {
   Praksa? selectedPraksa;
- late PrijavePraksaProvider _prijavaPraksaProvider;
+  late PrijavePraksaProvider _prijavaPraksaProvider;
+
+  final _formKey = GlobalKey<FormState>();
 
   @override
   void initState() {
@@ -28,6 +30,7 @@ class _PrijavePrakseReportDialogState extends State<PrijavePrakseReportDialog> {
     super.initState();
     _prijavaPraksaProvider = context.read<PrijavePraksaProvider>();
   }
+
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
@@ -35,56 +38,68 @@ class _PrijavePrakseReportDialogState extends State<PrijavePrakseReportDialog> {
       content: Container(
         width: 600,
         child: SingleChildScrollView(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Row(
-                children: [
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text('Naziv prakse'),
-                        SizedBox(height: 8),
-                        DropdownButtonFormField<Praksa>(
-                          decoration: InputDecoration(
-                            labelText: 'Praksa',
-                            border: OutlineInputBorder(),
+          child: Form(
+            key: _formKey,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Row(
+                  children: [
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text('Naziv prakse'),
+                          SizedBox(height: 8),
+                          DropdownButtonFormField<Praksa>(
+                            decoration: InputDecoration(
+                              labelText: 'Praksa',
+                              border: OutlineInputBorder(),
+                            ),
+                            value: selectedPraksa,
+                            onChanged: (Praksa? newValue) {
+                              setState(() {
+                                selectedPraksa = newValue;
+                              });
+                            },
+                            items: widget.prakse.map((Praksa praksa) {
+                              return DropdownMenuItem<Praksa>(
+                                value: praksa,
+                                child: Text(praksa.idNavigation?.naslov ?? ''),
+                              );
+                            }).toList(),
+                            validator: (value) {
+                              if (value == null) {
+                                return 'Molimo odaberite praksu.';
+                              }
+                              return null;
+                            },
                           ),
-                          value: selectedPraksa,
-                          onChanged: (Praksa? newValue) {
-                            setState(() {
-                              selectedPraksa = newValue;
-                            });
-                          },
-                          items: widget.prakse.map((Praksa praksa) {
-                            return DropdownMenuItem<Praksa>(
-                              value: praksa,
-                              child: Text(praksa.idNavigation?.naslov ?? ''),
-                            );
-                          }).toList(),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
-                  ),
-                ],
-              ),
-            ],
+                  ],
+                ),
+              ],
+            ),
           ),
         ),
       ),
       actions: [
         ElevatedButton(
           onPressed: () async {
-            await _prijavaPraksaProvider.printReport(selectedPraksa!.id!);
+            if (_formKey.currentState!.validate()) {
+            await _prijavaPraksaProvider.printReport(selectedPraksa!.id!, context);
+            }
           },
           child: Text('Isprintaj'),
         ),
         ElevatedButton(
           onPressed: () async {
+            if (_formKey.currentState!.validate()) {
             try {
-              final file = await _prijavaPraksaProvider.downloadReport(
-                  selectedPraksa!.id!);
+              final file = await _prijavaPraksaProvider
+                  .downloadReport(selectedPraksa!.id!, context);
 
               if (file != null) {
                 OpenFile.open(file.path);
@@ -93,10 +108,12 @@ class _PrijavePrakseReportDialogState extends State<PrijavePrakseReportDialog> {
               ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(content: Text('Failed to download report')));
             }
+            }
           },
           child: Text('Preuzmi izvjestaj'),
           style: ButtonStyle(
-            backgroundColor: MaterialStateProperty.all<Color>(Color.fromARGB(255, 19, 201, 65)),
+            backgroundColor: MaterialStateProperty.all<Color>(
+                Color.fromARGB(255, 19, 201, 65)),
             foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
             textStyle: MaterialStateProperty.all<TextStyle>(
                 TextStyle(fontWeight: FontWeight.bold)),
@@ -112,9 +129,9 @@ class _PrijavePrakseReportDialogState extends State<PrijavePrakseReportDialog> {
                 TextStyle(fontWeight: FontWeight.bold)),
           ),
           onPressed: () async {
-            if (selectedPraksa != null) {
-              var reportData = await _fetchReportData(
-                  context.read<PrijavePraksaProvider>());
+            if (_formKey.currentState!.validate()) {
+              var reportData =
+                  await _fetchReportData(context.read<PrijavePraksaProvider>());
               if (reportData != null) {
                 showDialog(
                   context: context,
@@ -143,26 +160,7 @@ class _PrijavePrakseReportDialogState extends State<PrijavePrakseReportDialog> {
                   },
                 );
               }
-            } else {
-              showDialog(
-                context: context,
-                builder: (BuildContext context) {
-                  return AlertDialog(
-                    title: Text('Greška'),
-                    content: Text(
-                        'Molimo popunite sva neophodna polja za generisanje izvještaja.'),
-                    actions: [
-                      TextButton(
-                        child: Text('U redu'),
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                        },
-                      ),
-                    ],
-                  );
-                },
-              );
-            }
+            } 
           },
         ),
       ],
@@ -240,82 +238,97 @@ class _PrijavePrakseReportDialogState extends State<PrijavePrakseReportDialog> {
             ],
           ),
           SizedBox(height: 16),
-          Expanded(
-            child: SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child: ConstrainedBox(
-                constraints: BoxConstraints(
-                  minWidth: 794,
+          if (reportData.count == 0)
+            Expanded(
+              child: Center(
+                child: Text(
+                  'Nema prijava za odabranu praksu.',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 18,
+                    color: Colors.grey,
+                  ),
+                  textAlign: TextAlign.center,
                 ),
-                child: SingleChildScrollView(
-                  scrollDirection: Axis.vertical,
-                  child: DataTable(
-                    columns: [
-                      const DataColumn(
-                        label: Expanded(
-                          child: Text(
-                            'Broj indeksa',
-                            style: TextStyle(fontStyle: FontStyle.italic),
-                            textAlign: TextAlign.center,
+              ),
+            )
+          else
+            Expanded(
+              child: SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: ConstrainedBox(
+                  constraints: BoxConstraints(
+                    minWidth: 794,
+                  ),
+                  child: SingleChildScrollView(
+                    scrollDirection: Axis.vertical,
+                    child: DataTable(
+                      columns: [
+                        const DataColumn(
+                          label: Expanded(
+                            child: Text(
+                              'Broj indeksa',
+                              style: TextStyle(fontStyle: FontStyle.italic),
+                              textAlign: TextAlign.center,
+                            ),
                           ),
                         ),
-                      ),
-                      const DataColumn(
-                        label: Expanded(
-                          child: Text(
-                            'Ime i prezime',
-                            style: TextStyle(fontStyle: FontStyle.italic),
-                            textAlign: TextAlign.center,
+                        const DataColumn(
+                          label: Expanded(
+                            child: Text(
+                              'Ime i prezime',
+                              style: TextStyle(fontStyle: FontStyle.italic),
+                              textAlign: TextAlign.center,
+                            ),
                           ),
                         ),
-                      ),
-                      const DataColumn(
-                        label: Expanded(
-                          child: Text(
-                            'CV',
-                            style: TextStyle(fontStyle: FontStyle.italic),
-                            textAlign: TextAlign.center,
+                        const DataColumn(
+                          label: Expanded(
+                            child: Text(
+                              'CV',
+                              style: TextStyle(fontStyle: FontStyle.italic),
+                              textAlign: TextAlign.center,
+                            ),
                           ),
                         ),
-                      ),
-                      const DataColumn(
-                        label: Expanded(
-                          child: Text(
-                            'Certifikati',
-                            style: TextStyle(fontStyle: FontStyle.italic),
-                            textAlign: TextAlign.center,
+                        const DataColumn(
+                          label: Expanded(
+                            child: Text(
+                              'Certifikati',
+                              style: TextStyle(fontStyle: FontStyle.italic),
+                              textAlign: TextAlign.center,
+                            ),
                           ),
                         ),
-                      ),
-                      const DataColumn(
-                        label: Expanded(
-                          child: Text(
-                            'Propratno pismo',
-                            style: TextStyle(fontStyle: FontStyle.italic),
-                            textAlign: TextAlign.center,
+                        const DataColumn(
+                          label: Expanded(
+                            child: Text(
+                              'Propratno pismo',
+                              style: TextStyle(fontStyle: FontStyle.italic),
+                              textAlign: TextAlign.center,
+                            ),
                           ),
                         ),
-                      ),
-                    ],
-                    rows: reportData.result
-                        .map((PrijavePraksa e) => DataRow(cells: [
-                              DataCell(Center(
-                                  child: Text(e.student?.brojIndeksa ?? ""))),
-                              DataCell(Center(
-                                  child: Text(
-                                      '${e.student?.idNavigation?.ime} ${e.student?.idNavigation?.prezime}'))),
-                              DataCell(Center(child: Text(e.cv ?? ""))),
-                              DataCell(
-                                  Center(child: Text(e.certifikati ?? ""))),
-                              DataCell(
-                                  Center(child: Text(e.propratnoPismo ?? ""))),
-                            ]))
-                        .toList(),
+                      ],
+                      rows: reportData.result
+                          .map((PrijavePraksa e) => DataRow(cells: [
+                                DataCell(Center(
+                                    child: Text(e.student?.brojIndeksa ?? ""))),
+                                DataCell(Center(
+                                    child: Text(
+                                        '${e.student?.idNavigation?.ime} ${e.student?.idNavigation?.prezime}'))),
+                                DataCell(Center(child: Text(e.cv ?? ""))),
+                                DataCell(
+                                    Center(child: Text(e.certifikati ?? ""))),
+                                DataCell(Center(
+                                    child: Text(e.propratnoPismo ?? ""))),
+                              ]))
+                          .toList(),
+                    ),
                   ),
                 ),
               ),
             ),
-          ),
           SizedBox(height: 16),
           Align(
             alignment: Alignment.bottomLeft,

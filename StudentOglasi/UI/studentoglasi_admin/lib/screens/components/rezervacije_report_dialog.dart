@@ -178,8 +178,10 @@ class _RezervacijeReportDialogState extends State<RezervacijeReportDialog> {
       actions: [
         ElevatedButton(
           onPressed: () async {
-            await _RezervacijaProvider.printReport(selectedSmjestaj!.id!,
-                selectedSmjestajnaJedinica?.id, startDate, endDate);
+            if (_formKey.currentState!.validate()) {
+              await _RezervacijaProvider.printReport(selectedSmjestaj!.id!,
+                  selectedSmjestajnaJedinica?.id, startDate, endDate, context);
+            }
           },
           child: Text('Isprintaj'),
         ),
@@ -191,7 +193,8 @@ class _RezervacijeReportDialogState extends State<RezervacijeReportDialog> {
                     selectedSmjestaj!.id!,
                     selectedSmjestajnaJedinica?.id,
                     startDate,
-                    endDate);
+                    endDate,
+                    context);
 
                 if (file != null) {
                   OpenFile.open(file.path);
@@ -303,91 +306,106 @@ class _RezervacijeReportDialogState extends State<RezervacijeReportDialog> {
             ),
           ),
           SizedBox(height: 16),
-          Expanded(
-            child: SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child: ConstrainedBox(
-                constraints: BoxConstraints(
-                  minWidth: 794,
+          if (reportData.count == 0)
+            Expanded(
+              child: Center(
+                child: Text(
+                  'Nema rezervacija za odabrane filtere.',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 18,
+                    color: Colors.grey,
+                  ),
+                  textAlign: TextAlign.center,
                 ),
-                child: SingleChildScrollView(
-                  scrollDirection: Axis.vertical,
-                  child: DataTable(
-                    columns: [
-                      const DataColumn(
-                        label: Expanded(
-                          child: Text(
-                            'Broj indeksa',
-                            style: TextStyle(fontStyle: FontStyle.italic),
-                            textAlign: TextAlign.center,
+              ),
+            )
+          else
+            Expanded(
+              child: SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: ConstrainedBox(
+                  constraints: BoxConstraints(
+                    minWidth: 794,
+                  ),
+                  child: SingleChildScrollView(
+                    scrollDirection: Axis.vertical,
+                    child: DataTable(
+                      columns: [
+                        const DataColumn(
+                          label: Expanded(
+                            child: Text(
+                              'Broj indeksa',
+                              style: TextStyle(fontStyle: FontStyle.italic),
+                              textAlign: TextAlign.center,
+                            ),
                           ),
                         ),
-                      ),
-                      const DataColumn(
-                        label: Expanded(
-                          child: Text(
-                            'Ime i prezime',
-                            style: TextStyle(fontStyle: FontStyle.italic),
-                            textAlign: TextAlign.center,
+                        const DataColumn(
+                          label: Expanded(
+                            child: Text(
+                              'Ime i prezime',
+                              style: TextStyle(fontStyle: FontStyle.italic),
+                              textAlign: TextAlign.center,
+                            ),
                           ),
                         ),
-                      ),
-                      const DataColumn(
-                        label: Expanded(
-                          child: Text(
-                            'Datum prijave',
-                            style: TextStyle(fontStyle: FontStyle.italic),
-                            textAlign: TextAlign.center,
+                        const DataColumn(
+                          label: Expanded(
+                            child: Text(
+                              'Datum prijave',
+                              style: TextStyle(fontStyle: FontStyle.italic),
+                              textAlign: TextAlign.center,
+                            ),
                           ),
                         ),
-                      ),
-                      const DataColumn(
-                        label: Expanded(
-                          child: Text(
-                            'Datum odjave',
-                            style: TextStyle(fontStyle: FontStyle.italic),
-                            textAlign: TextAlign.center,
+                        const DataColumn(
+                          label: Expanded(
+                            child: Text(
+                              'Datum odjave',
+                              style: TextStyle(fontStyle: FontStyle.italic),
+                              textAlign: TextAlign.center,
+                            ),
                           ),
                         ),
-                      ),
-                      const DataColumn(
-                        label: Expanded(
-                          child: Text(
-                            'Cijena',
-                            style: TextStyle(fontStyle: FontStyle.italic),
-                            textAlign: TextAlign.center,
+                        const DataColumn(
+                          label: Expanded(
+                            child: Text(
+                              'Cijena',
+                              style: TextStyle(fontStyle: FontStyle.italic),
+                              textAlign: TextAlign.center,
+                            ),
                           ),
                         ),
-                      ),
-                    ],
-                    rows: reportData.result
-                        .map((Rezervacije e) => DataRow(cells: [
-                              DataCell(Center(
-                                  child: Text(e.student?.brojIndeksa ?? ""))),
-                              DataCell(Center(
-                                  child: Text(
-                                      '${e.student?.idNavigation?.ime} ${e.student?.idNavigation?.prezime}'))),
-                              DataCell(Center(
-                                  child: Text(e.datumPrijave != null
-                                      ? DateFormat('dd.MM.yyyy')
-                                          .format(e.datumPrijave!)
-                                      : ''))),
-                              DataCell(Center(
-                                  child: Text(e.datumOdjave != null
-                                      ? DateFormat('dd.MM.yyyy')
-                                          .format(e.datumOdjave!)
-                                      : ''))),
-                              DataCell(Center(
-                                  child: Text(e.cijena != null
-                                      ? '${e.cijena!.toStringAsFixed(2)} KM'
-                                      : ''))),
-                            ]))
-                        .toList(),
+                      ],
+                      rows: reportData.result
+                          .map((Rezervacije e) => DataRow(cells: [
+                                DataCell(Center(
+                                    child: Text(e.student?.brojIndeksa ?? ""))),
+                                DataCell(Center(
+                                    child: Text(
+                                        '${e.student?.idNavigation?.ime} ${e.student?.idNavigation?.prezime}'))),
+                                DataCell(Center(
+                                    child: Text(e.datumPrijave != null
+                                        ? DateFormat('dd.MM.yyyy')
+                                            .format(e.datumPrijave!)
+                                        : ''))),
+                                DataCell(Center(
+                                    child: Text(e.datumOdjave != null
+                                        ? DateFormat('dd.MM.yyyy')
+                                            .format(e.datumOdjave!)
+                                        : ''))),
+                                DataCell(Center(
+                                    child: Text(e.cijena != null
+                                        ? '${e.cijena!.toStringAsFixed(2)} KM'
+                                        : ''))),
+                              ]))
+                          .toList(),
+                    ),
                   ),
                 ),
               ),
             ),
-          ),
           SizedBox(height: 16),
           Align(
             alignment: Alignment.bottomLeft,
