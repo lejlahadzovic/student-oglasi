@@ -16,6 +16,7 @@ import 'package:studentoglasi_admin/providers/slike_provider.dart';
 import 'package:studentoglasi_admin/providers/smjestaji_provider.dart';
 import 'package:studentoglasi_admin/providers/smjestajna_jedinica_provider.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
+import 'package:studentoglasi_admin/screens/smjestajna_jedinica_details_dialog.dart';
 import 'package:studentoglasi_admin/utils/util.dart';
 
 class SmjestajDetailsDialog extends StatefulWidget {
@@ -43,6 +44,7 @@ class _SmjestajDetailsDialogState extends State<SmjestajDetailsDialog> {
   late SmjestajiProvider _smjestajiProvider;
   late SlikeProvider _slikeProvider;
   List<PlatformFile>? _imageFiles;
+  List<String> _newImages = [];
 
   @override
   void initState() {
@@ -94,6 +96,26 @@ class _SmjestajDetailsDialogState extends State<SmjestajDetailsDialog> {
     _initialValue['smjestajnaJedinica'] = smjestajneJedinice;
   }
 
+  void _showSmjestajnaJedinicaDialog([SmjestajnaJedinica? jedinica]) async {
+    SmjestajnaJedinica? result = await showDialog<SmjestajnaJedinica>(
+      context: context,
+      builder: (BuildContext context) {
+        return SmjestajnaJedinicaDetailsDialog(jedinica: jedinica);
+      },
+    );
+
+    if (result != null) {
+      setState(() {
+        if (jedinica == null) {
+          _smjestaj.smjestajnaJedinicas!.add(result);
+        } else {
+          int index = _smjestaj.smjestajnaJedinicas!.indexOf(jedinica);
+          _smjestaj.smjestajnaJedinicas![index] = result;
+        }
+      });
+    }
+  }
+
   void _addSmjestajnaJedinica() {
     setState(() {
       _smjestaj.smjestajnaJedinicas!.add(SmjestajnaJedinica(
@@ -102,6 +124,7 @@ class _SmjestajDetailsDialogState extends State<SmjestajDetailsDialog> {
     if (widget.smjestaj != null) {
       _updateSmjestajneJediniceInInitialValue();
     }
+    _showSmjestajnaJedinicaDialog();
   }
 
   @override
@@ -405,302 +428,78 @@ class _SmjestajDetailsDialogState extends State<SmjestajDetailsDialog> {
                       });
                     },
                   ),
-                  for (int i = 0;
-                      i < _smjestaj.smjestajnaJedinicas!.length;
-                      i++)
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        SizedBox(height: 20),
-                        Divider(),
-                        SizedBox(height: 20),
-                        InkWell(
-                          onTap: () async {
-                            FilePickerResult? result =
-                                await FilePicker.platform.pickFiles(
-                              allowMultiple: true,
-                              type: FileType.image,
-                            );
-
-                            if (result != null) {
-                              setState(() {
-                                // _imageFiles ??= [];
-                                // _imageFiles!.addAll(result.files);
-                                _smjestaj.smjestajnaJedinicas![i].slike ??= [];
-                                _smjestaj.smjestajnaJedinicas![i].slike!.addAll(
-                                    result.files.map((file) => file.path!));
-                              });
-                            }
-                          },
-                          child: Container(
-                            width: 800,
-                            height: 400,
-                            padding: EdgeInsets.all(8.0),
-                            decoration: BoxDecoration(
-                              border: Border.all(color: Colors.grey),
-                              borderRadius: BorderRadius.circular(8.0),
-                            ),
-                            child: _buildImageGallery(
-                                _smjestaj.smjestajnaJedinicas![i].slikes ?? [],
-                                _smjestaj.smjestajnaJedinicas![i].slike ?? []),
-                          ),
-                        ),
-                        SizedBox(height: 20),
-                        Row(
-                          children: [
-                            Expanded(
-                              child: FormBuilderTextField(
-                                name: 'smjestajnaJedinica_$i.naziv',
-                                decoration: InputDecoration(
-                                  labelText: 'Naziv',
-                                  border: OutlineInputBorder(
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(10)),
-                                  ),
-                                ),
-                                initialValue:
-                                    _initialValue['smjestajnaJedinica']?[i]
-                                        ['naziv'],
-                                validator: FormBuilderValidators.compose([
-                                  FormBuilderValidators.required(
-                                    errorText: 'Naziv smještaja je obavezan.',
-                                  ),
-                                  FormBuilderValidators.minLength(
-                                    3,
-                                    errorText:
-                                        'Naziv smještaja mora imati najmanje 3 znaka.',
-                                  ),
-                                ]),
-                                onChanged: (value) {
-                                  setState(() {
-                                    _smjestaj.smjestajnaJedinicas![i].naziv =
-                                        value;
-                                  });
-                                },
-                              ),
-                            ),
-                          ],
-                        ),
-                        SizedBox(height: 20),
-                        Row(
-                          children: [
-                            Expanded(
-                              flex: 1,
-                              child: FormBuilderTextField(
-                                name: 'smjestajnaJedinica_$i.kapacitet',
-                                decoration: InputDecoration(
-                                  labelText: 'Kapacitet',
-                                  border: OutlineInputBorder(
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(10)),
-                                  ),
-                                ),
-                                initialValue:
-                                    _initialValue['smjestajnaJedinica']?[i]
-                                        ['kapacitet'],
-                                keyboardType: TextInputType.number,
-                                validator: (value) {
-                                  if (value == null || value.isEmpty) {
-                                    return 'Kapacitet je obavezan.';
-                                  }
-                                  final int? kapacitet = int.tryParse(value);
-                                  if (kapacitet == null || kapacitet <= 0) {
-                                    return 'Kapacitet mora biti pozitivan broj.';
-                                  }
-                                  return null;
-                                },
-                                onChanged: (value) {
-                                  setState(() {
-                                    _smjestaj.smjestajnaJedinicas![i].kapacitet;
-                                  });
-                                },
-                              ),
-                            ),
-                            SizedBox(width: 20),
-                            Expanded(
-                              flex: 1,
-                              child: FormBuilderTextField(
-                                name: 'smjestajnaJedinica_$i.cijena',
-                                decoration: InputDecoration(
-                                  labelText: 'Cijena',
-                                  border: OutlineInputBorder(
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(10)),
-                                  ),
-                                ),
-                                initialValue:
-                                    _initialValue['smjestajnaJedinica']?[i]
-                                        ['cijena'],
-                                keyboardType: TextInputType.number,
-                                validator: (value) {
-                                  if (value == null || value.isEmpty) {
-                                    return 'Cijena je obavezna.';
-                                  }
-                                  final double? cijena = double.tryParse(value);
-                                  if (cijena == null || cijena <= 0) {
-                                    return 'Cijena mora biti pozitivan broj.';
-                                  }
-                                  return null;
-                                },
-                                onChanged: (value) {
-                                  setState(() {
-                                    _smjestaj.smjestajnaJedinicas![i].cijena;
-                                  });
-                                },
-                              ),
-                            ),
-                          ],
-                        ),
-                        SizedBox(height: 20),
-                        FormBuilderTextField(
-                          name: 'smjestajnaJedinica_$i.opis',
-                          decoration: InputDecoration(
-                            labelText: 'Opis smještaja',
-                            border: OutlineInputBorder(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(10)),
-                            ),
-                          ),
-                          initialValue: _initialValue['smjestajnaJedinica']?[i]
-                              ['opis'],
-                          maxLines: 3,
-                          validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return 'Opis smještaja je obavezan.';
-                            }
-                            if (value.length < 10) {
-                              return 'Opis smještaja mora imati najmanje 10 znakova.';
-                            }
-                            return null;
-                          },
-                          onChanged: (value) {
-                            setState(() {
-                              _smjestaj.smjestajnaJedinicas![i].opis = value;
-                            });
-                          },
-                        ),
-                        SizedBox(height: 20),
-                        Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
-                              children: [
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text('Kuhinja'),
-                                    SizedBox(
-                                      height: 20,
-                                    ),
-                                    Text('Terasa'),
-                                  ],
-                                ),
-                                SizedBox(
-                                  width: 50,
-                                ),
-                                Column(
-                                  children: [
-                                    Switch(
-                                      value: _smjestaj.smjestajnaJedinicas![i]
-                                              .kuhinja ??
-                                          false,
-                                      onChanged: (value) {
-                                        setState(() {
-                                          _smjestaj.smjestajnaJedinicas![i]
-                                              .kuhinja = value;
-                                        });
-                                      },
-                                    ),
-                                    Switch(
-                                      value: _smjestaj
-                                              .smjestajnaJedinicas![i].terasa ??
-                                          false,
-                                      onChanged: (value) {
-                                        setState(() {
-                                          _smjestaj.smjestajnaJedinicas![i]
-                                              .terasa = value;
-                                        });
-                                      },
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ),
-                            SizedBox(
-                              height: 20,
-                              width: 100,
-                            ),
-                            Row(
-                              children: [
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text('TV'),
-                                    SizedBox(
-                                      height: 20,
-                                    ),
-                                    Text('Klima uređaj'),
-                                  ],
-                                ),
-                                SizedBox(
-                                  width: 50,
-                                ),
-                                Column(
-                                  children: [
-                                    Switch(
-                                      value: _smjestaj
-                                              .smjestajnaJedinicas![i].tv ??
-                                          false,
-                                      onChanged: (value) {
-                                        setState(() {
-                                          _smjestaj.smjestajnaJedinicas![i].tv =
-                                              value;
-                                        });
-                                      },
-                                    ),
-                                    Switch(
-                                      value: _smjestaj.smjestajnaJedinicas![i]
-                                              .klimaUredjaj ??
-                                          false,
-                                      onChanged: (value) {
-                                        setState(() {
-                                          _smjestaj.smjestajnaJedinicas![i]
-                                              .klimaUredjaj = value;
-                                        });
-                                      },
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                        SizedBox(height: 20),
-                        FormBuilderTextField(
-                          name: 'smjestajnaJedinica_$i.dodatneUsluge',
-                          decoration: InputDecoration(
-                            labelText: 'Dodatne usluge',
-                            border: OutlineInputBorder(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(10)),
-                            ),
-                          ),
-                          initialValue: _initialValue['smjestajnaJedinica']?[i]
-                              ['dodatneUsluge'],
-                          maxLines: 3,
-                          onChanged: (value) {
-                            setState(() {
-                              _smjestaj.smjestajnaJedinicas![i].dodatneUsluge =
-                                  value;
-                            });
-                          },
-                        ),
-                      ],
+                  SizedBox(height: 20),
+                  Text(
+                    'Smještajne jedinice',
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.w600,
                     ),
+                  ),
+                  Divider(),
                   SizedBox(height: 10),
-                  ElevatedButton(
-                    onPressed: _addSmjestajnaJedinica,
-                    child: Text('Dodaj smještajnu jedinicu'),
+                  for (var jedinica in _smjestaj.smjestajnaJedinicas!)
+                    ListTile(
+                      title: Text(jedinica.naziv ?? ''),
+                      subtitle: Text('Cijena: ${jedinica.cijena} KM'),
+                      trailing: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          IconButton(
+                            icon: Icon(
+                              Icons.edit,
+                              color: Colors.blue,
+                            ),
+                            onPressed: () =>
+                                _showSmjestajnaJedinicaDialog(jedinica),
+                          ),
+                          IconButton(
+                            icon: Icon(Icons.delete, color: Colors.red),
+                            onPressed: () async {
+                              bool? confirmDelete = await showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return AlertDialog(
+                                    title: Text('Potvrda brisanja'),
+                                    content: Text(
+                                        'Da li ste sigurni da želite obrisati?'),
+                                    actions: [
+                                      TextButton(
+                                        onPressed: () =>
+                                            Navigator.pop(context, false),
+                                        child: Text('Ne'),
+                                      ),
+                                      TextButton(
+                                        onPressed: () =>
+                                            Navigator.pop(context, true),
+                                        child: Text('Da'),
+                                      ),
+                                    ],
+                                  );
+                                },
+                              );
+
+                              if (confirmDelete == true) {
+                                await _deleteSmjestajnaJedinica(
+                                    context, jedinica);
+                              }
+                            },
+                          ),
+                        ],
+                      ),
+                    ),
+                  ElevatedButton.icon(
+                    icon: Icon(Icons.add),
+                    onPressed: () => _showSmjestajnaJedinicaDialog(),
+                    label: Text('Dodaj smještajnu jedinicu'),
+                    style: ButtonStyle(
+                      backgroundColor: MaterialStateProperty.all<Color>(
+                          Colors.blue.shade800),
+                      foregroundColor:
+                          MaterialStateProperty.all<Color>(Colors.white),
+                      textStyle: MaterialStateProperty.all<TextStyle>(
+                          TextStyle(fontWeight: FontWeight.bold)),
+                    ),
                   ),
                 ],
               ),
@@ -772,15 +571,15 @@ class _SmjestajDetailsDialogState extends State<SmjestajDetailsDialog> {
 
         for (int i = 0; i < _smjestaj.smjestajnaJedinicas!.length; i++) {
           Map<String, dynamic> jedinicaData = {
-            'naziv': formData['smjestajnaJedinica_$i.naziv'],
-            'cijena': double.parse(formData['smjestajnaJedinica_$i.cijena']),
-            'kapacitet': int.parse(formData['smjestajnaJedinica_$i.kapacitet']),
-            'opis': formData['smjestajnaJedinica_$i.opis'],
-            'kuhinja': _smjestaj.smjestajnaJedinicas![i].kuhinja,
-            'terasa': _smjestaj.smjestajnaJedinicas![i].terasa,
-            'tv': _smjestaj.smjestajnaJedinicas![i].tv,
-            'klimaUredjaj': _smjestaj.smjestajnaJedinicas![i].klimaUredjaj,
-            'dodatneUsluge': formData['smjestajnaJedinica_$i.dodatneUsluge'],
+            'naziv': _smjestaj.smjestajnaJedinicas?[i].naziv,
+            'cijena': _smjestaj.smjestajnaJedinicas?[i].cijena,
+            'kapacitet': _smjestaj.smjestajnaJedinicas?[i].kapacitet,
+            'opis': _smjestaj.smjestajnaJedinicas?[i].opis,
+            'kuhinja': _smjestaj.smjestajnaJedinicas?[i].kuhinja,
+            'terasa': _smjestaj.smjestajnaJedinicas?[i].terasa,
+            'tv': _smjestaj.smjestajnaJedinicas?[i].tv,
+            'klimaUredjaj': _smjestaj.smjestajnaJedinicas?[i].klimaUredjaj,
+            'dodatneUsluge': _smjestaj.smjestajnaJedinicas?[i].dodatneUsluge,
             'smjestajId': savedSmjestaj.id
           };
 
@@ -809,6 +608,24 @@ class _SmjestajDetailsDialogState extends State<SmjestajDetailsDialog> {
       } catch (e) {
         print('Greška prilikom spremanja podataka: $e');
       }
+    }
+  }
+
+  Future<void> _deleteSmjestajnaJedinica(
+      BuildContext context, SmjestajnaJedinica jedinica) async {
+    SmjestajnaJedinicaProvider smjestajnaJedinicaProvider =
+        context.read<SmjestajnaJedinicaProvider>();
+
+    bool isDeleted = await smjestajnaJedinicaProvider.delete(jedinica.id);
+
+    if (isDeleted) {
+      setState(() {
+        _smjestaj.smjestajnaJedinicas!.remove(jedinica);
+      });
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Brisanje smještajne jedinice nije uspjelo')),
+      );
     }
   }
 
