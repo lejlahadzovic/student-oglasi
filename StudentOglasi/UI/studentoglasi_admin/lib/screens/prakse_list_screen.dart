@@ -107,20 +107,22 @@ class _PrakseListScreenState extends State<PrakseListScreen> {
       },
       child: Container(
         child: Column(
-          children: [_buildSearch(), _buildDataListView(),
-          if(_currentPage>=0 && numberPages-1>=_currentPage)
-           CustomPaginator(
-                      numberPages: numberPages,
-                      initialPage: _currentPage,
-                      onPageChange: (int index) {
-                        setState(() {
-                          _currentPage = index;
-                          _fetchData();
-                        });
-                      },
-                      pageController: _pageController,
-                      fetchData: _fetchData,
-                    ),
+          children: [
+            _buildSearch(),
+            _buildDataListView(),
+            if (_currentPage >= 0 && numberPages - 1 >= _currentPage)
+              CustomPaginator(
+                numberPages: numberPages,
+                initialPage: _currentPage,
+                onPageChange: (int index) {
+                  setState(() {
+                    _currentPage = index;
+                    _fetchData();
+                  });
+                },
+                pageController: _pageController,
+                fetchData: _fetchData,
+              ),
           ],
         ),
       ),
@@ -135,7 +137,7 @@ class _PrakseListScreenState extends State<PrakseListScreen> {
       'naslov': _naslovController.text,
       'organizacija': selectedOrganizacije?.id,
       'status': selectedStatusOglasi?.id,
-      'page': _currentPage + 1, // pages are 1-indexed in the backend
+      'page': _currentPage + 1, 
       'pageSize': 5,
     });
     setState(() {
@@ -161,82 +163,101 @@ class _PrakseListScreenState extends State<PrakseListScreen> {
 
   Widget _buildSearch() {
     return Padding(
-        padding: const EdgeInsets.fromLTRB(100, 10, 100, 0),
-        child: Row(
-          children: [
-            Expanded(
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: TextField(
-                  decoration: InputDecoration(labelText: "Naziv"),
-                  controller: _naslovController,
-                ),
+      padding: const EdgeInsets.fromLTRB(100, 10, 100, 0),
+      child: Row(
+        children: [
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: TextField(
+                decoration: InputDecoration(labelText: "Naziv"),
+                controller: _naslovController,
               ),
             ),
-            SizedBox(width: 30.0),
-            Expanded(
-              flex: 1,
-              child: Padding(
-                padding: const EdgeInsets.only(top: 25.0),
-                child: DropdownButton2<StatusOglasi>(
-                  isExpanded: true,
-                  hint: Text(
-                    'Status oglasa',
-                  ),
-                  value: selectedStatusOglasi,
-                  onChanged: (StatusOglasi? newValue) {
-                    setState(() {
-                      selectedStatusOglasi = newValue;
-                    });
-                  },
-                  items: statusResult?.result.map((StatusOglasi status) {
-                        return DropdownMenuItem<StatusOglasi>(
-                          value: status,
-                          child: Text(status.naziv ?? ''),
-                        );
-                      }).toList() ??
-                      [],
-                ),
-              ),
-            ),
-            SizedBox(width: 20.0),
-            Expanded(
-              flex: 1,
-              child: Padding(
-                padding: const EdgeInsets.only(top: 25.0),
-                child: DropdownButton2<Organizacije>(
-                  isExpanded: true,
-                  hint: Text(
-                    'Organizacija',
-                  ),
-                  value: selectedOrganizacije,
-                  onChanged: (Organizacije? newValue) {
-                    setState(() {
-                      selectedOrganizacije = newValue;
-                    });
-                  },
-                  items: organizacijeResult?.result
-                          .map((Organizacije organizacija) {
-                        return DropdownMenuItem<Organizacije>(
-                          value: organizacija,
-                          child: Text(organizacija.naziv ?? ''),
-                        );
-                      }).toList() ??
-                      [],
-                ),
-              ),
-            ),
-            SizedBox(width: 30.0),
-            ElevatedButton(
-                onPressed: () async {
-                  await _fetchData();
+          ),
+          SizedBox(width: 30.0),
+          Expanded(
+            flex: 1,
+            child: Padding(
+              padding: const EdgeInsets.only(top: 25.0),
+              child: DropdownButton2<StatusOglasi>(
+                isExpanded: true,
+                hint: Text('Status oglasa'),
+                value: selectedStatusOglasi,
+                onChanged: (StatusOglasi? newValue) {
+                  setState(() {
+                    selectedStatusOglasi = newValue;
+                  });
                 },
-                child: Text("Filtriraj")),
-            SizedBox(
-              height: 8,
+                items: statusResult?.result.map((StatusOglasi status) {
+                      return DropdownMenuItem<StatusOglasi>(
+                        value: status,
+                        child: Text(status.naziv ?? ''),
+                      );
+                    }).toList() ??
+                    [],
+              ),
             ),
-          ],
-        ));
+          ),
+          SizedBox(width: 20.0),
+          Expanded(
+            flex: 1,
+            child: Padding(
+              padding: const EdgeInsets.only(top: 25.0), // Align dropdown
+              child: DropdownButton2<Organizacije>(
+                isExpanded: true,
+                hint: Text('Organizacija'),
+                value: selectedOrganizacije,
+                onChanged: (Organizacije? newValue) {
+                  setState(() {
+                    selectedOrganizacije = newValue;
+                  });
+                },
+                items:
+                    organizacijeResult?.result.map((Organizacije organizacija) {
+                          return DropdownMenuItem<Organizacije>(
+                            value: organizacija,
+                            child: Text(organizacija.naziv ?? ''),
+                          );
+                        }).toList() ??
+                        [],
+              ),
+            ),
+          ),
+          SizedBox(width: 20.0),
+          Padding(
+            padding: const EdgeInsets.only(top: 25.0),
+            child: Row(
+              children: [
+                ElevatedButton(
+                  onPressed: () async {
+                    await _fetchData();
+                  },
+                  child: Text("Filtriraj"),
+                ),
+                SizedBox(width: 10.0),
+                ElevatedButton(
+                  onPressed: () {
+                    _naslovController.clear();
+                    setState(() {
+                      selectedStatusOglasi = null;
+                      selectedOrganizacije = null;
+                    });
+                    _fetchData();
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor:
+                        Color.fromARGB(255, 240, 92, 92),
+                    foregroundColor: Colors.white, 
+                  ),
+                  child: Text("Očisti filtere"),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
   }
 
   Widget _buildDataListView() {
@@ -354,59 +375,65 @@ class _PrakseListScreenState extends State<PrakseListScreen> {
                                               });
                                             },
                                           ),
-                                         IconButton(
-                                    icon: Icon(
-                                      Icons.delete,
-                                      color: Colors.red,
-                                    ),
-                                    onPressed: () async {
-                                      bool confirmDelete = await showDialog(
-                                        context: context,
-                                        builder: (BuildContext context) {
-                                          return AlertDialog(
-                                            title: Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment
-                                                      .spaceBetween,
-                                              children: [
-                                                Text("Potvrda brisanja"),
-                                                IconButton(
-                                                  icon: Icon(Icons.close),
-                                                  onPressed: () {
-                                                    Navigator.of(context).pop(
-                                                        false); 
-                                                  },
-                                                ),
-                                              ],
+                                          IconButton(
+                                            icon: Icon(
+                                              Icons.delete,
+                                              color: Colors.red,
                                             ),
-                                            content: Text(
-                                                "Da li ste sigurni da želite izbrisati?"),
-                                            actions: [
-                                              TextButton(
-                                                onPressed: () {
-                                                  Navigator.of(context).pop(
-                                                      false); 
+                                            onPressed: () async {
+                                              bool confirmDelete =
+                                                  await showDialog(
+                                                context: context,
+                                                builder:
+                                                    (BuildContext context) {
+                                                  return AlertDialog(
+                                                    title: Row(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .spaceBetween,
+                                                      children: [
+                                                        Text(
+                                                            "Potvrda brisanja"),
+                                                        IconButton(
+                                                          icon:
+                                                              Icon(Icons.close),
+                                                          onPressed: () {
+                                                            Navigator.of(
+                                                                    context)
+                                                                .pop(false);
+                                                          },
+                                                        ),
+                                                      ],
+                                                    ),
+                                                    content: Text(
+                                                        "Da li ste sigurni da želite izbrisati?"),
+                                                    actions: [
+                                                      TextButton(
+                                                        onPressed: () {
+                                                          Navigator.of(context)
+                                                              .pop(false);
+                                                        },
+                                                        child: Text("Ne"),
+                                                      ),
+                                                      TextButton(
+                                                        onPressed: () {
+                                                          Navigator.of(context)
+                                                              .pop(true);
+                                                        },
+                                                        child: Text("Da"),
+                                                      ),
+                                                    ],
+                                                  );
                                                 },
-                                                child: Text("Ne"),
-                                              ),
-                                              TextButton(
-                                                onPressed: () {
-                                                  Navigator.of(context).pop(
-                                                      true);  
-                                                },
-                                                child: Text("Da"),
-                                              ),
-                                            ],
-                                          );
-                                        },
-                                      );
+                                              );
 
-                                      if (confirmDelete == true) {
-                                        await _prakseProvider.delete(e.id);
-                                        await _fetchData();
-                                      }
-                                    },
-                                  ),
+                                              if (confirmDelete == true) {
+                                                await _prakseProvider
+                                                    .delete(e.id);
+                                                await _fetchData();
+                                              }
+                                            },
+                                          ),
                                         ],
                                       ),
                                     ),

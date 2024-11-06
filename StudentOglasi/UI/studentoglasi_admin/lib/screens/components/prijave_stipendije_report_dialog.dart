@@ -112,7 +112,7 @@ class _PrijaveStipendijeReportDialogState
                 }
               } catch (e) {
                 ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text('Failed to download report')));
+                    SnackBar(content: Text('Preuzimanje izvještaja nije uspjelo.')));
               }
             }
           },

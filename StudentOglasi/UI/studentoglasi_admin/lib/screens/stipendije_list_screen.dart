@@ -151,53 +151,78 @@ class _StipendijeListScreenState extends State<StipendijeListScreen> {
 
   Widget _buildSearch() {
     return Padding(
-        padding: const EdgeInsets.fromLTRB(100, 10, 100, 0),
-        child: Row(
-          children: [
-            Expanded(
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: TextField(
-                  decoration: InputDecoration(labelText: "Naziv stipendije"),
-                  controller: _naslovController,
+      padding: const EdgeInsets.fromLTRB(100, 10, 100, 0),
+      child: Row(
+        children: [
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: TextField(
+                decoration: InputDecoration(
+                  labelText: "Naziv stipendije",
+                  contentPadding: EdgeInsets.symmetric(vertical: 12.0),
                 ),
+                controller: _naslovController,
               ),
             ),
-            SizedBox(width: 30.0),
-            Expanded(
-              flex: 1,
-              child: Padding(
-                padding: const EdgeInsets.only(top: 25.0),
-                child: DropdownButton2<Stipenditor>(
-                  isExpanded: true,
-                  hint: Text(
-                    'Stipenditor',
-                  ),
-                  value: selectedStipenditor,
-                  onChanged: (Stipenditor? newValue) {
-                    setState(() {
-                      selectedStipenditor = newValue;
-                    });
-                  },
-                  items:
-                      stipenditoriResult?.result.map((Stipenditor stipenditor) {
-                            return DropdownMenuItem<Stipenditor>(
-                              value: stipenditor,
-                              child: Text(stipenditor.naziv ?? ''),
-                            );
-                          }).toList() ??
-                          [],
-                ),
-              ),
-            ),
-            SizedBox(height: 8, width: 30.0),
-            ElevatedButton(
-                onPressed: () async {
-                  await _fetchData();
+          ),
+          SizedBox(width: 30.0),
+          Expanded(
+            flex: 1,
+            child: Padding(
+              padding: const EdgeInsets.only(top: 25.0), 
+              child: DropdownButton2<Stipenditor>(
+                isExpanded: true,
+                hint: Text('Stipenditor'),
+                value: selectedStipenditor,
+                onChanged: (Stipenditor? newValue) {
+                  setState(() {
+                    selectedStipenditor = newValue;
+                  });
                 },
-                child: Text("Filtriraj"))
-          ],
-        ));
+                items:
+                    stipenditoriResult?.result.map((Stipenditor stipenditor) {
+                          return DropdownMenuItem<Stipenditor>(
+                            value: stipenditor,
+                            child: Text(stipenditor.naziv ?? ''),
+                          );
+                        }).toList() ??
+                        [],
+              ),
+            ),
+          ),
+          SizedBox(width: 20.0),
+          Padding(
+            padding: const EdgeInsets.only(top: 25.0),
+            child: ElevatedButton(
+              onPressed: () async {
+                await _fetchData();
+              },
+              child: Text("Filtriraj"),
+            ),
+          ),
+          SizedBox(width: 10.0),
+          Padding(
+            padding: const EdgeInsets.only(top: 25.0),
+            child: ElevatedButton(
+              onPressed: () async {
+                setState(() {
+                  _naslovController.clear();
+                  selectedStipenditor = null;
+                });
+                await _fetchData();
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor:
+                    Color.fromARGB(255, 240, 92, 92),
+                foregroundColor: Colors.white,
+              ),
+              child: Text("Očisti filtere"),
+            ),
+          ),
+        ],
+      ),
+    );
   }
 
   Widget _buildDataListView() {
@@ -322,59 +347,65 @@ class _StipendijeListScreenState extends State<StipendijeListScreen> {
                                               });
                                             },
                                           ),
-                                         IconButton(
-                                    icon: Icon(
-                                      Icons.delete,
-                                      color: Colors.red,
-                                    ),
-                                    onPressed: () async {
-                                      bool confirmDelete = await showDialog(
-                                        context: context,
-                                        builder: (BuildContext context) {
-                                          return AlertDialog(
-                                            title: Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment
-                                                      .spaceBetween,
-                                              children: [
-                                                Text("Potvrda brisanja"),
-                                                IconButton(
-                                                  icon: Icon(Icons.close),
-                                                  onPressed: () {
-                                                    Navigator.of(context).pop(
-                                                        false); 
-                                                  },
-                                                ),
-                                              ],
+                                          IconButton(
+                                            icon: Icon(
+                                              Icons.delete,
+                                              color: Colors.red,
                                             ),
-                                            content: Text(
-                                                "Da li ste sigurni da želite izbrisati?"),
-                                            actions: [
-                                              TextButton(
-                                                onPressed: () {
-                                                  Navigator.of(context).pop(
-                                                      false); 
+                                            onPressed: () async {
+                                              bool confirmDelete =
+                                                  await showDialog(
+                                                context: context,
+                                                builder:
+                                                    (BuildContext context) {
+                                                  return AlertDialog(
+                                                    title: Row(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .spaceBetween,
+                                                      children: [
+                                                        Text(
+                                                            "Potvrda brisanja"),
+                                                        IconButton(
+                                                          icon:
+                                                              Icon(Icons.close),
+                                                          onPressed: () {
+                                                            Navigator.of(
+                                                                    context)
+                                                                .pop(false);
+                                                          },
+                                                        ),
+                                                      ],
+                                                    ),
+                                                    content: Text(
+                                                        "Da li ste sigurni da želite izbrisati?"),
+                                                    actions: [
+                                                      TextButton(
+                                                        onPressed: () {
+                                                          Navigator.of(context)
+                                                              .pop(false);
+                                                        },
+                                                        child: Text("Ne"),
+                                                      ),
+                                                      TextButton(
+                                                        onPressed: () {
+                                                          Navigator.of(context)
+                                                              .pop(true);
+                                                        },
+                                                        child: Text("Da"),
+                                                      ),
+                                                    ],
+                                                  );
                                                 },
-                                                child: Text("Ne"),
-                                              ),
-                                              TextButton(
-                                                onPressed: () {
-                                                  Navigator.of(context).pop(
-                                                      true);  
-                                                },
-                                                child: Text("Da"),
-                                              ),
-                                            ],
-                                          );
-                                        },
-                                      );
+                                              );
 
-                                      if (confirmDelete == true) {
-                                        await _stipendijeProvider.delete(e.id);
-                                        await _fetchData();
-                                      }
-                                    },
-                                  ),
+                                              if (confirmDelete == true) {
+                                                await _stipendijeProvider
+                                                    .delete(e.id);
+                                                await _fetchData();
+                                              }
+                                            },
+                                          ),
                                         ],
                                       ),
                                     ),

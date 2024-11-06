@@ -57,7 +57,6 @@ class _PrijavaPraksaDetailsDialogState
 
   @override
   void didChangeDependencies() {
-    // TODO: implement didChangeDependencies
     super.didChangeDependencies();
   }
 
@@ -69,21 +68,21 @@ class _PrijavaPraksaDetailsDialogState
         children: [
           Text(widget.title ?? ''),
           SizedBox(
-              height: 8.0), // Add some space between the title and subtitle
+              height: 8.0), 
           Text(
             'Praksa: ${widget.prijavePraksa?.praksa?.idNavigation?.naslov}',
             style: TextStyle(
-              fontSize: 18.0, // Adjust the font size as needed
-              color: Colors.blue, // Adjust the color as needed
+              fontSize: 18.0,
+              color: Colors.blue,
             ),
           ),
           SizedBox(
-              height: 8.0), // Add some space between the title and subtitle
+              height: 8.0), 
           Text(
             'Status prijave: ${widget.prijavePraksa?.status?.naziv}',
             style: TextStyle(
-              fontSize: 18.0, // Adjust the font size as needed
-              color: Colors.blue, // Adjust the color as needed
+              fontSize: 18.0, 
+              color: Colors.blue, 
             ),
           ),
         ],

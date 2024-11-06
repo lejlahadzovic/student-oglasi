@@ -128,85 +128,102 @@ class _SmjestajiListScreenState extends State<SmjestajiListScreen> {
     );
   }
 
-  Widget _buildSearch() {
-    return Padding(
-        padding: const EdgeInsets.fromLTRB(100, 10, 100, 0),
-        child: Row(
-          children: [
-            Expanded(
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: TextField(
-                  decoration: InputDecoration(labelText: "Naziv"),
-                  controller: _nazivController,
-                ),
-              ),
+ Widget _buildSearch() {
+  return Padding(
+    padding: const EdgeInsets.fromLTRB(100, 10, 100, 0),
+    child: Row(
+      children: [
+        Expanded(
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: TextField(
+              decoration: InputDecoration(labelText: "Naziv"),
+              controller: _nazivController,
             ),
-            SizedBox(width: 30.0),
-            Expanded(
-              flex: 1,
-              child: Padding(
-                padding: const EdgeInsets.only(top: 25.0),
-                child: DropdownButton2<Grad>(
-                  isExpanded: true,
-                  hint: Text(
-                    'Grad',
-                  ),
-                  value: selectedGrad,
-                  onChanged: (Grad? newValue) {
-                    setState(() {
-                      selectedGrad = newValue;
-                    });
-                  },
-                  items: gradoviResult?.result.map((Grad status) {
-                        return DropdownMenuItem<Grad>(
-                          value: status,
-                          child: Text(status.naziv ?? ''),
-                        );
-                      }).toList() ??
-                      [],
-                ),
-              ),
-            ),
-            SizedBox(width: 20.0),
-            Expanded(
-              flex: 1,
-              child: Padding(
-                padding: const EdgeInsets.only(top: 25.0),
-                child: DropdownButton2<TipSmjestaja>(
-                  isExpanded: true,
-                  hint: Text(
-                    'Tip smještaja',
-                  ),
-                  value: selectedTipSmjestaja,
-                  onChanged: (TipSmjestaja? newValue) {
-                    setState(() {
-                      selectedTipSmjestaja = newValue;
-                    });
-                  },
-                  items: tipoviSmjestajaResult?.result
-                          .map((TipSmjestaja organizacija) {
-                        return DropdownMenuItem<TipSmjestaja>(
-                          value: organizacija,
-                          child: Text(organizacija.naziv ?? ''),
-                        );
-                      }).toList() ??
-                      [],
-                ),
-              ),
-            ),
-            SizedBox(width: 30.0),
-            Padding(
-            padding: const EdgeInsets.only(top: 25.0),
-            child: ElevatedButton(
-                onPressed: () async {
-                  await _fetchData();
-                },
-                child: Text("Filtriraj")),
           ),
-          ],
-        ));
-  }
+        ),
+        SizedBox(width: 30.0),
+        Expanded(
+          flex: 1,
+          child: Padding(
+            padding: const EdgeInsets.only(top: 25.0),
+            child: DropdownButton2<Grad>(
+              isExpanded: true,
+              hint: Text('Grad'),
+              value: selectedGrad,
+              onChanged: (Grad? newValue) {
+                setState(() {
+                  selectedGrad = newValue;
+                });
+              },
+              items: gradoviResult?.result.map((Grad grad) {
+                    return DropdownMenuItem<Grad>(
+                      value: grad,
+                      child: Text(grad.naziv ?? ''),
+                    );
+                  }).toList() ??
+                  [],
+            ),
+          ),
+        ),
+        SizedBox(width: 20.0),
+        Expanded(
+          flex: 1,
+          child: Padding(
+            padding: const EdgeInsets.only(top: 25.0),
+            child: DropdownButton2<TipSmjestaja>(
+              isExpanded: true,
+              hint: Text('Tip smještaja'),
+              value: selectedTipSmjestaja,
+              onChanged: (TipSmjestaja? newValue) {
+                setState(() {
+                  selectedTipSmjestaja = newValue;
+                });
+              },
+              items: tipoviSmjestajaResult?.result.map((TipSmjestaja tipSmjestaja) {
+                    return DropdownMenuItem<TipSmjestaja>(
+                      value: tipSmjestaja,
+                      child: Text(tipSmjestaja.naziv ?? ''),
+                    );
+                  }).toList() ??
+                  [],
+            ),
+          ),
+        ),
+        SizedBox(width: 30.0),
+        Padding(
+          padding: const EdgeInsets.only(top: 25.0),
+          child: ElevatedButton(
+            onPressed: () async {
+              await _fetchData();
+            },
+            child: Text("Filtriraj"),
+          ),
+        ),
+        SizedBox(width: 20.0),
+        Padding(
+          padding: const EdgeInsets.only(top: 25.0),
+          child: ElevatedButton(
+            onPressed: () {
+              _nazivController.clear();
+              setState(() {
+                selectedGrad = null; 
+                selectedTipSmjestaja = null; 
+              });
+              _fetchData(); 
+            },
+             style: ElevatedButton.styleFrom(
+                backgroundColor:
+                    Color.fromARGB(255, 240, 92, 92),
+                foregroundColor: Colors.white, 
+              ),
+              child: Text("Očisti filtere"),
+            ),
+        ),
+      ],
+    ),
+  );
+}
 
   Widget _buildDataListView() {
     return Expanded(

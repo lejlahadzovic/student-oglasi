@@ -88,19 +88,18 @@ class LoginPage extends StatelessWidget {
                             ),
                           );
                         } on Exception catch (e) {
-                          String error = "Pogrešno korisničko ime ili lozinka";
-                          showDialog(
-                              context: context,
-                              builder: (BuildContext context) => AlertDialog(
-                                    title: Text("Greška"),
-                                    content: Text(error),
-                                    actions: [
-                                      TextButton(
-                                          onPressed: () =>
-                                              Navigator.pop(context),
-                                          child: Text("OK"))
-                                    ],
-                                  ));
+                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                            content: Row(
+                              children: [
+                                Icon(Icons.error, color: Colors.white),
+                                SizedBox(width: 8),
+                                Text('Pogrešno korisničko ime ili lozinka'),
+                              ],
+                            ),
+                            backgroundColor: Colors.redAccent,
+                          ));
+                          _usernameController.clear();
+                          _passwordController.clear();
                         }
                       },
                       style: ButtonStyle(

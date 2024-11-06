@@ -151,67 +151,87 @@ class _PrijavePraksaListScreen extends State<PrijavePraksaListScreen> {
   }
 
   Widget _buildSearch() {
-    return Padding(
-        padding: const EdgeInsets.fromLTRB(100, 10, 100, 0),
-        child: Row(
-          children: [
-            Expanded(
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: TextField(
-                  decoration: InputDecoration(labelText: "Ime i prezime"),
-                  controller: _imeController,
-                ),
-              ),
+  return Padding(
+    padding: const EdgeInsets.fromLTRB(100, 10, 100, 0),
+    child: Row(
+      children: [
+        Expanded(
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: TextField(
+              decoration: InputDecoration(labelText: "Ime i prezime"),
+              controller: _imeController,
             ),
-            SizedBox(width: 30.0),
-            Expanded(
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: TextField(
-                  decoration: InputDecoration(labelText: "Broj indeksa"),
-                  controller: _brojIndeksaController,
-                ),
-              ),
+          ),
+        ),
+        SizedBox(width: 30.0),
+        Expanded(
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: TextField(
+              decoration: InputDecoration(labelText: "Broj indeksa"),
+              controller: _brojIndeksaController,
             ),
-            SizedBox(width: 30.0),
-            Expanded(
-              flex: 1,
-              child: Padding(
-                padding: const EdgeInsets.only(top: 25.0),
-                child: DropdownButton2<StatusPrijave>(
-                  isExpanded: true,
-                  hint: Text(
-                    'Status prijave',
-                  ),
-                  value: selectedStatusPrijave,
-                  onChanged: (StatusPrijave? newValue) {
-                    setState(() {
-                      selectedStatusPrijave = newValue;
-                    });
-                  },
-                  items: statusResult?.result.map((StatusPrijave status) {
-                        return DropdownMenuItem<StatusPrijave>(
-                          value: status,
-                          child: Text(status.naziv ?? ''),
-                        );
-                      }).toList() ??
-                      [],
-                ),
-              ),
+          ),
+        ),
+        SizedBox(width: 30.0),
+        Expanded(
+          flex: 1,
+          child: Padding(
+            padding: const EdgeInsets.only(top: 25.0),
+            child: DropdownButton2<StatusPrijave>(
+              isExpanded: true,
+              hint: Text('Status prijave'),
+              value: selectedStatusPrijave,
+              onChanged: (StatusPrijave? newValue) {
+                setState(() {
+                  selectedStatusPrijave = newValue;
+                });
+              },
+              items: statusResult?.result.map((StatusPrijave status) {
+                    return DropdownMenuItem<StatusPrijave>(
+                      value: status,
+                      child: Text(status.naziv ?? ''),
+                    );
+                  }).toList() ??
+                  [],
             ),
-            SizedBox(width: 30.0),
-            ElevatedButton(
-                onPressed: () async {
-                  await _fetchData();
-                },
-                child: Text("Filtriraj")),
-            SizedBox(
-              height: 8,
+          ),
+        ),
+        SizedBox(width: 30.0),
+        Padding(
+          padding: const EdgeInsets.only(top: 25.0),
+          child: ElevatedButton(
+            onPressed: () async {
+              await _fetchData();
+            },
+            child: Text("Filtriraj"),
+          ),
+        ),
+        SizedBox(width: 20.0), // Space between buttons
+        Padding(
+          padding: const EdgeInsets.only(top: 25.0),
+          child: ElevatedButton(
+            onPressed: () {
+              // Clear filters logic
+              _imeController.clear();
+              _brojIndeksaController.clear();
+              setState(() {
+                selectedStatusPrijave = null; // Reset selected StatusPrijave
+              });
+              _fetchData(); // Optionally refetch data without filters
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Color.fromARGB(255, 240, 92, 92), // Pale red background
+              foregroundColor: Colors.white, // White text
             ),
-          ],
-        ));
-  }
+            child: Text("Očisti filtere"), // Corrected label
+          ),
+        ),
+      ],
+    ),
+  );
+}
 
   Widget _buildDataListView() {
     return Expanded(

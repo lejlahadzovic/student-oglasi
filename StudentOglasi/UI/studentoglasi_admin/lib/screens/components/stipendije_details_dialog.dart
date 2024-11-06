@@ -490,30 +490,36 @@ class _StipendijeDetailsDialogState extends State<StipendijeDetailsDialog> {
             if (_formKey.currentState!.saveAndValidate()) {
               var request =
                   Map<String, dynamic>.from(_formKey.currentState!.value);
-
               try {
-                widget.stipendija == null
-                    ? await _StipendijaProvider.insertWithImage(request)
-                    : await _StipendijaProvider.updateWithImage(
-                        widget.stipendija!.id!, request);
+                if (widget.stipendija == null) {
+                  await _StipendijaProvider.insertWithImage(request);
+                } else {
+                  await _StipendijaProvider.updateWithImage(
+                      widget.stipendija!.id!, request);
+                }
 
                 Navigator.pop(context, true);
                 ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                  content: Text('Podaci su uspješno sačuvani!'),
+                  content: Row(
+                    children: [
+                      Icon(Icons.check_circle, color: Colors.white),
+                      SizedBox(width: 8),
+                      Text('Podaci su uspješno sačuvani!'),
+                    ],
+                  ),
                   backgroundColor: Colors.lightGreen,
                 ));
               } on Exception catch (e) {
-                showDialog(
-                    context: context,
-                    builder: (BuildContext context) => AlertDialog(
-                          content: Text(
-                              "Došlo je do greške. Molimo pokušajte opet!"),
-                          actions: [
-                            TextButton(
-                                onPressed: () => Navigator.pop(context),
-                                child: Text("OK"))
-                          ],
-                        ));
+                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                  content: Row(
+                    children: [
+                      Icon(Icons.error, color: Colors.white),
+                      SizedBox(width: 8),
+                      Text('Došlo je do greške. Molimo pokušajte opet!'),
+                    ],
+                  ),
+                  backgroundColor: Colors.redAccent,
+                ));
               }
             }
           },

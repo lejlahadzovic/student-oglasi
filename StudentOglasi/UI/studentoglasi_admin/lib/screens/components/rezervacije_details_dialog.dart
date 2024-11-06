@@ -74,21 +74,21 @@ class _RezervacijeDetailsDialogState extends State<RezervacijeDetailsDialog> {
         children: [
           Text(widget.title ?? ''),
           SizedBox(
-              height: 8.0), // Add some space between the title and subtitle
+              height: 8.0), 
           Text(
             'Naziv smještaja: ${widget.rezervacija?.smjestaj?.naziv}',
             style: TextStyle(
-              fontSize: 18.0, // Adjust the font size as needed
-              color: Colors.blue, // Adjust the color as needed
+              fontSize: 18.0, 
+              color: Colors.blue,
             ),
           ),
           SizedBox(
-              height: 8.0), // Add some space between the title and subtitle
+              height: 8.0), 
           Text(
             'Smještajna jedinica: ${widget.rezervacija?.smjestajnaJedinica?.naziv}',
             style: TextStyle(
-              fontSize: 18.0, // Adjust the font size as needed
-              color: Colors.blue, // Adjust the color as needed
+              fontSize: 18.0, 
+              color: Colors.blue, 
             ),
           ),
         ],

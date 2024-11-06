@@ -187,9 +187,7 @@ class _StudentiListScreenState extends State<StudentiListScreen> {
               padding: const EdgeInsets.only(top: 25.0),
               child: DropdownButton2<Fakultet>(
                 isExpanded: true,
-                hint: Text(
-                  'Fakultet',
-                ),
+                hint: Text('Fakultet'),
                 value: selectedFakultet,
                 onChanged: (Fakultet? newValue) {
                   setState(() {
@@ -212,9 +210,7 @@ class _StudentiListScreenState extends State<StudentiListScreen> {
               padding: const EdgeInsets.only(top: 25.0),
               child: DropdownButton2<int>(
                 isExpanded: true,
-                hint: Text(
-                  'Godina studija',
-                ),
+                hint: Text('Godina studija'),
                 value: selectedGodina,
                 onChanged: (int? newValue) {
                   setState(() {
@@ -234,11 +230,31 @@ class _StudentiListScreenState extends State<StudentiListScreen> {
           Padding(
             padding: const EdgeInsets.only(top: 25.0),
             child: ElevatedButton(
+              onPressed: () async {
+                await _fetchData();
+              },
+              child: Text("Filtriraj"),
+            ),
+          ),
+          SizedBox(width: 10.0),
+          Padding(
+              padding: const EdgeInsets.only(top: 25.0),
+              child: ElevatedButton(
                 onPressed: () async {
+                  setState(() {
+                    _brojIndeksaController.clear();
+                    _imePrezimeController.clear();
+                    selectedFakultet = null;
+                    selectedGodina = null;
+                  });
                   await _fetchData();
                 },
-                child: Text("Filtriraj")),
-          ),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Color.fromARGB(255, 240, 92, 92),
+                  foregroundColor: Colors.white, 
+                ),
+                child: Text("Očisti filtere"),
+              )),
         ],
       ),
     );
@@ -364,8 +380,8 @@ class _StudentiListScreenState extends State<StudentiListScreen> {
                                                 IconButton(
                                                   icon: Icon(Icons.close),
                                                   onPressed: () {
-                                                    Navigator.of(context).pop(
-                                                        false); 
+                                                    Navigator.of(context)
+                                                        .pop(false);
                                                   },
                                                 ),
                                               ],
@@ -375,15 +391,15 @@ class _StudentiListScreenState extends State<StudentiListScreen> {
                                             actions: [
                                               TextButton(
                                                 onPressed: () {
-                                                  Navigator.of(context).pop(
-                                                      false); 
+                                                  Navigator.of(context)
+                                                      .pop(false);
                                                 },
                                                 child: Text("Ne"),
                                               ),
                                               TextButton(
                                                 onPressed: () {
-                                                  Navigator.of(context).pop(
-                                                      true);  
+                                                  Navigator.of(context)
+                                                      .pop(true);
                                                 },
                                                 child: Text("Da"),
                                               ),

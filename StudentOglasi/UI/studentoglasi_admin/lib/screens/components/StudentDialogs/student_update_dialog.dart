@@ -548,22 +548,26 @@ class _StudentDetailsDialogState extends State<StudentUpdateDialog>
                     widget.student!.id!, request);
                 Navigator.pop(context, true);
                 ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                  content: Text('Podaci su uspješno sačuvani!'),
+                  content: Row(
+                    children: [
+                      Icon(Icons.check_circle, color: Colors.white),
+                      SizedBox(width: 8),
+                      Text('Podaci su uspješno sačuvani!'),
+                    ],
+                  ),
                   backgroundColor: Colors.lightGreen,
                 ));
               } catch (e) {
-                showDialog(
-                    context: context,
-                    builder: (context) => AlertDialog(
-                          title: Text(
-                              "Došlo je do greške. Molimo pokušajte ponovo!"),
-                          content: Text(e.toString()),
-                          actions: [
-                            TextButton(
-                                onPressed: () => Navigator.pop(context),
-                                child: Text("OK"))
-                          ],
-                        ));
+                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                  content: Row(
+                    children: [
+                      Icon(Icons.error, color: Colors.white),
+                      SizedBox(width: 8),
+                      Text('Došlo je do greške. Molimo pokušajte ponovo!'),
+                    ],
+                  ),
+                  backgroundColor: Colors.redAccent,
+                ));
               }
             }
           },

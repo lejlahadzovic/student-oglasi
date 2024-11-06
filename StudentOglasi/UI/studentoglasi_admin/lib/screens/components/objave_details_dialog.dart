@@ -248,28 +248,35 @@ class _ObjaveDetailsDialogState extends State<ObjaveDetailsDialog> {
                   Map<String, dynamic>.from(_formKey.currentState!.value);
 
               try {
-                widget.objava == null
-                    ? await _objaveProvider.insertWithImage(request)
-                    : await _objaveProvider.updateWithImage(
-                        widget.objava!.id!, request);
+                if (widget.objava == null) {
+                  await _objaveProvider.insertWithImage(request);
+                } else {
+                  await _objaveProvider.updateWithImage(
+                      widget.objava!.id!, request);
+                }
 
                 Navigator.pop(context, true);
                 ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                  content: Text('Podaci su uspješno sačuvani!'),
+                  content: Row(
+                    children: [
+                      Icon(Icons.check_circle, color: Colors.white),
+                      SizedBox(width: 8),
+                      Text('Podaci su uspješno sačuvani!'),
+                    ],
+                  ),
                   backgroundColor: Colors.lightGreen,
                 ));
               } on Exception catch (e) {
-                showDialog(
-                    context: context,
-                    builder: (BuildContext context) => AlertDialog(
-                          title: Text("Došlo je do greške. Molimo pokušajte ponovo!"),
-                          content: Text(e.toString()),
-                          actions: [
-                            TextButton(
-                                onPressed: () => Navigator.pop(context),
-                                child: Text("OK"))
-                          ],
-                        ));
+                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                  content: Row(
+                    children: [
+                      Icon(Icons.error, color: Colors.white),
+                      SizedBox(width: 8),
+                      Text('Došlo je do greške. Molimo pokušajte ponovo!'),
+                    ],
+                  ),
+                  backgroundColor: Colors.redAccent,
+                ));
               }
             }
           },

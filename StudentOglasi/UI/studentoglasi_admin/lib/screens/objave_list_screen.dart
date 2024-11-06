@@ -30,7 +30,7 @@ class _ObjaveListScreenState extends State<ObjaveListScreen> {
   SearchResult<Objava>? result;
   SearchResult<Kategorija>? kategorijeResult;
   TextEditingController _naslovController = new TextEditingController();
- int _currentPage = 0;
+  int _currentPage = 0;
   int _totalItems = 0;
   late NumberPaginatorController _pageController;
   @override
@@ -42,12 +42,13 @@ class _ObjaveListScreenState extends State<ObjaveListScreen> {
     _fetchData();
     _fetchKategorije();
   }
+
   int calculateNumberPages(int totalItems, int pageSize) {
     return (totalItems / pageSize).ceil();
   }
+
   @override
   Widget build(BuildContext context) {
-    
     int numberPages = calculateNumberPages(_totalItems, 5);
     return MasterScreenWidget(
       title: "Novosti",
@@ -67,19 +68,23 @@ class _ObjaveListScreenState extends State<ObjaveListScreen> {
       },
       child: Container(
         child: Column(
-          children: [_buildSearch(), _buildDataListView(), if(_currentPage>=0 && numberPages-1>=_currentPage)
-           CustomPaginator(
-                      numberPages: numberPages,
-                      initialPage: _currentPage,
-                      onPageChange: (int index) {
-                        setState(() {
-                          _currentPage = index;
-                          _fetchData();
-                        });
-                      },
-                      pageController: _pageController,
-                      fetchData: _fetchData,
-                    ),],
+          children: [
+            _buildSearch(),
+            _buildDataListView(),
+            if (_currentPage >= 0 && numberPages - 1 >= _currentPage)
+              CustomPaginator(
+                numberPages: numberPages,
+                initialPage: _currentPage,
+                onPageChange: (int index) {
+                  setState(() {
+                    _currentPage = index;
+                    _fetchData();
+                  });
+                },
+                pageController: _pageController,
+                fetchData: _fetchData,
+              ),
+          ],
         ),
       ),
     );
@@ -89,12 +94,12 @@ class _ObjaveListScreenState extends State<ObjaveListScreen> {
     var data = await _objaveProvider.get(filter: {
       'naslov': _naslovController.text,
       'kategorijaID': selectedKategorija?.id,
-      'page': _currentPage + 1, 
+      'page': _currentPage + 1,
       'pageSize': 5,
     });
     setState(() {
       result = data;
-       _totalItems = data.count;
+      _totalItems = data.count;
       int numberPages = calculateNumberPages(_totalItems, 5);
       if (_currentPage >= numberPages) {
         _currentPage = numberPages - 1;
@@ -104,7 +109,6 @@ class _ObjaveListScreenState extends State<ObjaveListScreen> {
       }
       print(
           "Total items: $_totalItems, Number of pages: $numberPages, Current page after fetch: $_currentPage");
-   
     });
   }
 
@@ -141,9 +145,7 @@ class _ObjaveListScreenState extends State<ObjaveListScreen> {
               padding: const EdgeInsets.only(top: 25.0),
               child: DropdownButton2<Kategorija>(
                 isExpanded: true,
-                hint: Text(
-                  'Kategorija',
-                ),
+                hint: Text('Kategorija'),
                 value: selectedKategorija,
                 onChanged: (Kategorija? newValue) {
                   setState(() {
@@ -164,10 +166,30 @@ class _ObjaveListScreenState extends State<ObjaveListScreen> {
           Padding(
             padding: const EdgeInsets.only(top: 25.0),
             child: ElevatedButton(
-                onPressed: () async {
-                  await _fetchData();
-                },
-                child: Text("Filtriraj")),
+              onPressed: () async {
+                await _fetchData();
+              },
+              child: Text("Filtriraj"),
+            ),
+          ),
+          SizedBox(width: 20.0), 
+          Padding(
+            padding: const EdgeInsets.only(top: 25.0),
+            child: ElevatedButton(
+              onPressed: () {
+                _naslovController.clear();
+                setState(() {
+                  selectedKategorija = null;
+                });
+                _fetchData(); 
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor:
+                    Color.fromARGB(255, 240, 92, 92),
+                foregroundColor: Colors.white, 
+              ),
+              child: Text("Očisti filtere"),
+            ),
           ),
         ],
       ),
@@ -270,8 +292,8 @@ class _ObjaveListScreenState extends State<ObjaveListScreen> {
                                                 IconButton(
                                                   icon: Icon(Icons.close),
                                                   onPressed: () {
-                                                    Navigator.of(context).pop(
-                                                        false); 
+                                                    Navigator.of(context)
+                                                        .pop(false);
                                                   },
                                                 ),
                                               ],
@@ -281,15 +303,15 @@ class _ObjaveListScreenState extends State<ObjaveListScreen> {
                                             actions: [
                                               TextButton(
                                                 onPressed: () {
-                                                  Navigator.of(context).pop(
-                                                      false); 
+                                                  Navigator.of(context)
+                                                      .pop(false);
                                                 },
                                                 child: Text("Ne"),
                                               ),
                                               TextButton(
                                                 onPressed: () {
-                                                  Navigator.of(context).pop(
-                                                      true);  
+                                                  Navigator.of(context)
+                                                      .pop(true);
                                                 },
                                                 child: Text("Da"),
                                               ),
