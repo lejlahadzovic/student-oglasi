@@ -94,11 +94,11 @@ class _PrijaveStipendijeReportDialogState
         ElevatedButton(
           onPressed: () async {
             if (_formKey.currentState!.validate()) {
-            await _PrijavaStipendijaProvider.printReport(
-                selectedStipendija!.id!, context);
+              await _PrijavaStipendijaProvider.printReport(
+                  selectedStipendija!.id!, context);
             }
           },
-          child: Text('Isprintaj'),
+          child: Icon(Icons.print),
         ),
         ElevatedButton(
           onPressed: () async {
@@ -111,19 +111,12 @@ class _PrijaveStipendijeReportDialogState
                   OpenFile.open(file.path);
                 }
               } catch (e) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text('Preuzimanje izvještaja nije uspjelo.')));
+                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                    content: Text('Preuzimanje izvještaja nije uspjelo.')));
               }
             }
           },
-          child: Text('Preuzmi izvjestaj'),
-          style: ButtonStyle(
-            backgroundColor: MaterialStateProperty.all<Color>(
-                Color.fromARGB(255, 19, 201, 65)),
-            foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
-            textStyle: MaterialStateProperty.all<TextStyle>(
-                TextStyle(fontWeight: FontWeight.bold)),
-          ),
+          child: Icon(Icons.download),
         ),
         ElevatedButton(
           child: Text('Generiši'),
@@ -135,7 +128,7 @@ class _PrijaveStipendijeReportDialogState
                 TextStyle(fontWeight: FontWeight.bold)),
           ),
           onPressed: () async {
-            if (_formKey.currentState!.validate())  {
+            if (_formKey.currentState!.validate()) {
               var reportData = await _fetchReportData(
                   context.read<PrijaveStipendijaProvider>());
               if (reportData != null) {

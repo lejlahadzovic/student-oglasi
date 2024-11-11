@@ -22,7 +22,7 @@ namespace StudentOglasi.Services.Services
         }
         public override Task<Model.Stipendije> Insert(StipendijeInsertRequest insert)
         {
-            var state = _baseState.CreateState("Initial");
+            var state = _baseState.CreateState("Kreiran");
             return state.Insert(insert);
         }
         public override IQueryable<Database.Stipendije> AddFilter(IQueryable<Database.Stipendije> query, StipendijeSearchObject? search = null)
@@ -36,6 +36,10 @@ namespace StudentOglasi.Services.Services
             if (search?.Stipenditor != null)
             {
                 filteredQuery = filteredQuery.Where(x => x.Stipenditor.Id == search.Stipenditor);
+            }
+            if (search?.Status != null)
+            {
+                filteredQuery = filteredQuery.Where(x => x.Status.Naziv.Contains(search.Status));
             }
             return filteredQuery;
         }
@@ -59,6 +63,14 @@ namespace StudentOglasi.Services.Services
             entity.Status = await _context.StatusOglasis.FindAsync(entity.StatusId);
             var state = _baseState.CreateState(entity.Status.Naziv);
 
+            if (!entity.Status.Naziv.Contains("Skica"))
+            {
+                await state.Hide(id);
+
+                state = _baseState.CreateState(entity.Status.Naziv);
+                return await state.Update(id, update);
+            }
+
             return await state.Update(id, update);
         }
         public override async Task Delete(int id)
@@ -81,16 +93,6 @@ namespace StudentOglasi.Services.Services
             _context.Stipendijes.Remove(entity);
             await _context.SaveChangesAsync();
         }
-        public async Task<Model.Stipendije> Activate(int id)
-        {
-            var set = _context.Set<Database.Stipendije>();
-
-            var entity = await set.FindAsync(id);
-            entity.Status = await _context.StatusOglasis.FindAsync(entity.StatusId);
-            var state = _baseState.CreateState(entity.Status.Naziv);
-
-            return await state.Activate(id);
-        }
         public async Task<Model.Stipendije> Hide(int id)
         {
             var set = _context.Set<Database.Stipendije>();
@@ -107,7 +109,7 @@ namespace StudentOglasi.Services.Services
 
             var entity = await set.FindAsync(id);
             entity.Status = await _context.StatusOglasis.FindAsync(entity.StatusId);
-            var state = _baseState.CreateState(entity.Status.Naziv ?? "Initial");
+            var state = _baseState.CreateState(entity.Status.Naziv ?? "Kreiran");
             return await state.AllowedActions();
         }
         public async Task<List<Model.Stipendije>> GetRecommendedStipendije(int studentId)

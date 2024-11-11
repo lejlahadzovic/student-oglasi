@@ -52,7 +52,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
       body: _isLoading
           ? Center(child: CircularProgressIndicator())
           : _hasError
-              ? Center(child: Text('Failed to load notifications.'))
+              ? Center(child: Text('Neuspješno učitavanje obavijesti.'))
               : _notifications.result.isEmpty
                   ? Center(child: Text('Trenutno nema obavijesti'))
                   : ListView.builder(

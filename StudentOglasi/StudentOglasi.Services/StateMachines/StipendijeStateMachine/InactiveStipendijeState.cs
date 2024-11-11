@@ -5,9 +5,9 @@ using StudentOglasi.Services.OglasiStateMachine;
 
 namespace StudentOglasi.Services.StateMachine.StipendijeStateMachine
 {
-    public class ActiveStipendijeState : BaseStipendijeState
+    public class InactiveStipendijeState : BaseStipendijeState
     {
-        public ActiveStipendijeState(IServiceProvider serviceProvider, StudentoglasiContext context, IMapper mapper) : base(serviceProvider, context, mapper)
+        public InactiveStipendijeState(IServiceProvider serviceProvider, StudentoglasiContext context, IMapper mapper) : base(serviceProvider, context, mapper)
         {
         }
 

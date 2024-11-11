@@ -35,7 +35,7 @@ namespace StudentOglasi.Services.Services
 
         public override Task<Model.Prakse> Insert(PrakseInsertRequest insert)
         {
-            var state = _baseState.CreateState("Initial");
+            var state = _baseState.CreateState("Kreiran");
             return state.Insert(insert);
         }
         public override IQueryable<Database.Prakse> AddFilter(IQueryable<Database.Prakse> query, PrakseSearchObject? search = null)
@@ -53,6 +53,10 @@ namespace StudentOglasi.Services.Services
             if (search?.Status != null)
             {
                 filteredQuery = filteredQuery.Where(x => x.StatusId == search.Status);
+            }
+            if (!string.IsNullOrWhiteSpace(search?.StatusNaziv))
+            {
+                filteredQuery = filteredQuery.Where(x => x.Status.Naziv.Contains(search.StatusNaziv));
             }
             return filteredQuery;
         }
@@ -100,18 +104,17 @@ namespace StudentOglasi.Services.Services
             entity.Status = await _context.StatusOglasis.FindAsync(entity.StatusId);
             var state = _baseState.CreateState(entity.Status.Naziv);
 
+            if(!entity.Status.Naziv.Contains("Skica"))
+            {
+                await state.Hide(id);
+
+                state = _baseState.CreateState(entity.Status.Naziv);
+                return await state.Update(id, update);
+            }
+
            return await state.Update(id, update);
         }
-        public async Task<Model.Prakse> Activate(int id)
-        {
-            var set = _context.Set<Database.Prakse>();
 
-            var entity = await set.FindAsync(id);
-            entity.Status = await _context.StatusOglasis.FindAsync(entity.StatusId);
-            var state = _baseState.CreateState(entity.Status.Naziv);
-
-            return await state.Activate(id);
-        }
         public async Task<Model.Prakse> Hide(int id)
         {
             var set = _context.Set<Database.Prakse>();

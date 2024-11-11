@@ -26,10 +26,6 @@ namespace StudentOglasi.Services.StateMachines.PrakseStateMachine
         {
             throw new UserException("Action is not allowed!");
         }
-        public virtual Task<Model.Prakse> Activate(int id)
-        {
-            throw new UserException("Action is not allowed!");
-        }
         public virtual Task<Model.Prakse> Hide(int id)
         {
             throw new UserException("Action is not allowed!");
@@ -42,15 +38,18 @@ namespace StudentOglasi.Services.StateMachines.PrakseStateMachine
         {
             switch (stateName)
             {
-                case "Initial":
+                case "Kreiran":
                 case null:
                     return _serviceProvider.GetService<InitialPraksaState>();
                     break;
-                case "Draft":
+                case "Skica":
                     return _serviceProvider.GetService<DraftPrakseState>();
                     break;
                 case "Aktivan":
                     return _serviceProvider.GetService<ActivePrakseState>();
+                    break;
+                case "Istekao":
+                    return _serviceProvider.GetService<InactivePrakseState>();
                     break;
                 default:
                     throw new UserException("Action is not allowed!");

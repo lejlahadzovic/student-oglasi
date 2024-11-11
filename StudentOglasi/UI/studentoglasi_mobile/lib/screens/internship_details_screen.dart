@@ -71,7 +71,7 @@ class _InternshipDetailsScreenState extends State<InternshipDetailsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.internship.naslov ?? 'Internship Details'),
+        title: Text(widget.internship.naslov ?? 'Detalji prakse'),
         leading: IconButton(
           icon: Icon(Icons.arrow_back),
           onPressed: () {
@@ -96,7 +96,7 @@ class _InternshipDetailsScreenState extends State<InternshipDetailsScreen> {
                   : const SizedBox(
                       height: 200,
                       child: Center(
-                        child: Text('No Image Available'),
+                        child: Text('Slika nije dostupna'),
                       ),
                     ),
               SizedBox(height: 8),
@@ -142,31 +142,31 @@ class _InternshipDetailsScreenState extends State<InternshipDetailsScreen> {
                 ],
               ),
               SizedBox(height: 16),
-              Text('${widget.internship.naslov ?? 'No Title'}',
+              Text('${widget.internship.naslov ?? 'Nema naslova'}',
                   style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
               SizedBox(height: 8),
-              Text('${widget.internship.opis ?? 'No Description'}',
+              Text('${widget.internship.opis ?? 'Nema opisa'}',
                   style: TextStyle(fontSize: 16)),
               SizedBox(height: 8),
               Text('Rok prijave:',
                   style: TextStyle(fontWeight: FontWeight.bold)),
               Text(
-                  '${widget.internship.rokPrijave != null ? DateFormat('dd MM yyyy').format(widget.internship.rokPrijave!) : 'No Date Available'}'),
+                  '${widget.internship.rokPrijave != null ? DateFormat('dd MM yyyy').format(widget.internship.rokPrijave) : 'Nema dostupnog datuma'}'),
               SizedBox(height: 8),
               Text('Pocetak prakse:',
                   style: TextStyle(fontWeight: FontWeight.bold)),
               Text(
-                  '${praksa?.pocetakPrakse != null ? DateFormat('dd MM yyyy').format(praksa!.pocetakPrakse!) : 'No Date Available'}'),
+                  '${praksa?.pocetakPrakse != null ? DateFormat('dd MM yyyy').format(praksa!.pocetakPrakse!) : 'Nema dostupnog datuma'}'),
               SizedBox(height: 8),
               Text('Kraj prakse:',
                   style: TextStyle(fontWeight: FontWeight.bold)),
               Text(
-                  '${praksa?.krajPrakse != null ? DateFormat('dd MM yyyy').format(praksa!.krajPrakse!) : 'No Date Available'}'),
+                  '${praksa?.krajPrakse != null ? DateFormat('dd MM yyyy').format(praksa!.krajPrakse!) : 'Nema dostupnog datuma'}'),
               SizedBox(height: 8),
               Text('Organizacija:',
                   style: TextStyle(fontWeight: FontWeight.bold)),
               Text(
-                  '${praksa?.organizacija?.naziv ?? 'No Organization Available'}'),
+                  '${praksa?.organizacija?.naziv ?? 'Nema dostupnog naziva organizacije'}'),
               SizedBox(height: 8),
               Row(
                 children: [
@@ -180,12 +180,12 @@ class _InternshipDetailsScreenState extends State<InternshipDetailsScreen> {
               ),
               SizedBox(height: 8),
               Text('Benefiti:', style: TextStyle(fontWeight: FontWeight.bold)),
-              Text('${praksa?.benefiti ?? 'No Benefits Available'}'),
+              Text('${praksa?.benefiti ?? 'Nema benefita'}'),
               SizedBox(height: 8),
               Text('Kvalifikacije:',
                   style: TextStyle(fontWeight: FontWeight.bold)),
-              Text('${praksa?.kvalifikacije ?? 'No Qualifications Available'}'),
-              SizedBox(height: 16), // Added spacing to avoid overcrowding
+              Text('${praksa?.kvalifikacije ?? 'Nema kvalifikacija'}'),
+              SizedBox(height: 16), 
               Row(
                 children: [
                   Expanded(

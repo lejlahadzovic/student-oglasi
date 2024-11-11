@@ -67,7 +67,7 @@ class _ScholarshipDetailsScreenState extends State<ScholarshipDetailsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.scholarship.naslov ?? 'Scholarship Details'),
+        title: Text(widget.scholarship.naslov ?? 'Detalji stipendija'),
         leading: IconButton(
           icon: Icon(Icons.arrow_back),
           onPressed: () {
@@ -75,7 +75,7 @@ class _ScholarshipDetailsScreenState extends State<ScholarshipDetailsScreen> {
           },
         ),
       ),
-      body: SingleChildScrollView( // Wrap content in SingleChildScrollView
+      body: SingleChildScrollView( 
         child: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Column(
@@ -91,7 +91,7 @@ class _ScholarshipDetailsScreenState extends State<ScholarshipDetailsScreen> {
                   : const SizedBox(
                       height: 200,
                       child: Center(
-                        child: Text('No Image Available'),
+                        child: Text('Nema dostupne slike'),
                       ),
                     ),
               SizedBox(height: 8),
@@ -137,12 +137,12 @@ class _ScholarshipDetailsScreenState extends State<ScholarshipDetailsScreen> {
               ),
               SizedBox(height: 16),
               Text(
-                widget.scholarship.naslov ?? 'No Title',
+                widget.scholarship.naslov ?? 'Nema naziva',
                 style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
               ),
               SizedBox(height: 16),
               Text(
-                widget.scholarship.opis ?? 'No Description',
+                widget.scholarship.opis ?? 'Nema opisa',
                 style: TextStyle(fontSize: 16),
               ),
               SizedBox(height: 16),

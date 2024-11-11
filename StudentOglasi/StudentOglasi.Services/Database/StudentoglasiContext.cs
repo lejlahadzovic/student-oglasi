@@ -758,27 +758,27 @@ protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
             {
                 Id = 1,
                 Naslov = "Računovodstvo u praksi",
-                RokPrijave = new DateTime(2024, 6, 30),
+                RokPrijave = new DateTime(2024, 12, 30),
                 Opis = "Ova praksa omogućava sticanje praktičnog iskustva u vođenju knjiga, pripremi financijskih izvještaja, obračunu plata i poreza, te primjeni računovodstvenih standarda.",
-                VrijemeObjave = new DateTime(2024, 6, 1),
+                VrijemeObjave = new DateTime(2024, 11, 1),
                 Slika = "internship1.png"
             },
             new Oglasi
             {
                 Id = 2,
                 Naslov = "Praksa u marketingu za studente završnih godina",
-                RokPrijave = new DateTime(2024, 7, 15),
+                RokPrijave = new DateTime(2024, 12, 28),
                 Opis = "Pridružite se našem dinamičnom marketing timu i steknite dragoceno iskustvo! Nudimo plaćenu praksu za studente završnih godina ekonomskih i menadžment fakulteta. Tokom prakse, radit ćete na stvarnim projektima, učiti od iskusnih profesionalaca i razvijati svoje veštine. Prijave su otvorene do kraja meseca. Ne propustite priliku!",
-                VrijemeObjave = new DateTime(2024, 6, 1),
+                VrijemeObjave = new DateTime(2024, 11, 11),
                 Slika = "internship2.png"
             },
             new Oglasi
             {
                 Id = 3,
                 Naslov = "Erasmus+ stipendije za zimski semestar na Univerzitetu u Ljubljani",
-                RokPrijave = new DateTime(2024, 8, 1),
+                RokPrijave = new DateTime(2024, 12, 31),
                 Opis = "Ured za međunarodnu saradnju Univerziteta u Zenici objavljuje Konkurs za prijavu studenata za razmjenu u zimskom semestru 2024/25. godine u okviru Erasmus+ programa za Univerzitet u Ljubljani, Slovenija.",
-                VrijemeObjave = new DateTime(2024, 6, 1),
+                VrijemeObjave = new DateTime(2024, 11, 1),
                 Slika = "scholarship1.jpg"
             },
             new Oglasi
@@ -803,27 +803,27 @@ protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
             {
                 Id = 6,
                 Naslov = "Praksa u oblasti ljudskih resursa",
-                RokPrijave = new DateTime(2024, 7, 25),
+                RokPrijave = new DateTime(2024, 12, 28),
                 Opis = "Ova praksa vam omogućava sticanje praktičnog iskustva u regrutaciji, upravljanju talentima i organizaciji zaposlenih. Idealna prilika za studente koji žele karijeru u HR sektoru.",
-                VrijemeObjave = new DateTime(2024, 6, 10),
+                VrijemeObjave = new DateTime(2024, 11, 10),
                 Slika = "internship4.png"
             },
             new Oglasi
             {
                 Id = 7,
                 Naslov = "Praksa u finansijama",
-                RokPrijave = new DateTime(2024, 7, 30),
+                RokPrijave = new DateTime(2024, 12, 30),
                 Opis = "Praksa u našem financijskom timu nudi priliku za rad na analizi financijskih podataka, planiranju budžeta i pripremi izvještaja. Idealan početak za one koji žele karijeru u financijama.",
-                VrijemeObjave = new DateTime(2024, 6, 15),
+                VrijemeObjave = new DateTime(2024, 11, 12),
                 Slika = "internship5.png"
             },
             new Oglasi
             {
                 Id = 8,
                 Naslov = "Praksa u dizajnu",
-                RokPrijave = new DateTime(2024, 8, 5),
+                RokPrijave = new DateTime(2024, 12, 27),
                 Opis = "Ako volite kreativni rad, ova praksa vam nudi priliku da radite sa našim dizajnerskim timom na stvaranju vizuelnih rješenja za digitalne i štampane medije.",
-                VrijemeObjave = new DateTime(2024, 6, 20),
+                VrijemeObjave = new DateTime(2024, 11, 11),
                 Slika = "internship1.png"
             },
             new Oglasi
@@ -839,18 +839,18 @@ protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
             {
                 Id = 10,
                 Naslov = "Stipendije za master studije u inostranstvu",
-                RokPrijave = new DateTime(2024, 8, 20),
+                RokPrijave = new DateTime(2024, 12, 28),
                 Opis = "Ova stipendija pokriva troškove školarine i života za master studije u inostranstvu. Idealna prilika za studente koji žele nastaviti obrazovanje na prestižnim univerzitetima.",
-                VrijemeObjave = new DateTime(2024, 6, 1),
+                VrijemeObjave = new DateTime(2024, 11, 12),
                 Slika = "scholarship2.jpg"
             },
             new Oglasi
             {
                 Id = 11,
                 Naslov = "Stipendije za studente tehničkih nauka",
-                RokPrijave = new DateTime(2024, 8, 25),
+                RokPrijave = new DateTime(2024, 12, 30),
                 Opis = "Stipendije namijenjene studentima tehničkih fakulteta koji pokazuju izuzetne rezultate u studiranju i želju za usavršavanjem u oblasti tehničkih nauka.",
-                VrijemeObjave = new DateTime(2024, 6, 5),
+                VrijemeObjave = new DateTime(2024, 11, 5),
                 Slika = "scholarship3.jpg"
             },
             new Oglasi
@@ -866,18 +866,18 @@ protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
             {
                 Id = 13,
                 Naslov = "Stipendije za istraživačke projekte",
-                RokPrijave = new DateTime(2024, 9, 10),
+                RokPrijave = new DateTime(2024, 12, 27),
                 Opis = "Stipendije za studente koji rade na inovativnim istraživačkim projektima u oblasti prirodnih nauka. Prilika za finansijsku podršku i dalji razvoj istraživačkog rada.",
-                VrijemeObjave = new DateTime(2024, 6, 15),
+                VrijemeObjave = new DateTime(2024, 11, 10),
                 Slika = "scholarship5.jpg"
             },
             new Oglasi
             {
                 Id = 14,
                 Naslov = "Erasmus+ stipendije za studente na razmjeni",
-                RokPrijave = new DateTime(2024, 9, 15),
+                RokPrijave = new DateTime(2024, 12, 29),
                 Opis = "Prilika za studente koji žele studirati jedan semestar u inostranstvu kroz Erasmus+ program. Stipendija pokriva troškove puta, smještaja i školarine.",
-                VrijemeObjave = new DateTime(2024, 6, 20),
+                VrijemeObjave = new DateTime(2024, 11, 11),
                 Slika = "scholarship1.jpg"
             }
             );
@@ -891,10 +891,10 @@ protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
             );
 
         modelBuilder.Entity<StatusOglasi>().HasData(
-            new StatusOglasi { Id = 1, Naziv = "Initial", Opis = null },
-            new StatusOglasi { Id = 2, Naziv = "Draft", Opis = null },
+            new StatusOglasi { Id = 1, Naziv = "Kreiran", Opis = null },
+            new StatusOglasi { Id = 2, Naziv = "Skica", Opis = null },
             new StatusOglasi { Id = 3, Naziv = "Aktivan", Opis = null },
-            new StatusOglasi { Id = 4, Naziv = "Update", Opis = null }
+            new StatusOglasi { Id = 4, Naziv = "Istekao", Opis = null }
         );
 
         modelBuilder.Entity<StatusPrijave>().HasData(
@@ -1059,19 +1059,19 @@ protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
             new Prakse
             {
                 Id = 1,
-                PocetakPrakse = new DateTime(2024, 7, 1),
-                KrajPrakse = new DateTime(2024, 9, 1),
+                PocetakPrakse = new DateTime(2025, 1, 11),
+                KrajPrakse = new DateTime(2025, 2, 1),
                 Kvalifikacije = "Poznavanje rada na računaru",
                 Benefiti = "Besplatan ručak",
                 Placena = true,
-                StatusId = 2,
+                StatusId = 3,
                 OrganizacijaId = 1
             },
             new Prakse
             {
                 Id = 2,
-                PocetakPrakse = new DateTime(2024, 8, 1),
-                KrajPrakse = new DateTime(2024, 10, 1),
+                PocetakPrakse = new DateTime(2025, 2, 1),
+                KrajPrakse = new DateTime(2025, 3, 1),
                 Kvalifikacije = "Poznavanje programiranja",
                 Benefiti = "Besplatan prevoz",
                 Placena = false,
@@ -1086,40 +1086,40 @@ protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
                 Kvalifikacije = "Iskustvo u programiranju",
                 Benefiti = "Mentorska podrška",
                 Placena = true,
-                StatusId = 2,
+                StatusId = 4,
                 OrganizacijaId = 3
             },
             new Prakse
             {
                 Id = 6,
-                PocetakPrakse = new DateTime(2024, 9, 1),
-                KrajPrakse = new DateTime(2024, 11, 1),
+                PocetakPrakse = new DateTime(2025, 3, 1),
+                KrajPrakse = new DateTime(2025, 4, 1),
                 Kvalifikacije = "Osnove regrutacije i upravljanja talentima",
                 Benefiti = "Praktično iskustvo u HR-u",
                 Placena = false,
-                StatusId = 2,
+                StatusId = 3,
                 OrganizacijaId = 4
             },
             new Prakse
             {
                 Id = 7,
-                PocetakPrakse = new DateTime(2024, 8, 15),
-                KrajPrakse = new DateTime(2024, 10, 15),
+                PocetakPrakse = new DateTime(2025, 3, 15),
+                KrajPrakse = new DateTime(2025, 4, 15),
                 Kvalifikacije = "Osnovno znanje financijske analize",
                 Benefiti = "Mentorska podrška",
                 Placena = true,
-                StatusId = 2,
+                StatusId = 3,
                 OrganizacijaId = 5
             },
             new Prakse
             {
                 Id = 8,
-                PocetakPrakse = new DateTime(2024, 9, 1),
-                KrajPrakse = new DateTime(2024, 11, 1),
+                PocetakPrakse = new DateTime(2025, 2, 1),
+                KrajPrakse = new DateTime(2025, 2, 21),
                 Kvalifikacije = "Osnovno znanje dizajna",
                 Benefiti = "Rad u kreativnom timu",
                 Placena = false,
-                StatusId = 2,
+                StatusId = 3,
                 OrganizacijaId = 8  
             },
 
@@ -1131,7 +1131,7 @@ protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
                 Kvalifikacije = "Poznavanje turizma i ugostiteljstva",
                 Benefiti = "Iskustvo u radu sa gostima",
                 Placena = true,
-                StatusId = 2,
+                StatusId = 4,
                 OrganizacijaId = 9
             }
             );
@@ -1147,7 +1147,7 @@ protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
                 Izvor = "Erasmus+ Program",
                 NivoObrazovanja = "Studije",
                 BrojStipendisata = 5,
-                StatusId = 2,
+                StatusId = 3,
                 StipenditorId = 1
             },
             new Stipendije
@@ -1160,7 +1160,7 @@ protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
                 Izvor = "Fondacija za obrazovanje",
                 NivoObrazovanja = "Srednje škole i univerzitet",
                 BrojStipendisata = 10,
-                StatusId = 2,
+                StatusId = 4,
                 StipenditorId = 2
             },
             new Stipendije
@@ -1173,7 +1173,7 @@ protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
                 Izvor = "Stipendije za master studije",
                 NivoObrazovanja = "Master studije",
                 BrojStipendisata = 7,
-                StatusId = 2,
+                StatusId = 3,
                 StipenditorId = 3 
             },
             new Stipendije
@@ -1186,7 +1186,7 @@ protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
                 Izvor = "Stipendije za tehničke nauke",
                 NivoObrazovanja = "Studije",
                 BrojStipendisata = 8,
-                StatusId = 2,
+                StatusId = 3,
                 StipenditorId = 1 
             },
             new Stipendije
@@ -1199,7 +1199,7 @@ protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
                 Izvor = "Stipendije za socijalno ugrožene",
                 NivoObrazovanja = "Studije",
                 BrojStipendisata = 10,
-                StatusId = 2,
+                StatusId = 4,
                 StipenditorId = 2 
             },
             new Stipendije
@@ -1212,7 +1212,7 @@ protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
                 Izvor = "Stipendije za istraživačke projekte",
                 NivoObrazovanja = "Studije",
                 BrojStipendisata = 5,
-                StatusId = 2,
+                StatusId = 3,
                 StipenditorId = 3
             },
             new Stipendije
@@ -1225,7 +1225,7 @@ protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
                 Izvor = "Erasmus+ program",
                 NivoObrazovanja = "Studije",
                 BrojStipendisata = 5,
-                StatusId = 2,
+                StatusId = 3,
                 StipenditorId = 1
             }
             );

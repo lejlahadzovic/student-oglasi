@@ -37,18 +37,17 @@ namespace StudentOglasi.Services.StateMachine.StipendijeStateMachine
                 await HandleImageUpdateAsync(entity, request.Slika);
             }
 
+            var state = await _context.StatusOglasis.FindAsync(request.StatusId);
+            if(state.Naziv.Contains("Aktivan") && request.IdNavigation.RokPrijave<DateTime.Now)
+            {
+                throw new Exception("Oglas ne može biti aktiviran ako je rok prijave istekao. Datum roka prijave mora biti veći od trenutnog.");
+            }
+            else if(state.Naziv.Contains("Istekao") && request.IdNavigation.RokPrijave > DateTime.Now)
+            {
+                throw new Exception("Status ne može biti istekao ako je rok prijave stariji od današnjeg datuma.");
+            }
+
             _mapper.Map(request, entity);
-            await _context.SaveChangesAsync();
-            return _mapper.Map<Model.Stipendije>(entity);
-        }
-        public override async Task<Model.Stipendije> Activate(int id)
-        {
-            var set = _context.Set<Database.Stipendije>();
-
-            var entity = await set.Include(p => p.IdNavigation).FirstOrDefaultAsync(e => e.Id == id);
-
-            entity.Status = await _context.StatusOglasis.FirstOrDefaultAsync(e => e.Naziv.Contains("Aktivan"));
-
             await _context.SaveChangesAsync();
             return _mapper.Map<Model.Stipendije>(entity);
         }
@@ -56,7 +55,6 @@ namespace StudentOglasi.Services.StateMachine.StipendijeStateMachine
         {
             var list = await base.AllowedActions();
             list.Add("Update");
-            list.Add("Activate");
             return list;
         }
 

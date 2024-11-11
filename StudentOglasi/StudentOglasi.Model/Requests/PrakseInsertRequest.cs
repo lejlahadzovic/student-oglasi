@@ -28,6 +28,7 @@ namespace StudentOglasi.Model.Requests
         public OglasiRequest IdNavigation { get; set; } = null!;
 
         public int OrganizacijaId { get; set; }
+        public int StatusId { get; set; }
     }
 }
 

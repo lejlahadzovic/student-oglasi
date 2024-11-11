@@ -106,7 +106,7 @@ class _PrijavaPraksaFormScreenState extends State<PrijavaPraksaFormScreen> {
     } catch (e) {
       print('Error submitting application: $e');
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error submitting application: $e')),
+        SnackBar(content: Text('Greška pri slanju prijave: $e')),
       );
     }
   }
@@ -132,14 +132,14 @@ class _PrijavaPraksaFormScreenState extends State<PrijavaPraksaFormScreen> {
                 controller: _certifikatiController,
                 readOnly: true,
                 decoration: InputDecoration(
-                  hintText: 'Select certifikati file',
+                  hintText: 'Odaberite certifikate',
                   suffixIcon: IconButton(
                     icon: Icon(Icons.attach_file),
                     onPressed: () => _pickFile('certifikati'),
                   ),
                   border: OutlineInputBorder(),
                 ),
-                validator: FormBuilderValidators.required(errorText: 'Please select a certifikati file'),
+                validator: FormBuilderValidators.required(errorText: 'Odaberite certifikate'),
               ),
               SizedBox(height: 20),
 
@@ -150,14 +150,14 @@ class _PrijavaPraksaFormScreenState extends State<PrijavaPraksaFormScreen> {
                 controller: _cvController,
                 readOnly: true,
                 decoration: InputDecoration(
-                  hintText: 'Select CV file',
+                  hintText: 'Odaberite CV dokument',
                   suffixIcon: IconButton(
                     icon: Icon(Icons.attach_file),
                     onPressed: () => _pickFile('cv'),
                   ),
                   border: OutlineInputBorder(),
                 ),
-                validator: FormBuilderValidators.required(errorText: 'Please select a CV file'),
+                validator: FormBuilderValidators.required(errorText: 'Odaberite CV dokument'),
               ),
               SizedBox(height: 20),
               Text('Propratno pismo', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
@@ -167,14 +167,14 @@ class _PrijavaPraksaFormScreenState extends State<PrijavaPraksaFormScreen> {
                 controller: _propratnoPismoController,
                 readOnly: true,
                 decoration: InputDecoration(
-                  hintText: 'Select propratno pismo file',
+                  hintText: 'Odaberite propratno pismo',
                   suffixIcon: IconButton(
                     icon: Icon(Icons.attach_file),
                     onPressed: () => _pickFile('propratnoPismo'),
                   ),
                   border: OutlineInputBorder(),
                 ),
-                validator: FormBuilderValidators.required(errorText: 'Please select a propratno pismo file'),
+                validator: FormBuilderValidators.required(errorText: 'Odaberite propratno pismo'),
               ),
               SizedBox(height: 30),
               Align(

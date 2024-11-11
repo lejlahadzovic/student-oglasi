@@ -16,7 +16,7 @@ namespace StudentOglasi.Services.StateMachine.PrakseStateMaachine
 
             var entity = await set.Include(p => p.IdNavigation).FirstOrDefaultAsync(e => e.Id == id);
 
-            entity.Status = await _context.StatusOglasis.FirstOrDefaultAsync(e => e.Naziv.Contains("Draft"));
+            entity.Status = await _context.StatusOglasis.FirstOrDefaultAsync(e => e.Naziv.Contains("Skica"));
 
             await _context.SaveChangesAsync();
             return _mapper.Map<Model.Prakse>(entity);

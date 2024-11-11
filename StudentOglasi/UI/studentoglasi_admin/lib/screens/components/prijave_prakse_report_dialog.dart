@@ -89,35 +89,29 @@ class _PrijavePrakseReportDialogState extends State<PrijavePrakseReportDialog> {
         ElevatedButton(
           onPressed: () async {
             if (_formKey.currentState!.validate()) {
-            await _prijavaPraksaProvider.printReport(selectedPraksa!.id!, context);
+              await _prijavaPraksaProvider.printReport(
+                  selectedPraksa!.id!, context);
             }
           },
-          child: Text('Isprintaj'),
+          child: Icon(Icons.print),
         ),
         ElevatedButton(
           onPressed: () async {
             if (_formKey.currentState!.validate()) {
-            try {
-              final file = await _prijavaPraksaProvider
-                  .downloadReport(selectedPraksa!.id!, context);
+              try {
+                final file = await _prijavaPraksaProvider.downloadReport(
+                    selectedPraksa!.id!, context);
 
-              if (file != null) {
-                OpenFile.open(file.path);
+                if (file != null) {
+                  OpenFile.open(file.path);
+                }
+              } catch (e) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text('Failed to download report')));
               }
-            } catch (e) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text('Failed to download report')));
-            }
             }
           },
-          child: Text('Preuzmi izvjestaj'),
-          style: ButtonStyle(
-            backgroundColor: MaterialStateProperty.all<Color>(
-                Color.fromARGB(255, 19, 201, 65)),
-            foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
-            textStyle: MaterialStateProperty.all<TextStyle>(
-                TextStyle(fontWeight: FontWeight.bold)),
-          ),
+          child: Icon(Icons.download),
         ),
         ElevatedButton(
           child: Text('Generiši'),
@@ -160,7 +154,7 @@ class _PrijavePrakseReportDialogState extends State<PrijavePrakseReportDialog> {
                   },
                 );
               }
-            } 
+            }
           },
         ),
       ],

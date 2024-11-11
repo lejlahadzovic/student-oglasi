@@ -16,7 +16,7 @@ class ObjavaDetailsScreen extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: Colors.blue,
         title: Text(
-          objava.naslov ?? 'News Details',
+          objava.naslov ?? 'Detalji objava',
           style: TextStyle(
             color: Colors.white,
             fontWeight: FontWeight.bold,
@@ -45,7 +45,7 @@ class ObjavaDetailsScreen extends StatelessWidget {
                 : const SizedBox(
                     height: 200,
                     child: Center(
-                      child: Text('No Image Available'),
+                      child: Text('Nema dostupne slike'),
                     ),
                   ),
             SizedBox(height: 8),
@@ -76,7 +76,7 @@ class ObjavaDetailsScreen extends StatelessWidget {
 
             // Title of the news
             Text(
-              objava.naslov ?? 'No Title',
+              objava.naslov ?? 'Nema naziva',
               style: TextStyle(
                 fontSize: 24,
                 fontWeight: FontWeight.bold,
@@ -87,7 +87,7 @@ class ObjavaDetailsScreen extends StatelessWidget {
 
             // News content
             Text(
-              objava.sadrzaj ?? 'No Description',
+              objava.sadrzaj ?? 'Nema opisa',
               style: TextStyle(
                 fontSize: 16,
                 color: Colors.black54,

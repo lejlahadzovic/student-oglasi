@@ -183,7 +183,7 @@ class _RezervacijeReportDialogState extends State<RezervacijeReportDialog> {
                   selectedSmjestajnaJedinica?.id, startDate, endDate, context);
             }
           },
-          child: Text('Isprintaj'),
+          child: Icon(Icons.print),
         ),
         ElevatedButton(
           onPressed: () async {
@@ -201,15 +201,15 @@ class _RezervacijeReportDialogState extends State<RezervacijeReportDialog> {
                 }
               } catch (e) {
                 ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text('Failed to download report')));
+                    SnackBar(content: Text('Preuzimanje zvještaja nije uspjelo')));
               }
             }
           },
-          child: Text('Preuzmi izvjestaj'),
+          child: Icon(Icons.download),
           style: ButtonStyle(
             backgroundColor: MaterialStateProperty.all<Color>(
-                Color.fromARGB(255, 19, 201, 65)),
-            foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
+               Colors.white),
+            foregroundColor: MaterialStateProperty.all<Color>(Colors.blue.shade800),
             textStyle: MaterialStateProperty.all<TextStyle>(
                 TextStyle(fontWeight: FontWeight.bold)),
           ),
@@ -250,6 +250,13 @@ class _RezervacijeReportDialogState extends State<RezervacijeReportDialog> {
             }
           },
           child: Text('Generiši'),
+          style: ButtonStyle(
+            backgroundColor:
+                MaterialStateProperty.all<Color>(Colors.blue.shade800),
+            foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
+            textStyle: MaterialStateProperty.all<TextStyle>(
+                TextStyle(fontWeight: FontWeight.bold)),
+          ),
         ),
       ],
     );

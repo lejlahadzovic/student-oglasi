@@ -80,14 +80,7 @@ class _PrakseListScreenState extends State<PrakseListScreen> {
   @override
   Widget build(BuildContext context) {
     int numberPages = calculateNumberPages(_totalItems, 5);
-/*
-    // Ensure current page is within bounds before building paginator
-    if (_currentPage >= numberPages) {
-      _currentPage = numberPages - 1;
-    }
-    if (_currentPage < 0) {
-      _currentPage = 0;
-    }*/
+
     return MasterScreenWidget(
       title: "Prakse",
       addButtonLabel: "Dodaj praksu",

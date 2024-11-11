@@ -3,6 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.VisualStudio.Services.Users;
 using StudentOglasi.Model.Requests;
 using StudentOglasi.Services.Database;
+using StudentOglasi.Services.StateMachine.PrakseStateMaachine;
 using StudentOglasi.Services.StateMachine.StipendijeStateMachine;
 
 namespace StudentOglasi.Services.OglasiStateMachine
@@ -26,15 +27,7 @@ namespace StudentOglasi.Services.OglasiStateMachine
         {
             throw new UserException("Action is not allowed!");
         }
-        public virtual Task<Model.Stipendije> Activate(int id)
-        {
-            throw new UserException("Action is not allowed!");
-        }
         public virtual Task<Model.Stipendije> Hide(int id)
-        {
-            throw new UserException("Action is not allowed!");
-        }
-        public virtual Task<Model.Stipendije> Delete(int id)
         {
             throw new UserException("Action is not allowed!");
         }
@@ -42,15 +35,18 @@ namespace StudentOglasi.Services.OglasiStateMachine
         {
             switch (stateName)
             {
-                case "Initial":
+                case "Kreiran":
                 case null:
                     return _serviceProvider.GetService<InitialStipendijeState>();
                     break;
-                case "Draft":
+                case "Skica":
                     return _serviceProvider.GetService<DraftStipendijeState>();
                     break;
                 case "Aktivan":
-                    return _serviceProvider.GetService<ActiveStipendijeState>();
+                    return _serviceProvider.GetService<ActiveStipendijeState>(); 
+                    break;
+                case "Istekao":
+                    return _serviceProvider.GetService<InactiveStipendijeState>();
                     break;
                 default:
                     throw new UserException("Action is not allowed!");

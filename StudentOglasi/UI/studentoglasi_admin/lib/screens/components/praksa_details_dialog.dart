@@ -80,337 +80,361 @@ class _PraksaDetailsDialogState extends State<PraksaDetailsDialog> {
   Widget build(BuildContext context) {
     return AlertDialog(
       title: Text(widget.title ?? ''),
-      content: SingleChildScrollView(
-        child: FormBuilder(
-          key: _formKey,
-          initialValue: _initialValue,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              SizedBox(height: 10),
-              FormBuilderField(
-                name: 'filePath',
-                builder: (FormFieldState<dynamic> field) {
-                  return Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      InputDecorator(
-                        decoration: InputDecoration(
-                          labelText: 'Slika',
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.all(Radius.circular(10)),
-                          ),
-                          errorText: field.errorText,
-                        ),
-                        child: Center(
-                          child: _filePath != null
-                              ? Image.file(
-                                  File(_filePath!),
-                                  fit: BoxFit.cover,
-                                  width: 800,
-                                  height: 450,
-                                )
-                              : _imageUrl != null
-                                  ? Image.network(
-                                      _imageUrl!,
+      content: ConstrainedBox(
+        constraints: BoxConstraints(
+          minWidth: 800,
+          maxWidth: 800,
+        ),
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.all(10.0),
+            child: FormBuilder(
+              key: _formKey,
+              initialValue: _initialValue,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SizedBox(height: 10),
+                  FormBuilderField(
+                    name: 'filePath',
+                    builder: (FormFieldState<dynamic> field) {
+                      return Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          InputDecorator(
+                            decoration: InputDecoration(
+                              labelText: 'Slika',
+                              border: OutlineInputBorder(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(10)),
+                              ),
+                              errorText: field.errorText,
+                            ),
+                            child: Center(
+                              child: _filePath != null
+                                  ? Image.file(
+                                      File(_filePath!),
                                       fit: BoxFit.cover,
                                       width: 800,
-                                      height: 450,
+                                      height: 350,
                                     )
-                                  : SizedBox(
-                                      width: 800,
-                                      height: 450,
-                                      child: Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          Icon(
-                                            Icons.image,
-                                            size: 200,
-                                            color: Colors.grey,
+                                  : _imageUrl != null
+                                      ? Image.network(
+                                          _imageUrl!,
+                                          fit: BoxFit.cover,
+                                          width: 800,
+                                          height: 350,
+                                        )
+                                      : SizedBox(
+                                          width: 800,
+                                          height: 350,
+                                          child: Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              Icon(
+                                                Icons.image,
+                                                size: 100,
+                                                color: Colors.grey,
+                                              ),
+                                              SizedBox(height: 20),
+                                              Text(
+                                                'Nema dostupne slike',
+                                                style: TextStyle(
+                                                    fontSize: 24,
+                                                    color: Colors.grey),
+                                              ),
+                                            ],
                                           ),
-                                          SizedBox(height: 20),
-                                          Text(
-                                            'Nema dostupne slike',
-                                            style: TextStyle(
-                                                fontSize: 24,
-                                                color: Colors.grey),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                        ),
-                      ),
-                      SizedBox(height: 10),
-                      Row(
-                        children: [
-                          Expanded(
-                            child: Text(
-                              _filePath != null ? _filePath! : '',
-                              style: TextStyle(fontSize: 16),
+                                        ),
                             ),
                           ),
-                          ElevatedButton(
-                            onPressed: () async {
-                              FilePickerResult? result = await FilePicker
-                                  .platform
-                                  .pickFiles(type: FileType.image);
+                          SizedBox(height: 20),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              ElevatedButton(
+                                onPressed: () async {
+                                  FilePickerResult? result = await FilePicker
+                                      .platform
+                                      .pickFiles(type: FileType.image);
 
-                              if (result != null) {
-                                setState(() {
-                                  _filePath = result.files.single.path;
-                                });
-                                field.didChange(_filePath);
-                              }
-                            },
-                            child: Text('Odaberite sliku'),
+                                  if (result != null) {
+                                    setState(() {
+                                      _filePath = result.files.single.path;
+                                    });
+                                    field.didChange(_filePath);
+                                  }
+                                },
+                                child: Text('Odaberite sliku'),
+                              ),
+                            ],
                           ),
                         ],
+                      );
+                    },
+                  ),
+                  SizedBox(height: 20),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Container(
+                          width: 400,
+                          child: FormBuilderTextField(
+                              name: 'idNavigation.naslov',
+                              decoration: InputDecoration(
+                                labelText: 'Naslov',
+                                border: OutlineInputBorder(
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(10)),
+                                ),
+                              ),
+                              validator: validateText),
+                        ),
+                      ),
+                      SizedBox(width: 20),
+                      Expanded(
+                        child: Container(
+                          width: 400,
+                          child: FormBuilderCheckbox(
+                            name: 'placena',
+                            initialValue: _initialValue['placena'],
+                            title: Text('Placena'),
+                          ),
+                        ),
                       ),
                     ],
-                  );
-                },
-              ),
-              SizedBox(height: 10),
-              Row(
-                children: [
-                  Expanded(
-                    child: Container(
-                      width: 400,
-                      child: FormBuilderTextField(
-                          name: 'idNavigation.naslov',
-                          decoration: InputDecoration(
-                            labelText: 'Naslov',
-                            border: OutlineInputBorder(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(10)),
-                            ),
-                          ),
-                          validator: validateText),
-                    ),
                   ),
-                  SizedBox(width: 20),
-                  Expanded(
-                    child: Container(
-                      width: 400,
-                      child: FormBuilderCheckbox(
-                        name: 'placena',
-                        initialValue: _initialValue['placena'],
-                        title: Text('Placena'),
+                  SizedBox(height: 20),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: FormBuilderDropdown<String>(
+                            name: 'organizacijaId',
+                            decoration: InputDecoration(
+                              labelText: 'Organizacija',
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                            ),
+                            items: widget.organizacijeResult?.result
+                                    .map((Organizacije organizacija) =>
+                                        DropdownMenuItem(
+                                          value: organizacija.id.toString(),
+                                          child: Text(organizacija.naziv ?? ''),
+                                        ))
+                                    .toList() ??
+                                [],
+                            validator: validateText),
                       ),
-                    ),
-                  ),
-                ],
-              ),
-              SizedBox(height: 10),
-              Row(
-                children: [
-                  Expanded(
-                    child: Container(
-                      width: 400,
-                      child: FormBuilderTextField(
-                          name: 'kvalifikacije',
-                          decoration: InputDecoration(
-                            labelText: 'Kvalifikacije',
-                            border: OutlineInputBorder(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(10)),
+                      SizedBox(width: 20),
+                      Expanded(
+                        child: FormBuilderDropdown<String>(
+                            name: 'statusId',
+                            decoration: InputDecoration(
+                              labelText: 'Status',
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10),
+                              ),
                             ),
-                          ),
-                          validator: validateText),
-                    ),
+                            items: widget.statusResult?.result
+                                    .map((StatusOglasi status) =>
+                                        DropdownMenuItem(
+                                          value: status.id.toString(),
+                                          child: Text(status.naziv ?? ''),
+                                        ))
+                                    .toList() ??
+                                [],
+                            validator: validateText),
+                      ),
+                    ],
                   ),
-                  SizedBox(width: 20),
-                  Expanded(
-                    child: Container(
-                      width: 400,
-                      child: FormBuilderTextField(
-                          name: 'benefiti',
-                          decoration: InputDecoration(
-                            labelText: 'Benefiti',
-                            border: OutlineInputBorder(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(10)),
-                            ),
-                          ),
-                          validator: validateText),
-                    ),
-                  ),
-                ],
-              ),
-              SizedBox(height: 10),
-              Row(
-                children: [
-                  Expanded(
-                    child: FormBuilderDropdown<String>(
-                        name: 'organizacijaId',
-                        decoration: InputDecoration(
-                          labelText: 'Organizacija',
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10),
+                  SizedBox(height: 20),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Container(
+                          width: 400,
+                          child: FormBuilderDateTimePicker(
+                            name: 'idNavigation.vrijemeObjave',
+                            inputType: InputType.date,
+                            format: DateFormat('dd.MM.yyyy.'),
+                            decoration:
+                                InputDecoration(labelText: 'Vrijeme objave'),
+                            validator: (value) {
+                              if (value == null) {
+                                return 'Izaberite datum';
+                              }
+                              return null;
+                            },
                           ),
                         ),
-                        items: widget.organizacijeResult?.result
-                                .map((Organizacije organizacija) =>
-                                    DropdownMenuItem(
-                                      value: organizacija.id.toString(),
-                                      child: Text(organizacija.naziv ?? ''),
-                                    ))
-                                .toList() ??
-                            [],
-                        validator: validateText),
-                  ),
-                  SizedBox(width: 20),
-                  Expanded(
-                    child: FormBuilderDropdown<String>(
-                        name: 'statusId',
-                        decoration: InputDecoration(
-                          labelText: 'Status',
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10),
+                      ),
+                      SizedBox(width: 20),
+                      Expanded(
+                        child: Container(
+                          width: 400,
+                          child: FormBuilderDateTimePicker(
+                            name: 'idNavigation.rokPrijave',
+                            inputType: InputType.date,
+                            format: DateFormat('dd.MM.yyyy.'),
+                            decoration:
+                                InputDecoration(labelText: 'Rok prijave'),
+                            validator: (value) {
+                              if (value == null) {
+                                return 'Izaberite datum';
+                              } else if (value.isBefore(DateTime.now()) &&
+                                  _formKey.currentState?.fields['statusId']
+                                          ?.value ==
+                                      '3') {
+                                return 'Rok prijave mora biti poslije trenutnog datuma za aktivan status.';
+                              } else if (value.isAfter(DateTime.now()) &&
+                                  _formKey.currentState?.fields['statusId']
+                                          ?.value ==
+                                      '4') {
+                                return 'Rok prijave mora biti prije trenutnog datuma za status istekao.';
+                              } else if (_formKey
+                                      .currentState
+                                      ?.fields['idNavigation.vrijemeObjave']
+                                      ?.value !=
+                                  null) {
+                                DateTime vrijemeObjave = _formKey
+                                    .currentState
+                                    ?.fields['idNavigation.vrijemeObjave']
+                                    ?.value;
+                                if (value.isBefore(vrijemeObjave)) {
+                                  return 'Izabrani datum mora biti poslije vremena objave';
+                                }
+                              }
+                              return null;
+                            },
                           ),
                         ),
-                        items: widget.statusResult?.result
-                                .map((StatusOglasi status) => DropdownMenuItem(
-                                      value: status.id.toString(),
-                                      child: Text(status.naziv ?? ''),
-                                    ))
-                                .toList() ??
-                            [],
-                        validator: validateText),
-                  ),
-                ],
-              ),
-              SizedBox(height: 10),
-              Row(
-                children: [
-                  Expanded(
-                    child: Container(
-                      width: 400,
-                      child: FormBuilderDateTimePicker(
-                        name: 'idNavigation.vrijemeObjave',
-                        inputType: InputType.date,
-                        format: DateFormat('dd.MM.yyyy.'),
-                        decoration:
-                            InputDecoration(labelText: 'Vrijeme objave'),
-                        validator: (value) {
-                          if (value == null) {
-                            return 'Izaberite datum';
-                          }
-                          return null;
-                        },
                       ),
-                    ),
+                    ],
                   ),
-                  SizedBox(width: 20),
-                  Expanded(
-                    child: Container(
-                      width: 400,
-                      child: FormBuilderDateTimePicker(
-                        name: 'idNavigation.rokPrijave',
-                        inputType: InputType.date,
-                        format: DateFormat('dd.MM.yyyy.'),
-                        decoration: InputDecoration(labelText: 'Rok prijave'),
-                        validator: (value) {
-                          if (value == null) {
-                            return 'Izaberite datum';
-                          } else if (_formKey
-                                  .currentState
-                                  ?.fields['idNavigation.vrijemeObjave']
-                                  ?.value !=
-                              null) {
-                            DateTime vrijemeObjave = _formKey.currentState
-                                ?.fields['idNavigation.vrijemeObjave']?.value;
-                            if (value.isBefore(vrijemeObjave)) {
-                              return 'Izabrani datum mora biti poslije vremena objave';
-                            }
-                          }
-                          return null;
-                        },
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              SizedBox(height: 10),
-              Row(
-                children: [
-                  Expanded(
-                    child: Container(
-                      width: 400,
-                      child: FormBuilderDateTimePicker(
-                        name: 'pocetakPrakse',
-                        inputType: InputType.date,
-                        format: DateFormat('dd.MM.yyyy.'),
-                        decoration:
-                            InputDecoration(labelText: 'Početak prakse'),
-                        validator: (value) {
-                          if (value == null) {
-                            return 'Izaberite datum';
-                          } else if (_formKey.currentState
-                                  ?.fields['idNavigation.rokPrijave']?.value !=
-                              null) {
-                            DateTime rokPrijave = _formKey.currentState
-                                ?.fields['idNavigation.rokPrijave']?.value;
-                            if (value.isBefore(rokPrijave)) {
-                              return 'Izabrani datum mora biti poslije roka prijave';
-                            }
-                          }
-                          return null;
-                        },
-                      ),
-                    ),
-                  ),
-                  SizedBox(width: 20),
-                  Expanded(
-                    child: Container(
-                      width: 400,
-                      child: FormBuilderDateTimePicker(
-                        name: 'krajPrakse',
-                        inputType: InputType.date,
-                        format: DateFormat('dd.MM.yyyy.'),
-                        decoration: InputDecoration(labelText: 'Kraj prakse'),
-                        validator: (value) {
-                          if (value == null) {
-                            return 'Izaberite datum';
-                          } else if (_formKey.currentState
-                                  ?.fields['pocetakPrakse']?.value !=
-                              null) {
-                            DateTime pocetakPrakse = _formKey
-                                .currentState?.fields['pocetakPrakse']?.value;
-                            if (value.isBefore(pocetakPrakse)) {
-                              return 'Izabrani datum mora biti poslije početka prakse';
-                            }
-                          }
-                          return null;
-                        },
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              SizedBox(height: 10),
-              Row(
-                children: [
-                  Expanded(
-                    child: Container(
-                      width: 400,
-                      child: FormBuilderTextField(
-                          name: 'idNavigation.opis',
-                          maxLines: 5,
-                          decoration: InputDecoration(
-                            labelText: 'Opis',
-                            border: OutlineInputBorder(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(10)),
-                            ),
+                  SizedBox(height: 20),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Container(
+                          width: 400,
+                          child: FormBuilderDateTimePicker(
+                            name: 'pocetakPrakse',
+                            inputType: InputType.date,
+                            format: DateFormat('dd.MM.yyyy.'),
+                            decoration:
+                                InputDecoration(labelText: 'Početak prakse'),
+                            validator: (value) {
+                              if (value == null) {
+                                return 'Izaberite datum';
+                              } else if (_formKey
+                                      .currentState
+                                      ?.fields['idNavigation.rokPrijave']
+                                      ?.value !=
+                                  null) {
+                                DateTime rokPrijave = _formKey.currentState
+                                    ?.fields['idNavigation.rokPrijave']?.value;
+                                if (value.isBefore(rokPrijave)) {
+                                  return 'Izabrani datum mora biti poslije roka prijave';
+                                }
+                              }
+                              return null;
+                            },
                           ),
-                          validator: validateText),
-                    ),
+                        ),
+                      ),
+                      SizedBox(width: 20),
+                      Expanded(
+                        child: Container(
+                          width: 400,
+                          child: FormBuilderDateTimePicker(
+                            name: 'krajPrakse',
+                            inputType: InputType.date,
+                            format: DateFormat('dd.MM.yyyy.'),
+                            decoration:
+                                InputDecoration(labelText: 'Kraj prakse'),
+                            validator: (value) {
+                              if (value == null) {
+                                return 'Izaberite datum';
+                              } else if (_formKey.currentState
+                                      ?.fields['pocetakPrakse']?.value !=
+                                  null) {
+                                DateTime pocetakPrakse = _formKey.currentState
+                                    ?.fields['pocetakPrakse']?.value;
+                                if (value.isBefore(pocetakPrakse)) {
+                                  return 'Izabrani datum mora biti poslije početka prakse';
+                                }
+                              }
+                              return null;
+                            },
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 20),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Container(
+                          width: 400,
+                          child: FormBuilderTextField(
+                              name: 'kvalifikacije',
+                              maxLines: 3,
+                              decoration: InputDecoration(
+                                labelText: 'Kvalifikacije',
+                                border: OutlineInputBorder(
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(10)),
+                                ),
+                              ),
+                              validator: validateText),
+                        ),
+                      ),
+                      SizedBox(width: 20),
+                      Expanded(
+                        child: Container(
+                          width: 400,
+                          child: FormBuilderTextField(
+                              name: 'benefiti',
+                              maxLines: 3,
+                              decoration: InputDecoration(
+                                labelText: 'Benefiti',
+                                border: OutlineInputBorder(
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(10)),
+                                ),
+                              ),
+                              validator: validateText),
+                        ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 20),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Container(
+                          width: 400,
+                          child: FormBuilderTextField(
+                              name: 'idNavigation.opis',
+                              maxLines: 3,
+                              decoration: InputDecoration(
+                                labelText: 'Opis',
+                                border: OutlineInputBorder(
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(10)),
+                                ),
+                              ),
+                              validator: validateText),
+                        ),
+                      ),
+                    ],
                   ),
                 ],
               ),
-            ],
+            ),
           ),
         ),
       ),
@@ -456,6 +480,7 @@ class _PraksaDetailsDialogState extends State<PraksaDetailsDialog> {
                   backgroundColor: Colors.lightGreen,
                 ));
               } on Exception catch (e) {
+                Navigator.pop(context, true);
                 ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                   content: Row(
                     children: [

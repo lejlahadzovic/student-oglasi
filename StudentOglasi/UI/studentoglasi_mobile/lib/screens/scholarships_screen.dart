@@ -256,9 +256,9 @@ class _ScholarshipsScreenState extends State<ScholarshipsScreen> {
                 : _hasError
                     ? Center(
                         child: Text(
-                            'Failed to load data. Please try again later.'))
+                            'Neuspješno učitavanje podataka. Molimo pokušajte opet.'))
                     : _stipendije?.count == 0
-                        ? Center(child: Text('No data available.'))
+                        ? Center(child: Text('Nema dostupnih podataka.'))
                         : ListView.builder(
                             itemCount: recommendedStipendije.count +
                                 filteredStipendije.length,
@@ -350,7 +350,7 @@ class _ScholarshipsScreenState extends State<ScholarshipsScreen> {
                 ),
                 SizedBox(height: 8),
                 Text(
-                  stipendija.idNavigation?.naslov ?? 'No title',
+                  stipendija.idNavigation?.naslov ?? 'Nema naziva',
                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                 ),
                 SizedBox(height: 8),

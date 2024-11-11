@@ -22,14 +22,14 @@ class CustomPaginator extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.fromLTRB(150, 10, 150, 50),
       child: NumberPaginator(
-        numberPages: numberPages, // Update this to the actual number of pages
+        numberPages: numberPages,
         initialPage: initialPage,
         onPageChange: onPageChange,
         showPrevButton: true,
         showNextButton: false,
         nextButtonContent: Icon(Icons.arrow_right_alt),
         prevButtonBuilder: (context) => Padding(
-          padding: const EdgeInsets.only(left: 0.0), // Add padding to the left
+          padding: const EdgeInsets.only(left: 0.0), 
           child: TextButton(
             onPressed: pageController.currentPage > 0
                 ? () => pageController.prev()

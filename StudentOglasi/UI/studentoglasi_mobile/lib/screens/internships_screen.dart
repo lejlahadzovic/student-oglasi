@@ -258,9 +258,9 @@ class _InternshipsScreenState extends State<InternshipsScreen> {
                 : _hasError
                     ? const Center(
                         child: Text(
-                            'Failed to load data. Please try again later.'))
+                            'Neuspješno učitavanje podataka. Molimo pokušajte opet.'))
                     : _praksa?.count == 0
-                        ? const Center(child: Text('No data available.'))
+                        ? const Center(child: Text('Nema dostupnih podataka.'))
                         : ListView.builder(
                             itemCount:
                                 recommendedPrakse.count + filteredPraksa.length,
@@ -350,7 +350,7 @@ class _InternshipsScreenState extends State<InternshipsScreen> {
                 ),
                 SizedBox(height: 8),
                 Text(
-                  praksa.idNavigation?.naslov ?? 'No title',
+                  praksa.idNavigation?.naslov ?? 'Nema naziva',
                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                 ),
                 Text(

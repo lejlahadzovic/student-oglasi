@@ -101,7 +101,7 @@ class _PrijavaStipendijaFormScreenState extends State<PrijavaStipendijaFormScree
     } catch (e) {
       print('Error submitting application: $e');
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error submitting application: $e')),
+        SnackBar(content: Text('Greška pri slanju prijave: $e')),
       );
     }
   }

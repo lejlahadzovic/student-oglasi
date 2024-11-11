@@ -112,7 +112,7 @@ class _ObjaveDetailsDialogState extends State<ObjaveDetailsDialog> {
                                         children: [
                                           Icon(
                                             Icons.image,
-                                            size: 200,
+                                            size: 100,
                                             color: Colors.grey,
                                           ),
                                           SizedBox(height: 20),

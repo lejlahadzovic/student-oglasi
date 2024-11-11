@@ -160,11 +160,11 @@ class _ApplicationsScreenState extends State<ApplicationsScreen> {
           ? const Center(child: CircularProgressIndicator())
           : _hasError
               ? const Center(
-                  child: Text('Failed to load data. Please try again later.'))
+                  child: Text('Neuspješno učitavanje podataka. Molimo pokušajte opet.'))
               : prijavePrakseResult == null &&
                       prijaveStipendijaResult == null &&
                       rezeracijeResult == null
-                  ? const Center(child: Text('Trenutno nemate prijava.'))
+                  ? const Center(child: Text('Trenutno nema prijava.'))
                   : ListView.builder(
                       itemCount: (prijavePrakseResult?.length ?? 0) +
                           (prijaveStipendijaResult?.length ?? 0) +

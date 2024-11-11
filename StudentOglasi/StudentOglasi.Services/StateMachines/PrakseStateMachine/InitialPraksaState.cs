@@ -36,19 +36,28 @@ namespace StudentOglasi.Services.StateMachines.PrakseStateMachine
                 }
             }
 
-            entity.Status = await _context.StatusOglasis.FirstOrDefaultAsync(e => e.Naziv.Contains("Draft"));
-            entity.StatusId = entity.Status.Id;
-            set.Add(entity);
-
             await _context.SaveChangesAsync();
             string title = entity.IdNavigation.Naslov;
             await _obavijestiService.SendNotificationOglasi("Prakse", title, entity.IdNavigation.Id, "success");
+            return _mapper.Map<Model.Prakse>(entity);
+        }
+
+        public override async Task<Model.Prakse> Hide(int id)
+        {
+            var set = _context.Set<Database.Prakse>();
+
+            var entity = await set.Include(p => p.IdNavigation).FirstOrDefaultAsync(e => e.Id == id);
+
+            entity.Status = await _context.StatusOglasis.FirstOrDefaultAsync(e => e.Naziv.Contains("Skica"));
+
+            await _context.SaveChangesAsync();
             return _mapper.Map<Model.Prakse>(entity);
         }
         public override async Task<List<string>> AllowedActions()
         {
             var list = await base.AllowedActions();
             list.Add("Insert");
+            list.Add("Hide");
             return list;
         }
     }

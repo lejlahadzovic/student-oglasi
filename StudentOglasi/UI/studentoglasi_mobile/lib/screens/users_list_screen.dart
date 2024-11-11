@@ -58,9 +58,9 @@ class _UsersListScreenState extends State<UsersListScreen> {
       body: _isLoading
           ? Center(child: CircularProgressIndicator())
           : _hasError
-              ? Center(child: Text('Failed to load users. Please try again.'))
+              ? Center(child: Text('Neuspješno učitavanje podataka. Molimo pokušajte opet.'))
               : _users.isEmpty
-                  ? Center(child: Text('Nema dostipnih razgovora.'))
+                  ? Center(child: Text('Nema dostupnih podataka.'))
                   : ListView.builder(
                       itemCount: _users.length,
                       itemBuilder: (context, index) {

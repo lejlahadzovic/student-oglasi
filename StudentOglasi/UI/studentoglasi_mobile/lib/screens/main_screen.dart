@@ -171,9 +171,9 @@ class _ObjavaListScreenState extends State<ObjavaListScreen> {
                 : _hasError
                     ? Center(
                         child: Text(
-                            'Failed to load data. Please try again later.'))
+                            'Neuspješno učitavanje podataka. Molimo pokušajte opet.'))
                     : _objave?.count == 0
-                        ? Center(child: Text('No data available.'))
+                        ? Center(child: Text('Nema dostupnih podataka.'))
                         : ListView.builder(
                             itemCount: _objave?.count,
                             itemBuilder: (context, index) {

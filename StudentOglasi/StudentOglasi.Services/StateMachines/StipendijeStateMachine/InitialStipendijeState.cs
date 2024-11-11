@@ -43,8 +43,6 @@ namespace StudentOglasi.Services.StateMachine.StipendijeStateMachine
                 }
             }
 
-            entity.Status = await _context.StatusOglasis.FirstOrDefaultAsync(e => e.Naziv.Contains("Draft"));
-            entity.StatusId = entity.Status.Id;
             set.Add(entity);
 
             await _context.SaveChangesAsync();
@@ -52,10 +50,22 @@ namespace StudentOglasi.Services.StateMachine.StipendijeStateMachine
             await _obavijestiService.SendNotificationOglasi("Stipendije", title, entity.IdNavigation.Id, "success");
             return _mapper.Map<Model.Stipendije>(entity);
         }
+        public override async Task<Model.Stipendije> Hide(int id)
+        {
+            var set = _context.Set<Database.Stipendije>();
+
+            var entity = await set.Include(p => p.IdNavigation).FirstOrDefaultAsync(e => e.Id == id);
+
+            entity.Status = await _context.StatusOglasis.FirstOrDefaultAsync(e => e.Naziv.Contains("Skica"));
+
+            await _context.SaveChangesAsync();
+            return _mapper.Map<Model.Stipendije>(entity);
+        }
         public override async Task<List<string>> AllowedActions()
         {
             var list = await base.AllowedActions();
             list.Add("Insert");
+            list.Add("Hide");
             return list;
         }
     }

@@ -27,12 +27,6 @@ namespace StudentOglasi.Controllers
             return base.Update(id, update);
         }
 
-        [HttpPut("{id}/activate")]
-        public virtual async Task<Model.Stipendije> Activate(int id)
-        {
-            return await (_service as IStipendijeService).Activate(id);
-        }
-
         [HttpPut("{id}/hide")]
         public virtual async Task<Model.Stipendije> Hide(int id)
         {
