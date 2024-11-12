@@ -108,6 +108,10 @@ class _CommentsScreenState extends State<CommentsScreen> {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: komentar.odgovori.map((reply) {
+                    var replyFormattedTime = reply.vrijemeObjave != null
+                      ? DateFormat('dd.MM.yyyy HH:mm').format(reply.vrijemeObjave!)
+                      : 'N/A';
+
                     return Padding(
                       padding: const EdgeInsets.only(left: 16.0, top: 8.0),
                       child: Card(
@@ -119,7 +123,7 @@ class _CommentsScreenState extends State<CommentsScreen> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                '${reply.ime} ${reply.prezime} • $formattedTime',
+                                '${reply.ime} ${reply.prezime} • $replyFormattedTime',
                                 style: TextStyle(fontWeight: FontWeight.bold),
                               ),
                               SizedBox(height: 4.0),
