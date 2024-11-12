@@ -183,7 +183,9 @@ class _SmjestajiListScreenState extends State<SmjestajiListScreen> {
               items: tipoviSmjestajaResult?.result.map((TipSmjestaja tipSmjestaja) {
                     return DropdownMenuItem<TipSmjestaja>(
                       value: tipSmjestaja,
-                      child: Text(tipSmjestaja.naziv ?? ''),
+                      child: Text(tipSmjestaja.naziv ?? '',
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(fontSize: 14)),
                     );
                   }).toList() ??
                   [],

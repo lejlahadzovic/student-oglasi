@@ -188,7 +188,9 @@ class _RezervacijeListScreen extends State<RezervacijeListScreen> {
                 items: statusResult?.result.map((StatusPrijave status) {
                       return DropdownMenuItem<StatusPrijave>(
                         value: status,
-                        child: Text(status.naziv ?? ''),
+                        child: Text(status.naziv ?? '',
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(fontSize: 14)),
                       );
                     }).toList() ??
                     [],

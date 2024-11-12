@@ -155,7 +155,9 @@ class _ObjaveListScreenState extends State<ObjaveListScreen> {
                 items: kategorijeResult?.result.map((Kategorija kategorija) {
                       return DropdownMenuItem<Kategorija>(
                         value: kategorija,
-                        child: Text(kategorija.naziv ?? ''),
+                        child: Text(kategorija.naziv ?? '',
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(fontSize: 14)),
                       );
                     }).toList() ??
                     [],

@@ -121,12 +121,11 @@ class _StipendijeListScreenState extends State<StipendijeListScreen> {
 
   Future<void> _fetchData() async {
     print("login proceed");
-    // Navigator.of(context).pop();
 
     var data = await _stipendijeProvider.get(filter: {
       'naslov': _naslovController.text,
       'stipenditor': selectedStipenditor?.id,
-      'page': _currentPage + 1, // pages are 1-indexed in the backend
+      'page': _currentPage + 1,
       'pageSize': 5,
     });
     setState(() {
@@ -170,7 +169,7 @@ class _StipendijeListScreenState extends State<StipendijeListScreen> {
           Expanded(
             flex: 1,
             child: Padding(
-              padding: const EdgeInsets.only(top: 25.0), 
+              padding: const EdgeInsets.only(top: 25.0),
               child: DropdownButton2<Stipenditor>(
                 isExpanded: true,
                 hint: Text('Stipenditor'),
@@ -184,7 +183,9 @@ class _StipendijeListScreenState extends State<StipendijeListScreen> {
                     stipenditoriResult?.result.map((Stipenditor stipenditor) {
                           return DropdownMenuItem<Stipenditor>(
                             value: stipenditor,
-                            child: Text(stipenditor.naziv ?? ''),
+                            child: Text(stipenditor.naziv ?? '',
+                                overflow: TextOverflow.ellipsis,
+                                style: TextStyle(fontSize: 14)),
                           );
                         }).toList() ??
                         [],
@@ -213,8 +214,7 @@ class _StipendijeListScreenState extends State<StipendijeListScreen> {
                 await _fetchData();
               },
               style: ElevatedButton.styleFrom(
-                backgroundColor:
-                    Color.fromARGB(255, 240, 92, 92),
+                backgroundColor: Color.fromARGB(255, 240, 92, 92),
                 foregroundColor: Colors.white,
               ),
               child: Text("Očisti filtere"),
@@ -227,191 +227,210 @@ class _StipendijeListScreenState extends State<StipendijeListScreen> {
 
   Widget _buildDataListView() {
     return Expanded(
-        child: SingleChildScrollView(
-            child: Padding(
-                padding: const EdgeInsets.fromLTRB(100, 30, 100, 0),
-                child: IntrinsicWidth(
-                  stepWidth: double.infinity,
-                  child: DataTable(
-                      columns: [
-                        const DataColumn(
-                          label: Expanded(
-                            child: Text(
-                              'Naslov',
-                              style: TextStyle(fontStyle: FontStyle.italic),
-                              textAlign: TextAlign.center,
-                            ),
-                          ),
-                        ),
-                        const DataColumn(
-                          label: Expanded(
-                            child: Text(
-                              'Iznos',
-                              style: TextStyle(fontStyle: FontStyle.italic),
-                              textAlign: TextAlign.center,
-                            ),
-                          ),
-                        ),
-                        const DataColumn(
-                          label: Expanded(
-                            child: Text(
-                              'Status',
-                              style: TextStyle(fontStyle: FontStyle.italic),
-                              textAlign: TextAlign.center,
-                            ),
-                          ),
-                        ),
-                        const DataColumn(
-                          label: Expanded(
-                            child: Text(
-                              'Izvor',
-                              style: TextStyle(fontStyle: FontStyle.italic),
-                              textAlign: TextAlign.center,
-                            ),
-                          ),
-                        ),
-                        const DataColumn(
-                          label: Expanded(
-                            child: Text(
-                              'Nivo obrazovanja',
-                              style: TextStyle(fontStyle: FontStyle.italic),
-                              textAlign: TextAlign.center,
-                            ),
-                          ),
-                        ),
-                        const DataColumn(
-                          label: Expanded(
-                            child: Text(
-                              'Broj stipendista',
-                              style: TextStyle(fontStyle: FontStyle.italic),
-                              textAlign: TextAlign.center,
-                            ),
-                          ),
-                        ),
-                        const DataColumn(
-                          label: Expanded(
-                            child: Text(
-                              'Akcije',
-                              style: TextStyle(fontStyle: FontStyle.italic),
-                              textAlign: TextAlign.center,
-                            ),
-                          ),
-                        ),
-                      ],
-                      rows: result?.result
-                              .map((Stipendije e) => DataRow(cells: [
-                                    DataCell(Center(
-                                        child: Text(
-                                            e.idNavigation?.naslov ?? "",
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.bold)))),
-                                    DataCell(Center(
-                                        child: Text(
-                                            '${formatNumber(e.iznos)} KM'))),
-                                    DataCell(Center(
-                                        child: Text(e.status?.naziv ?? ""))),
-                                    DataCell(
-                                        Center(child: Text(e.izvor ?? ""))),
-                                    DataCell(Center(
-                                        child: Text(e.nivoObrazovanja ?? ""))),
-                                    DataCell(Center(
-                                        child: Text(
-                                            formatNumber(e.brojStipendisata)))),
-                                    DataCell(
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          IconButton(
-                                            icon: Icon(
-                                              Icons.edit,
-                                              color: Colors.blue,
-                                            ),
-                                            onPressed: () {
-                                              showDialog(
-                                                  context: context,
-                                                  builder: (BuildContext
-                                                          context) =>
-                                                      StipendijeDetailsDialog(
-                                                          stipendija: e,
-                                                          statusResult:
-                                                              statusResult,
-                                                          stipenditoriResult:
-                                                              stipenditoriResult,
-                                                          oglasiResult:
-                                                              oglasiResult)).then(
-                                                  (value) {
-                                                if (value != null && value) {
-                                                  _fetchData();
-                                                }
-                                              });
-                                            },
-                                          ),
-                                          IconButton(
-                                            icon: Icon(
-                                              Icons.delete,
-                                              color: Colors.red,
-                                            ),
-                                            onPressed: () async {
-                                              bool confirmDelete =
-                                                  await showDialog(
-                                                context: context,
-                                                builder:
-                                                    (BuildContext context) {
-                                                  return AlertDialog(
-                                                    title: Row(
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .spaceBetween,
-                                                      children: [
-                                                        Text(
-                                                            "Potvrda brisanja"),
-                                                        IconButton(
-                                                          icon:
-                                                              Icon(Icons.close),
-                                                          onPressed: () {
-                                                            Navigator.of(
-                                                                    context)
-                                                                .pop(false);
-                                                          },
-                                                        ),
-                                                      ],
-                                                    ),
-                                                    content: Text(
-                                                        "Da li ste sigurni da želite izbrisati?"),
-                                                    actions: [
-                                                      TextButton(
-                                                        onPressed: () {
-                                                          Navigator.of(context)
-                                                              .pop(false);
-                                                        },
-                                                        child: Text("Ne"),
-                                                      ),
-                                                      TextButton(
-                                                        onPressed: () {
-                                                          Navigator.of(context)
-                                                              .pop(true);
-                                                        },
-                                                        child: Text("Da"),
-                                                      ),
-                                                    ],
-                                                  );
-                                                },
-                                              );
-
-                                              if (confirmDelete == true) {
-                                                await _stipendijeProvider
-                                                    .delete(e.id);
-                                                await _fetchData();
-                                              }
-                                            },
-                                          ),
-                                        ],
+      child: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(100, 30, 100, 0),
+          child: IntrinsicWidth(
+            stepWidth: double.infinity,
+            child: DataTable(
+              columnSpacing: 15,
+              columns: [
+                DataColumn(
+                  label: Container(
+                    width: 150,
+                    child: Text(
+                      'Naslov',
+                      style: TextStyle(fontStyle: FontStyle.italic),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                ),
+                DataColumn(
+                  label: Container(
+                    width: 60,
+                    child: Text(
+                      'Iznos',
+                      style: TextStyle(fontStyle: FontStyle.italic),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                ),
+                DataColumn(
+                  label: Container(
+                    width: 100,
+                    child: Text(
+                      'Broj stipendista',
+                      style: TextStyle(fontStyle: FontStyle.italic),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                ),
+                DataColumn(
+                  label: Container(
+                    width: 150,
+                    child: Text(
+                      'Izvor',
+                      style: TextStyle(fontStyle: FontStyle.italic),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                ),
+                DataColumn(
+                  label: Container(
+                    width: 60,
+                    child: Text(
+                      'Status',
+                      style: TextStyle(fontStyle: FontStyle.italic),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                ),
+                DataColumn(
+                  label: SizedBox(
+                    width: 80,
+                    child: Center(
+                      child: Text(
+                        'Akcije',
+                        style: TextStyle(fontStyle: FontStyle.italic),
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+              rows: result?.result
+                      .map((Stipendije e) => DataRow(cells: [
+                            DataCell(Container(
+                              width: 250,
+                              child: Text(
+                                e.idNavigation?.naslov ?? "",
+                                style: TextStyle(fontWeight: FontWeight.bold),
+                                overflow: TextOverflow.clip,
+                              ),
+                            )),
+                            DataCell(Container(
+                                width: 60,
+                                child: Center(
+                                  child: Text(
+                                    '${formatNumber(e.iznos)} KM',
+                                  ),
+                                ))),
+                            DataCell(Container(
+                                width: 60,
+                                child: Center(
+                                  child: Text(
+                                    formatNumber(e.brojStipendisata),
+                                  ),
+                                ))),
+                            DataCell(Container(
+                              width: 200,
+                              child: Text(
+                                e.izvor ?? "",
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            )),
+                            DataCell(Container(
+                                width: 60,
+                                child: Center(
+                                  child: Text(
+                                    e.status?.naziv ?? "",
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                ))),
+                            DataCell(
+                              SizedBox(
+                                width: 80,
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    IconButton(
+                                      icon: Icon(
+                                        Icons.edit,
+                                        color: Colors.blue,
                                       ),
+                                      onPressed: () {
+                                        showDialog(
+                                            context: context,
+                                            builder: (BuildContext context) =>
+                                                StipendijeDetailsDialog(
+                                                    stipendija: e,
+                                                    statusResult: statusResult,
+                                                    stipenditoriResult:
+                                                        stipenditoriResult,
+                                                    oglasiResult:
+                                                        oglasiResult)).then(
+                                            (value) {
+                                          if (value != null && value) {
+                                            _fetchData();
+                                          }
+                                        });
+                                      },
                                     ),
-                                  ]))
-                              .toList() ??
-                          []),
-                ))));
+                                    IconButton(
+                                      icon: Icon(
+                                        Icons.delete,
+                                        color: Colors.red,
+                                      ),
+                                      onPressed: () async {
+                                        bool confirmDelete = await showDialog(
+                                          context: context,
+                                          builder: (BuildContext context) {
+                                            return AlertDialog(
+                                              title: Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceBetween,
+                                                children: [
+                                                  Text("Potvrda brisanja"),
+                                                  IconButton(
+                                                    icon: Icon(Icons.close),
+                                                    onPressed: () {
+                                                      Navigator.of(context)
+                                                          .pop(false);
+                                                    },
+                                                  ),
+                                                ],
+                                              ),
+                                              content: Text(
+                                                  "Da li ste sigurni da želite izbrisati?"),
+                                              actions: [
+                                                TextButton(
+                                                  onPressed: () {
+                                                    Navigator.of(context)
+                                                        .pop(false);
+                                                  },
+                                                  child: Text("Ne"),
+                                                ),
+                                                TextButton(
+                                                  onPressed: () {
+                                                    Navigator.of(context)
+                                                        .pop(true);
+                                                  },
+                                                  child: Text("Da"),
+                                                ),
+                                              ],
+                                            );
+                                          },
+                                        );
+
+                                        if (confirmDelete == true) {
+                                          await _stipendijeProvider
+                                              .delete(e.id);
+                                          await _fetchData();
+                                        }
+                                      },
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ]))
+                      .toList() ??
+                  [],
+            ),
+          ),
+        ),
+      ),
+    );
   }
 }

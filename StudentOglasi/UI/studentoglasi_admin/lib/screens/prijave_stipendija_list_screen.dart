@@ -1,5 +1,6 @@
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:number_paginator/number_paginator.dart';
 import 'package:provider/provider.dart';
@@ -194,7 +195,9 @@ class _PrijaveStipendijaListScreen extends State<PrijaveStipendijaListScreen> {
                 items: statusResult?.result.map((StatusPrijave status) {
                       return DropdownMenuItem<StatusPrijave>(
                         value: status,
-                        child: Text(status.naziv ?? ''),
+                        child: Text(status.naziv ?? '',
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(fontSize: 14)),
                       );
                     }).toList() ??
                     [],
@@ -216,20 +219,18 @@ class _PrijaveStipendijaListScreen extends State<PrijaveStipendijaListScreen> {
             padding: const EdgeInsets.only(top: 25.0),
             child: ElevatedButton(
               onPressed: () {
-                
                 _imeController.clear();
                 _brojIndeksaController.clear();
                 setState(() {
-                  selectedStatusPrijave = null; 
+                  selectedStatusPrijave = null;
                 });
-                _fetchData(); 
+                _fetchData();
               },
               style: ElevatedButton.styleFrom(
-                backgroundColor:
-                    Color.fromARGB(255, 240, 92, 92), 
+                backgroundColor: Color.fromARGB(255, 240, 92, 92),
                 foregroundColor: Colors.white,
               ),
-              child: Text("Očisti filtere"), 
+              child: Text("Očisti filtere"),
             ),
           ),
         ],
@@ -245,6 +246,7 @@ class _PrijaveStipendijaListScreen extends State<PrijaveStipendijaListScreen> {
                 child: IntrinsicWidth(
                   stepWidth: double.infinity,
                   child: DataTable(
+                      columnSpacing: 15,
                       columns: const [
                         DataColumn(
                           label: Expanded(
@@ -312,11 +314,10 @@ class _PrijaveStipendijaListScreen extends State<PrijaveStipendijaListScreen> {
                       ],
                       rows: result?.result
                               .map((PrijaveStipendija e) => DataRow(cells: [
-                                    DataCell(Center(
-                                        child: Text(
-                                            "${e.student?.idNavigation?.ime ?? ""}  ${e.student?.idNavigation?.prezime ?? ""}",
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.bold)))),
+                                    DataCell(Text(
+                                        "${e.student?.idNavigation?.ime ?? ""} ${e.student?.idNavigation?.prezime ?? ""}",
+                                        style: const TextStyle(
+                                            fontWeight: FontWeight.bold))),
                                     DataCell(Center(
                                         child: Text(
                                             e.student?.brojIndeksa ?? ""))),

@@ -18,7 +18,6 @@ namespace StudentOglasi.Services.StateMachine.StipendijeStateMachine
     {
         public readonly FileService _fileService;
         public readonly ObavijestiService _obavijestiService;
-        private readonly IHttpContextAccessor _httpContextAccessor;
         public InitialStipendijeState(IServiceProvider serviceProvider, StudentoglasiContext context, IMapper mapper, FileService fileService, ObavijestiService obavijestiService) : base(serviceProvider, context, mapper)
         {
             _obavijestiService = obavijestiService;

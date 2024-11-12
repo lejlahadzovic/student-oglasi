@@ -130,7 +130,7 @@ class _PrakseListScreenState extends State<PrakseListScreen> {
       'naslov': _naslovController.text,
       'organizacija': selectedOrganizacije?.id,
       'status': selectedStatusOglasi?.id,
-      'page': _currentPage + 1, 
+      'page': _currentPage + 1,
       'pageSize': 5,
     });
     setState(() {
@@ -185,7 +185,9 @@ class _PrakseListScreenState extends State<PrakseListScreen> {
                 items: statusResult?.result.map((StatusOglasi status) {
                       return DropdownMenuItem<StatusOglasi>(
                         value: status,
-                        child: Text(status.naziv ?? ''),
+                        child: Text(status.naziv ?? '',
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(fontSize: 14)),
                       );
                     }).toList() ??
                     [],
@@ -210,7 +212,9 @@ class _PrakseListScreenState extends State<PrakseListScreen> {
                     organizacijeResult?.result.map((Organizacije organizacija) {
                           return DropdownMenuItem<Organizacije>(
                             value: organizacija,
-                            child: Text(organizacija.naziv ?? ''),
+                            child: Text(organizacija.naziv ?? '',
+                                overflow: TextOverflow.ellipsis,
+                                style: TextStyle(fontSize: 14)),
                           );
                         }).toList() ??
                         [],
@@ -239,9 +243,8 @@ class _PrakseListScreenState extends State<PrakseListScreen> {
                     _fetchData();
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor:
-                        Color.fromARGB(255, 240, 92, 92),
-                    foregroundColor: Colors.white, 
+                    backgroundColor: Color.fromARGB(255, 240, 92, 92),
+                    foregroundColor: Colors.white,
                   ),
                   child: Text("Očisti filtere"),
                 ),
@@ -255,184 +258,212 @@ class _PrakseListScreenState extends State<PrakseListScreen> {
 
   Widget _buildDataListView() {
     return Expanded(
-        child: SingleChildScrollView(
-            child: Padding(
-                padding: const EdgeInsets.fromLTRB(100, 30, 100, 0),
-                child: IntrinsicWidth(
-                  stepWidth: double.infinity,
-                  child: DataTable(
-                      columns: [
-                        const DataColumn(
-                          label: Expanded(
-                            child: Text(
-                              'Naslov',
-                              style: TextStyle(fontStyle: FontStyle.italic),
-                              textAlign: TextAlign.center,
-                            ),
-                          ),
-                        ),
-                        const DataColumn(
-                          label: Expanded(
-                            child: Text(
-                              'Početak prakse',
-                              style: TextStyle(fontStyle: FontStyle.italic),
-                              textAlign: TextAlign.center,
-                            ),
-                          ),
-                        ),
-                        const DataColumn(
-                          label: Expanded(
-                            child: Text(
-                              'Kvalifikacije',
-                              style: TextStyle(fontStyle: FontStyle.italic),
-                              textAlign: TextAlign.center,
-                            ),
-                          ),
-                        ),
-                        const DataColumn(
-                          label: Expanded(
-                            child: Text(
-                              'Status',
-                              style: TextStyle(fontStyle: FontStyle.italic),
-                              textAlign: TextAlign.center,
-                            ),
-                          ),
-                        ),
-                        const DataColumn(
-                          label: Expanded(
-                            child: Text(
-                              'Organizacija',
-                              style: TextStyle(fontStyle: FontStyle.italic),
-                              textAlign: TextAlign.center,
-                            ),
-                          ),
-                        ),
-                        const DataColumn(
-                          label: Expanded(
-                            child: Text(
-                              'Akcije',
-                              style: TextStyle(fontStyle: FontStyle.italic),
-                              textAlign: TextAlign.center,
-                            ),
-                          ),
-                        ),
-                      ],
-                      rows: result?.result
-                              .map((Praksa e) => DataRow(cells: [
-                                    DataCell(Center(
-                                        child: Text(
-                                            e.idNavigation?.naslov ?? "",
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.bold)))),
-                                    DataCell(Center(
-                                        child: Text(e.pocetakPrakse != null
-                                            ? DateFormat('dd.MM.yyyy')
-                                                .format(e.pocetakPrakse!)
-                                            : ''))),
-                                    DataCell(Center(
-                                        child: Text(e.kvalifikacije ?? ""))),
-                                    DataCell(Center(
-                                        child: Text(e.status?.naziv ?? ""))),
-                                    DataCell(Center(
-                                        child:
-                                            Text(e.organizacija?.naziv ?? ""))),
-                                    DataCell(
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          IconButton(
-                                            icon: Icon(
-                                              Icons.edit,
-                                              color: Colors.blue,
-                                            ),
-                                            onPressed: () {
-                                              showDialog(
-                                                  context: context,
-                                                  builder: (BuildContext
-                                                          context) =>
-                                                      PraksaDetailsDialog(
-                                                          title:
-                                                              'Detalji prakse',
-                                                          praksa: e,
-                                                          statusResult:
-                                                              statusResult,
-                                                          organizacijeResult:
-                                                              organizacijeResult,
-                                                          oglasiResult:
-                                                              oglasiResult)).then(
-                                                  (value) {
-                                                if (value != null && value) {
-                                                  _fetchData();
-                                                }
-                                              });
-                                            },
-                                          ),
-                                          IconButton(
-                                            icon: Icon(
-                                              Icons.delete,
-                                              color: Colors.red,
-                                            ),
-                                            onPressed: () async {
-                                              bool confirmDelete =
-                                                  await showDialog(
-                                                context: context,
-                                                builder:
-                                                    (BuildContext context) {
-                                                  return AlertDialog(
-                                                    title: Row(
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .spaceBetween,
-                                                      children: [
-                                                        Text(
-                                                            "Potvrda brisanja"),
-                                                        IconButton(
-                                                          icon:
-                                                              Icon(Icons.close),
-                                                          onPressed: () {
-                                                            Navigator.of(
-                                                                    context)
-                                                                .pop(false);
-                                                          },
-                                                        ),
-                                                      ],
-                                                    ),
-                                                    content: Text(
-                                                        "Da li ste sigurni da želite izbrisati?"),
-                                                    actions: [
-                                                      TextButton(
-                                                        onPressed: () {
-                                                          Navigator.of(context)
-                                                              .pop(false);
-                                                        },
-                                                        child: Text("Ne"),
-                                                      ),
-                                                      TextButton(
-                                                        onPressed: () {
-                                                          Navigator.of(context)
-                                                              .pop(true);
-                                                        },
-                                                        child: Text("Da"),
-                                                      ),
-                                                    ],
-                                                  );
-                                                },
-                                              );
-
-                                              if (confirmDelete == true) {
-                                                await _prakseProvider
-                                                    .delete(e.id);
-                                                await _fetchData();
-                                              }
-                                            },
-                                          ),
-                                        ],
+      child: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(100, 30, 100, 0),
+          child: IntrinsicWidth(
+            stepWidth: double.infinity,
+            child: DataTable(
+              columnSpacing: 15,
+              columns: [
+                DataColumn(
+                  label: Container(
+                    width: 150,
+                    child: Text(
+                      'Naslov',
+                      style: TextStyle(fontStyle: FontStyle.italic),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                ),
+                DataColumn(
+                  label: Container(
+                    width: 100,
+                    alignment: Alignment.center,
+                    child: Text(
+                      'Početak prakse',
+                      style: TextStyle(fontStyle: FontStyle.italic),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                ),
+                DataColumn(
+                  label: Container(
+                    width: 80,
+                    alignment: Alignment.center,
+                    child: Text(
+                      'Rok prijave',
+                      style: TextStyle(fontStyle: FontStyle.italic),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                ),
+                DataColumn(
+                  label: Container(
+                    width: 100,
+                    alignment: Alignment.center,
+                    child: Text(
+                      'Organizacija',
+                      style: TextStyle(fontStyle: FontStyle.italic),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                ),
+                DataColumn(
+                  label: Container(
+                    width: 60,
+                    alignment: Alignment.center,
+                    child: Text(
+                      'Status',
+                      style: TextStyle(fontStyle: FontStyle.italic),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                ),
+                DataColumn(
+                  label: Container(
+                    width: 80,
+                    alignment: Alignment.center,
+                    child: Text(
+                      'Akcije',
+                      style: TextStyle(fontStyle: FontStyle.italic),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                ),
+              ],
+              rows: result?.result
+                      .map((Praksa e) => DataRow(
+                            cells: [
+                              DataCell(Container(
+                                width: 250,
+                                child: Text(
+                                  e.idNavigation?.naslov ?? "",
+                                  style: TextStyle(fontWeight: FontWeight.bold),
+                                  overflow: TextOverflow.clip,
+                                ),
+                              )),
+                              DataCell(Container(
+                                width: 80,
+                                alignment: Alignment.center,
+                                child: Text(e.pocetakPrakse != null
+                                    ? DateFormat('dd.MM.yyyy')
+                                        .format(e.pocetakPrakse!)
+                                    : ''),
+                              )),
+                              DataCell(Container(
+                                width: 80,
+                                alignment: Alignment.center,
+                                child: Text(e.idNavigation?.rokPrijave != null
+                                    ? DateFormat('dd.MM.yyyy')
+                                        .format(e.pocetakPrakse!)
+                                    : ''),
+                              )),
+                              DataCell(Container(
+                                width: 150,
+                                child: Text(
+                                  e.organizacija?.naziv ?? "",
+                                  overflow: TextOverflow.clip,
+                                ),
+                              )),
+                              DataCell(Container(
+                                width: 60,
+                                alignment: Alignment.center,
+                                child: Text(e.status?.naziv ?? ""),
+                              )),
+                              DataCell(Container(
+                                width: 80,
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    IconButton(
+                                      icon: Icon(
+                                        Icons.edit,
+                                        color: Colors.blue,
                                       ),
+                                      onPressed: () {
+                                        showDialog(
+                                          context: context,
+                                          builder: (BuildContext context) =>
+                                              PraksaDetailsDialog(
+                                            title: 'Detalji prakse',
+                                            praksa: e,
+                                            statusResult: statusResult,
+                                            organizacijeResult:
+                                                organizacijeResult,
+                                            oglasiResult: oglasiResult,
+                                          ),
+                                        ).then((value) {
+                                          if (value != null && value) {
+                                            _fetchData();
+                                          }
+                                        });
+                                      },
                                     ),
-                                  ]))
-                              .toList() ??
-                          []),
-                ))));
+                                    IconButton(
+                                      icon: Icon(
+                                        Icons.delete,
+                                        color: Colors.red,
+                                      ),
+                                      onPressed: () async {
+                                        bool confirmDelete = await showDialog(
+                                          context: context,
+                                          builder: (BuildContext context) {
+                                            return AlertDialog(
+                                              title: Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceBetween,
+                                                children: [
+                                                  Text("Potvrda brisanja"),
+                                                  IconButton(
+                                                    icon: Icon(Icons.close),
+                                                    onPressed: () {
+                                                      Navigator.of(context)
+                                                          .pop(false);
+                                                    },
+                                                  ),
+                                                ],
+                                              ),
+                                              content: Text(
+                                                  "Da li ste sigurni da želite izbrisati?"),
+                                              actions: [
+                                                TextButton(
+                                                  onPressed: () {
+                                                    Navigator.of(context)
+                                                        .pop(false);
+                                                  },
+                                                  child: Text("Ne"),
+                                                ),
+                                                TextButton(
+                                                  onPressed: () {
+                                                    Navigator.of(context)
+                                                        .pop(true);
+                                                  },
+                                                  child: Text("Da"),
+                                                ),
+                                              ],
+                                            );
+                                          },
+                                        );
+
+                                        if (confirmDelete == true) {
+                                          await _prakseProvider.delete(e.id);
+                                          await _fetchData();
+                                        }
+                                      },
+                                    ),
+                                  ],
+                                ),
+                              )),
+                            ],
+                          ))
+                      .toList() ??
+                  [],
+            ),
+          ),
+        ),
+      ),
+    );
   }
 }

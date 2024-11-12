@@ -197,7 +197,9 @@ class _StudentiListScreenState extends State<StudentiListScreen> {
                 items: fakultetiResult?.result.map((Fakultet fakultet) {
                       return DropdownMenuItem<Fakultet>(
                         value: fakultet,
-                        child: Text(fakultet.naziv ?? ''),
+                        child: Text(fakultet.naziv ?? '',
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(fontSize: 14)),
                       );
                     }).toList() ??
                     [],
@@ -220,7 +222,11 @@ class _StudentiListScreenState extends State<StudentiListScreen> {
                 items: godine.map((godina) {
                   return DropdownMenuItem<int>(
                     value: godina,
-                    child: Text('$godina. godina'),
+                    child: Text(
+                      '$godina. godina',
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(fontSize: 14),
+                    ),
                   );
                 }).toList(),
               ),
@@ -251,7 +257,7 @@ class _StudentiListScreenState extends State<StudentiListScreen> {
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Color.fromARGB(255, 240, 92, 92),
-                  foregroundColor: Colors.white, 
+                  foregroundColor: Colors.white,
                 ),
                 child: Text("Očisti filtere"),
               )),

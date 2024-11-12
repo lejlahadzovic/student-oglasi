@@ -54,10 +54,6 @@ namespace StudentOglasi.Services.Services
             {
                 filteredQuery = filteredQuery.Where(x => x.StatusId == search.Status);
             }
-            if (!string.IsNullOrWhiteSpace(search?.StatusNaziv))
-            {
-                filteredQuery = filteredQuery.Where(x => x.Status.Naziv.Contains(search.StatusNaziv));
-            }
             return filteredQuery;
         }
         public override IQueryable<Database.Prakse> AddInclude(IQueryable<Database.Prakse> query, PrakseSearchObject? search = null)

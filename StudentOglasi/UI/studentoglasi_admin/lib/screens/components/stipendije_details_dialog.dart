@@ -222,7 +222,7 @@ class _StipendijeDetailsDialogState extends State<StipendijeDetailsDialog> {
                               }
                               final number = double.tryParse(value);
                               if (number == null) {
-                                return 'Unesite važeći iznos'; // Enter a valid amount
+                                return 'Unesite važeći novčani iznos'; // Enter a valid amount
                               }
                               return null;
                             },
