@@ -50,8 +50,11 @@ class PrijavePraksaProvider extends BaseProvider<PrijavePraksa> {
       }
     } on DioException catch (e) {
       if (e.response?.statusCode == 404) {
-        _showAlert(context, "Nema prijava za odabranu praksu.");
+        Navigator.of(context).pop();
+        _showAlert(context,
+            "Nema prijava za odabranu praksu. Molimo odaberite drugu opciju.");
       } else {
+        Navigator.of(context).pop();
         _showAlert(context, "Greška prilikom preuzimanja izvještaja.");
       }
       print("Error during file download: $e");
@@ -61,34 +64,17 @@ class PrijavePraksaProvider extends BaseProvider<PrijavePraksa> {
   }
 
   void _showAlert(BuildContext context, String message) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                children: [
-                  Icon(Icons.info_outline),
-                  SizedBox(width: 8),
-                  Text("Obavijest"),
-                ],
-              ),
-              Divider(),
-            ],
-          ),
-          content: SizedBox(width: 300, child: Text(message)),
-          actions: [
-            ElevatedButton(
-              child: Text("OK"),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Row(
+          children: [
+            Icon(Icons.info_outline),
+            SizedBox(width: 10),
+            Expanded(child: Text(message)),
           ],
-        );
-      },
+        ),
+        duration: Duration(seconds: 5),
+      ),
     );
   }
 

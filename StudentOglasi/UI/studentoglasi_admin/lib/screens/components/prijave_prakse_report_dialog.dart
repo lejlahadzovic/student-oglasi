@@ -107,7 +107,7 @@ class _PrijavePrakseReportDialogState extends State<PrijavePrakseReportDialog> {
                 }
               } catch (e) {
                 ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text('Failed to download report')));
+                    SnackBar(content: Text('Preuzimanje izvještaja nije uspjelo')));
               }
             }
           },

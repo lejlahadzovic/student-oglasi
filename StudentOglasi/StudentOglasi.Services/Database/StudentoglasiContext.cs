@@ -898,7 +898,6 @@ protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         );
 
         modelBuilder.Entity<StatusPrijave>().HasData(
-            new StatusPrijave { Id = 1, Naziv = "Initial", Opis = null },
             new StatusPrijave { Id = 2, Naziv = "Na cekanju", Opis = null },
             new StatusPrijave { Id = 3, Naziv = "Odobrena", Opis = null },
             new StatusPrijave { Id = 4, Naziv = "Otkazana", Opis = null }

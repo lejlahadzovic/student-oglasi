@@ -27,10 +27,6 @@ class ObjaveDetailsDialog extends StatefulWidget {
 class _ObjaveDetailsDialogState extends State<ObjaveDetailsDialog> {
   final _formKey = GlobalKey<FormBuilderState>();
   Map<String, dynamic> _initialValue = {};
-  // TextEditingController _naslovController = TextEditingController();
-  // TextEditingController _sadrzajController = TextEditingController();
-  // late KategorijaProvider _kategorijeProvider;
-  // Kategorija? _selectedKategorija;
   late ObjaveProvider _objaveProvider;
   String? _filePath;
   String? _imageUrl;
@@ -39,18 +35,7 @@ class _ObjaveDetailsDialogState extends State<ObjaveDetailsDialog> {
   void initState() {
     super.initState();
     _objaveProvider = context.read<ObjaveProvider>();
-    // _kategorijeProvider = context.read<KategorijaProvider>();
-
-    // if (widget.objava != null) {
-    //   _naslovController.text = widget.objava!.naslov ?? '';
-    //   _sadrzajController.text = widget.objava!.sadrzaj ?? '';
-    //   if (widget.kategorijeResult != null &&
-    //       widget.kategorijeResult!.result.isNotEmpty) {
-    //     _selectedKategorija = widget.kategorijeResult!.result.firstWhere(
-    //       (kategorija) => kategorija.id == widget.objava!.kategorija?.id
-    //     );
-    //   }
-    // }
+  
     if (widget.objava != null && widget.objava!.slika != null) {
       _imageUrl = FilePathManager.constructUrl(widget.objava!.slika!);
     }
@@ -96,18 +81,18 @@ class _ObjaveDetailsDialogState extends State<ObjaveDetailsDialog> {
                                     File(_filePath!),
                                     fit: BoxFit.cover,
                                     width: 800,
-                                    height: 450,
+                                    height: 350,
                                   )
                                 : _imageUrl != null
                                     ? Image.network(
                                         _imageUrl!,
                                         fit: BoxFit.cover,
                                         width: 800,
-                                        height: 450,
+                                        height: 350,
                                       )
                                     : SizedBox(
                                         width: 800,
-                                        height: 450,
+                                        height: 350,
                                         child: Column(
                                           mainAxisAlignment:
                                               MainAxisAlignment.center,
@@ -129,7 +114,7 @@ class _ObjaveDetailsDialogState extends State<ObjaveDetailsDialog> {
                                       ),
                           ),
                         ),
-                        SizedBox(height: 10),
+                        SizedBox(height: 20),
                         Row(
                           children: [
                             Expanded(

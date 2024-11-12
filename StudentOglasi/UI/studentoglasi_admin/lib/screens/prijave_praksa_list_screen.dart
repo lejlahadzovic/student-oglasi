@@ -382,17 +382,6 @@ class _PrijavePraksaListScreen extends State<PrijavePraksaListScreen> {
                                               });
                                             },
                                           ),
-                                          /* IconButton(
-                                            icon: Icon(
-                                              Icons.delete,
-                                              color: Colors.red,
-                                            ),
-                                            onPressed: () async {
-                                              await _prakseProvider
-                                                  .delete(e.id);
-                                              await _fetchData();
-                                            },
-                                          ),*/
                                         ],
                                       ),
                                     ),
