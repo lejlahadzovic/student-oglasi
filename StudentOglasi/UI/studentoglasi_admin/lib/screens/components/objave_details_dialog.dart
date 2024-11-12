@@ -67,161 +67,164 @@ class _ObjaveDetailsDialogState extends State<ObjaveDetailsDialog> {
     return AlertDialog(
       title: Text(widget.title ?? ''),
       content: SingleChildScrollView(
-        child: FormBuilder(
-          key: _formKey,
-          initialValue: _initialValue,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              SizedBox(height: 10),
-              FormBuilderField(
-                name: 'filePath',
-                builder: (FormFieldState<dynamic> field) {
-                  return Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      InputDecorator(
-                        decoration: InputDecoration(
-                          labelText: 'Slika',
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.all(Radius.circular(10)),
+        child:ConstrainedBox(
+        constraints: BoxConstraints(maxWidth: 800),
+          child: FormBuilder(
+            key: _formKey,
+            initialValue: _initialValue,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(height: 10),
+                FormBuilderField(
+                  name: 'filePath',
+                  builder: (FormFieldState<dynamic> field) {
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        InputDecorator(
+                          decoration: InputDecoration(
+                            labelText: 'Slika',
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.all(Radius.circular(10)),
+                            ),
+                            errorText: field.errorText,
                           ),
-                          errorText: field.errorText,
-                        ),
-                        child: Center(
-                          child: _filePath != null
-                              ? Image.file(
-                                  File(_filePath!),
-                                  fit: BoxFit.cover,
-                                  width: 800,
-                                  height: 450,
-                                )
-                              : _imageUrl != null
-                                  ? Image.network(
-                                      _imageUrl!,
-                                      fit: BoxFit.cover,
-                                      width: 800,
-                                      height: 450,
-                                    )
-                                  : SizedBox(
-                                      width: 800,
-                                      height: 450,
-                                      child: Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          Icon(
-                                            Icons.image,
-                                            size: 100,
-                                            color: Colors.grey,
-                                          ),
-                                          SizedBox(height: 20),
-                                          Text(
-                                            'Nema dostupne slike',
-                                            style: TextStyle(
-                                                fontSize: 24,
-                                                color: Colors.grey),
-                                          ),
-                                        ],
+                          child: Center(
+                            child: _filePath != null
+                                ? Image.file(
+                                    File(_filePath!),
+                                    fit: BoxFit.cover,
+                                    width: 800,
+                                    height: 450,
+                                  )
+                                : _imageUrl != null
+                                    ? Image.network(
+                                        _imageUrl!,
+                                        fit: BoxFit.cover,
+                                        width: 800,
+                                        height: 450,
+                                      )
+                                    : SizedBox(
+                                        width: 800,
+                                        height: 450,
+                                        child: Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            Icon(
+                                              Icons.image,
+                                              size: 100,
+                                              color: Colors.grey,
+                                            ),
+                                            SizedBox(height: 20),
+                                            Text(
+                                              'Nema dostupne slike',
+                                              style: TextStyle(
+                                                  fontSize: 24,
+                                                  color: Colors.grey),
+                                            ),
+                                          ],
+                                        ),
                                       ),
-                                    ),
+                          ),
                         ),
-                      ),
-                      SizedBox(height: 10),
-                      Row(
-                        children: [
-                          Expanded(
-                            child: Text(
-                              _filePath != null ? _filePath! : '',
-                              style: TextStyle(fontSize: 16),
+                        SizedBox(height: 10),
+                        Row(
+                          children: [
+                            Expanded(
+                              child: Text(
+                                _filePath != null ? _filePath! : '',
+                                style: TextStyle(fontSize: 16),
+                              ),
+                            ),
+                            ElevatedButton(
+                              onPressed: () async {
+                                FilePickerResult? result = await FilePicker
+                                    .platform
+                                    .pickFiles(type: FileType.image);
+          
+                                if (result != null) {
+                                  setState(() {
+                                    _filePath = result.files.single.path;
+                                  });
+                                  field.didChange(_filePath);
+                                }
+                              },
+                              child: Text('Odaberite sliku'),
+                            ),
+                          ],
+                        ),
+                      ],
+                    );
+                  },
+                ),
+                SizedBox(height: 10),
+                Row(
+                  children: [
+                    Expanded(
+                      child: Container(
+                        width: 400,
+                        child: FormBuilderTextField(
+                          name: 'naslov',
+                          decoration: InputDecoration(
+                            labelText: 'Naslov',
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.all(Radius.circular(10)),
                             ),
                           ),
-                          ElevatedButton(
-                            onPressed: () async {
-                              FilePickerResult? result = await FilePicker
-                                  .platform
-                                  .pickFiles(type: FileType.image);
-
-                              if (result != null) {
-                                setState(() {
-                                  _filePath = result.files.single.path;
-                                });
-                                field.didChange(_filePath);
-                              }
-                            },
-                            child: Text('Odaberite sliku'),
-                          ),
-                        ],
+                          validator: FormBuilderValidators.compose([
+                            FormBuilderValidators.required(
+                                errorText: 'Naslov je obavezan'),
+                            FormBuilderValidators.maxLength(100,
+                                errorText:
+                                    'Naslov može imati najviše 100 znakova'),
+                          ]),
+                        ),
                       ),
-                    ],
-                  );
-                },
-              ),
-              SizedBox(height: 10),
-              Row(
-                children: [
-                  Expanded(
-                    child: Container(
-                      width: 400,
-                      child: FormBuilderTextField(
-                        name: 'naslov',
+                    ),
+                    SizedBox(width: 20),
+                    Expanded(
+                      child: FormBuilderDropdown<String>(
+                        name: 'kategorijaId',
                         decoration: InputDecoration(
-                          labelText: 'Naslov',
+                          labelText: 'Kategorija',
                           border: OutlineInputBorder(
-                            borderRadius: BorderRadius.all(Radius.circular(10)),
+                            borderRadius: BorderRadius.circular(10),
                           ),
                         ),
-                        validator: FormBuilderValidators.compose([
-                          FormBuilderValidators.required(
-                              errorText: 'Naslov je obavezan'),
-                          FormBuilderValidators.maxLength(100,
-                              errorText:
-                                  'Naslov može imati najviše 100 znakova'),
-                        ]),
+                        items: widget.kategorijeResult?.result
+                                .map((Kategorija kategorija) => DropdownMenuItem(
+                                      value: kategorija.id.toString(),
+                                      child: Text(kategorija.naziv ?? ''),
+                                    ))
+                                .toList() ??
+                            [],
+                        validator: FormBuilderValidators.required(
+                            errorText: 'Kategorija je obavezna'),
                       ),
                     ),
-                  ),
-                  SizedBox(width: 20),
-                  Expanded(
-                    child: FormBuilderDropdown<String>(
-                      name: 'kategorijaId',
-                      decoration: InputDecoration(
-                        labelText: 'Kategorija',
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                      ),
-                      items: widget.kategorijeResult?.result
-                              .map((Kategorija kategorija) => DropdownMenuItem(
-                                    value: kategorija.id.toString(),
-                                    child: Text(kategorija.naziv ?? ''),
-                                  ))
-                              .toList() ??
-                          [],
-                      validator: FormBuilderValidators.required(
-                          errorText: 'Kategorija je obavezna'),
-                    ),
-                  ),
-                ],
-              ),
-              SizedBox(height: 10),
-              FormBuilderTextField(
-                name: 'sadrzaj',
-                maxLines: 5,
-                decoration: InputDecoration(
-                  labelText: 'Sadržaj',
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(10)),
-                  ),
+                  ],
                 ),
-                validator: FormBuilderValidators.compose([
-                  FormBuilderValidators.required(
-                      errorText: 'Sadržaj je obavezan'),
-                  FormBuilderValidators.minLength(10,
-                      errorText: 'Sadržaj mora imati najmanje 10 znakova'),
-                ]),
-              ),
-            ],
+                SizedBox(height: 10),
+                FormBuilderTextField(
+                  name: 'sadrzaj',
+                  maxLines: 5,
+                  decoration: InputDecoration(
+                    labelText: 'Sadržaj',
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(10)),
+                    ),
+                  ),
+                  validator: FormBuilderValidators.compose([
+                    FormBuilderValidators.required(
+                        errorText: 'Sadržaj je obavezan'),
+                    FormBuilderValidators.minLength(10,
+                        errorText: 'Sadržaj mora imati najmanje 10 znakova'),
+                  ]),
+                ),
+              ],
+            ),
           ),
         ),
       ),

@@ -88,10 +88,27 @@ class _ScholarshipDetailsScreenState extends State<ScholarshipDetailsScreen> {
                       width: double.infinity,
                       fit: BoxFit.cover,
                     )
-                  : const SizedBox(
+                  :  Container(
+                      width: double.infinity,
                       height: 200,
-                      child: Center(
-                        child: Text('Nema dostupne slike'),
+                      decoration: BoxDecoration(
+                        color: Colors.grey[100],
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(
+                            Icons.image,
+                            size: 100,
+                            color: Colors.grey,
+                          ),
+                          SizedBox(height: 20),
+                          Text(
+                            'Nema dostupne slike',
+                            style: TextStyle(fontSize: 18, color: Colors.grey),
+                          ),
+                        ],
                       ),
                     ),
               SizedBox(height: 8),

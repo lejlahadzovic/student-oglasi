@@ -306,22 +306,26 @@ class _InternshipsScreenState extends State<InternshipsScreen> {
                             width: double.infinity,
                             fit: BoxFit.cover,
                           )
-                        : const SizedBox(
-                            width: 800,
-                            height: 450,
+                        : Container(
+                            width: double.infinity,
+                            height: 200,
+                            decoration: BoxDecoration(
+                              color: Colors.grey[200],
+                              borderRadius: BorderRadius.circular(10),
+                            ),
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 Icon(
                                   Icons.image,
-                                  size: 200,
+                                  size: 100,
                                   color: Colors.grey,
                                 ),
                                 SizedBox(height: 20),
                                 Text(
                                   'Nema dostupne slike',
                                   style: TextStyle(
-                                      fontSize: 24, color: Colors.grey),
+                                      fontSize: 18, color: Colors.grey),
                                 ),
                               ],
                             ),

@@ -671,11 +671,38 @@ class _SmjestajDetailsDialogState extends State<SmjestajDetailsDialog> {
                 ),
                 iconSize: 22,
                 onPressed: () async {
-                  bool success = await _slikeProvider.delete(slika.slikaId);
-                  if (success) {
-                    setState(() {
-                      savedImages.remove(slika);
-                    });
+                  bool? confirmDelete = await showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return AlertDialog(
+                        title: Text('Potvrda brisanja'),
+                        content: Text(
+                            'Da li ste sigurni da želite obrisati ovu sliku?'),
+                        actions: [
+                          TextButton(
+                            child: Text('Ne'),
+                            onPressed: () {
+                              Navigator.of(context).pop(false);
+                            },
+                          ),
+                          TextButton(
+                            child: Text('Da'),
+                            onPressed: () {
+                              Navigator.of(context).pop(true);
+                            },
+                          ),
+                        ],
+                      );
+                    },
+                  );
+
+                  if (confirmDelete == true) {
+                    bool success = await _slikeProvider.delete(slika.slikaId);
+                    if (success) {
+                      setState(() {
+                        savedImages.remove(slika);
+                      });
+                    }
                   }
                 },
               ),

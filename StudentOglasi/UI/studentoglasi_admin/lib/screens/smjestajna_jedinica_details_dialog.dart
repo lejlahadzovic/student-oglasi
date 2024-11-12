@@ -143,6 +143,7 @@ class _SmjestajnaJedinicaDetailsDialogState
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.all(Radius.circular(10)),
                           ),
+                          suffixIcon: Icon(Icons.people, color: Colors.grey),
                         ),
                         keyboardType: TextInputType.number,
                         validator: (value) {
@@ -150,7 +151,10 @@ class _SmjestajnaJedinicaDetailsDialogState
                             return 'Kapacitet je obavezan.';
                           }
                           final int? kapacitet = int.tryParse(value);
-                          if (kapacitet == null || kapacitet <= 0) {
+                          if (kapacitet == null) {
+                            return 'Kapacitet mora biti numerički broj.';
+                          }
+                          if (kapacitet <= 0) {
                             return 'Kapacitet mora biti pozitivan broj.';
                           }
                           return null;
@@ -172,6 +176,7 @@ class _SmjestajnaJedinicaDetailsDialogState
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.all(Radius.circular(10)),
                           ),
+                          suffixText: 'KM',
                         ),
                         keyboardType: TextInputType.number,
                         validator: (value) {
@@ -345,7 +350,9 @@ class _SmjestajnaJedinicaDetailsDialogState
               Navigator.pop(context, _jedinica);
             }
           },
-          child: Text('Dodaj smještajnu jedinicu'),
+          child: Text(widget.jedinica == null
+              ? 'Dodaj smještajnu jedinicu'
+              : 'Spremi smještajnu jedinicu'),
         ),
       ],
     );
@@ -378,11 +385,38 @@ class _SmjestajnaJedinicaDetailsDialogState
                 ),
                 iconSize: 22,
                 onPressed: () async {
-                  bool success = await _slikeProvider.delete(slika.slikaId);
-                  if (success) {
-                    setState(() {
-                      savedImages.remove(slika);
-                    });
+                  bool? confirmDelete = await showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return AlertDialog(
+                        title: Text('Potvrda brisanja'),
+                        content: Text(
+                            'Da li ste sigurni da želite obrisati ovu sliku?'),
+                        actions: [
+                          TextButton(
+                            child: Text('Ne'),
+                            onPressed: () {
+                              Navigator.of(context).pop(false);
+                            },
+                          ),
+                          TextButton(
+                            child: Text('Da'),
+                            onPressed: () {
+                              Navigator.of(context).pop(true);
+                            },
+                          ),
+                        ],
+                      );
+                    },
+                  );
+
+                  if (confirmDelete == true) {
+                    bool success = await _slikeProvider.delete(slika.slikaId);
+                    if (success) {
+                      setState(() {
+                        savedImages.remove(slika);
+                      });
+                    }
                   }
                 },
               ),

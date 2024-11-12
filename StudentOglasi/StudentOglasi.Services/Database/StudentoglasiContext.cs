@@ -1410,9 +1410,9 @@ protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
             new Slike { SlikaId = 10, Naziv = "ap1.jpg", SmjestajnaJedinicaId = 1 },
             new Slike { SlikaId = 11, Naziv = "ap2.jpg", SmjestajnaJedinicaId = 4 },
             new Slike { SlikaId = 12, Naziv = "ap9.jpg", SmjestajnaJedinicaId = 3 },
-            new Slike { SlikaId = 13, Naziv = "hotel2.jpg", SmjestajId = 1 },
-            new Slike { SlikaId = 14, Naziv = "hotel3.jpg", SmjestajId = 3 },
-            new Slike { SlikaId = 15, Naziv = "hotel2.jpg", SmjestajId = 4 }
+            new Slike { SlikaId = 13, Naziv = "hotel4.jpg", SmjestajId = 1 },
+            new Slike { SlikaId = 14, Naziv = "hotel6.jpg", SmjestajId = 3 },
+            new Slike { SlikaId = 15, Naziv = "hotel5.jpg", SmjestajId = 4 }
         );
 
         modelBuilder.Entity<Ocjene>().HasData(
@@ -1483,45 +1483,22 @@ protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 
 
         modelBuilder.Entity<PrijavePraksa>().HasData(
-            new PrijavePraksa
-            {
-                StudentId = 2,
-                PraksaId = 1,
-                PropratnoPismo = "Propratno_pismo_1.pdf",
-                Cv = "CV_studenta_1.pdf",
-                Certifikati = "Certifikati_studenta_1.pdf",
-                StatusId = 2
-            },
-            new PrijavePraksa
-            {
-                StudentId = 3,
-                PraksaId = 2,
-                PropratnoPismo = "Propratno_pismo_2.pdf",
-                Cv = "CV_studenta_2.pdf",
-                Certifikati = "Certifikati_studenta_2.pdf",
-                StatusId = 2
-            }
+            new PrijavePraksa { StudentId = 2, PraksaId = 1, PropratnoPismo = "Propratno_pismo_1.pdf", Cv = "CV_studenta_1.pdf", Certifikati = "Certifikati_studenta_1.pdf", StatusId = 2 },
+            new PrijavePraksa { StudentId = 3, PraksaId = 2, PropratnoPismo = "Propratno_pismo_2.pdf", Cv = "CV_studenta_2.pdf", Certifikati = "Certifikati_studenta_2.pdf", StatusId = 2 },
+            new PrijavePraksa { StudentId = 5, PraksaId = 6, PropratnoPismo = "Propratno_pismo.pdf", Cv = "CV_studenta.pdf", Certifikati = "Certifikati_studenta.pdf", StatusId = 4 },
+            new PrijavePraksa { StudentId = 6, PraksaId = 7, PropratnoPismo = "Propratno_pismo.pdf", Cv = "CV_studenta.pdf", Certifikati = "Certifikati_studenta.pdf", StatusId = 2 },
+            new PrijavePraksa { StudentId = 7, PraksaId = 8, PropratnoPismo = "Propratno_pismo.pdf", Cv = "CV_studenta.pdf", Certifikati = "Certifikati_studenta.pdf", StatusId = 3 },
+            new PrijavePraksa { StudentId = 8, PraksaId = 1, PropratnoPismo = "Propratno_pismo.pdf", Cv = "CV_studenta.pdf", Certifikati = "Certifikati_studenta.pdf", StatusId = 2 },
+            new PrijavePraksa { StudentId = 9, PraksaId = 2, PropratnoPismo = "Propratno_pismo.pdf", Cv = "CV_studenta.pdf", Certifikati = "Certifikati_studenta.pdf", StatusId = 4 }
             );
 
         modelBuilder.Entity<PrijaveStipendija>().HasData(
-            new PrijaveStipendija
-            {
-                StudentId = 2,
-                StipendijaId = 3,
-                Dokumentacija = "Dokumentacija_studenta_1.pdf",
-                Cv = "CV_studenta_1.pdf",
-                ProsjekOcjena = 8.5m,
-                StatusId = 2
-            },
-            new PrijaveStipendija
-            {
-                StudentId = 3,
-                StipendijaId = 4,
-                Dokumentacija = "Dokumentacija_studenta_2.pdf",
-                Cv = "CV_studenta_2.pdf",
-                ProsjekOcjena = 9.0m,
-                StatusId = 2
-            }
+            new PrijaveStipendija { StudentId = 2, StipendijaId = 3, Dokumentacija = "Dokumentacija_studenta_1.pdf", Cv = "CV_studenta_1.pdf", ProsjekOcjena = 8.5m, StatusId = 2 },
+            new PrijaveStipendija { StudentId = 3, StipendijaId = 4, Dokumentacija = "Dokumentacija_studenta_2.pdf", Cv = "CV_studenta_2.pdf", ProsjekOcjena = 9.0m, StatusId = 2 },
+            new PrijaveStipendija { StudentId = 6, StipendijaId = 12, Dokumentacija = "Dokumentacija_studenta.pdf", Cv = "CV_studenta.pdf", ProsjekOcjena = 8.7m, StatusId = 4 },
+            new PrijaveStipendija { StudentId = 7, StipendijaId = 13, Dokumentacija = "Dokumentacija_studenta.pdf", Cv = "CV_studenta.pdf", ProsjekOcjena = 9.1m, StatusId = 2 },
+            new PrijaveStipendija { StudentId = 8, StipendijaId = 3, Dokumentacija = "Dokumentacija_studenta.pdf", Cv = "CV_studenta.pdf", ProsjekOcjena = 8.0m, StatusId = 2 },
+            new PrijaveStipendija { StudentId = 9, StipendijaId = 4, Dokumentacija = "Dokumentacija_studenta.pdf", Cv = "CV_studenta.pdf", ProsjekOcjena = 7.9m, StatusId = 3 }
             );
 
         modelBuilder.Entity<Rezervacije>().HasData(
@@ -1547,6 +1524,66 @@ protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
                 BrojOsoba = 3,
                 Cijena = 300.00m,
                 Napomena = null,
+                StatusId = 2
+            },
+            new Rezervacije
+            {
+                Id = 3,
+                SmjestajnaJedinicaId = 3,
+                StudentId = 4,
+                DatumPrijave = new DateTime(2024, 8, 1),
+                DatumOdjave = new DateTime(2024, 8, 10),
+                BrojOsoba = 2,
+                Cijena = 250.00m,
+                Napomena = "Poruka o specijalnim potrebama",
+                StatusId = 3
+            },
+            new Rezervacije
+            {
+                Id = 4,
+                SmjestajnaJedinicaId = 4,
+                StudentId = 5,
+                DatumPrijave = new DateTime(2024, 9, 3),
+                DatumOdjave = new DateTime(2024, 9, 15),
+                BrojOsoba = 4,
+                Cijena = 400.00m,
+                Napomena = "Dodatni zahtevi za doručak",
+                StatusId = 3
+            },
+            new Rezervacije
+            {
+                Id = 5,
+                SmjestajnaJedinicaId = 5,
+                StudentId = 6,
+                DatumPrijave = new DateTime(2024, 10, 12),
+                DatumOdjave = new DateTime(2024, 10, 20),
+                BrojOsoba = 1,
+                Cijena = 150.00m,
+                Napomena = null,
+                StatusId = 4
+            },
+            new Rezervacije
+            {
+                Id = 6,
+                SmjestajnaJedinicaId = 6,
+                StudentId = 7,
+                DatumPrijave = new DateTime(2024, 11, 10),
+                DatumOdjave = new DateTime(2024, 11, 15),
+                BrojOsoba = 2,
+                Cijena = 180.00m,
+                Napomena = "Specijalne instrukcije za prijavu",
+                StatusId = 4
+            },
+            new Rezervacije
+            {
+                Id = 7,
+                SmjestajnaJedinicaId = 1,
+                StudentId = 8,
+                DatumPrijave = new DateTime(2024, 12, 5),
+                DatumOdjave = new DateTime(2024, 12, 10),
+                BrojOsoba = 2,
+                Cijena = 220.00m,
+                Napomena = "Kasna prijava",
                 StatusId = 2
             }
             );

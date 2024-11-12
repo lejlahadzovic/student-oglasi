@@ -71,9 +71,13 @@ class _AccommodationDetailsScreenState
               widget.smjestaj.slikes != null &&
                       widget.smjestaj.slikes!.isNotEmpty
                   ? ImageGallery(images: widget.smjestaj.slikes!)
-                  : SizedBox(
+                  : Container(
                       width: double.infinity,
                       height: 200,
+                      decoration: BoxDecoration(
+                        color: Colors.grey[100],
+                        borderRadius: BorderRadius.circular(10),
+                      ),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [

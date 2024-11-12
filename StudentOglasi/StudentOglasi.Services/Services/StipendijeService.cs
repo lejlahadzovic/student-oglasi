@@ -37,7 +37,6 @@ namespace StudentOglasi.Services.Services
             {
                 filteredQuery = filteredQuery.Where(x => x.Stipenditor.Id == search.Stipenditor);
             }
-
             return filteredQuery;
         }
         public override IQueryable<Database.Stipendije> AddInclude(IQueryable<Database.Stipendije> query, StipendijeSearchObject? search = null)

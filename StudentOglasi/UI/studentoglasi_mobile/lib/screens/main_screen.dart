@@ -88,26 +88,21 @@ class _ObjavaListScreenState extends State<ObjavaListScreen> {
           children: [
             Expanded(
               child: Container(
-                padding:
-                    EdgeInsets.only(bottom: 12.0),
+                padding: EdgeInsets.only(bottom: 12.0),
                 child: TextField(
                   controller: _naslovController,
                   style: TextStyle(color: Colors.white),
                   decoration: InputDecoration(
                     hintText: 'Pretraži...',
-                    hintStyle: TextStyle(
-                        color: Colors.white), 
+                    hintStyle: TextStyle(color: Colors.white),
                     enabledBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(
-                          color: Colors.white, width: 1),
+                      borderSide: BorderSide(color: Colors.white, width: 1),
                     ),
                     focusedBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(
-                          color: Colors.white, width: 1),
+                      borderSide: BorderSide(color: Colors.white, width: 1),
                     ),
                     border: UnderlineInputBorder(
-                      borderSide: BorderSide(
-                          color: Colors.white, width: 1), 
+                      borderSide: BorderSide(color: Colors.white, width: 1),
                     ),
                   ),
                   onChanged: (text) => _onSearchChanged(),
@@ -207,9 +202,15 @@ class _ObjavaListScreenState extends State<ObjavaListScreen> {
                                                   width: double.infinity,
                                                   fit: BoxFit.cover,
                                                 )
-                                              : SizedBox(
-                                                  width: 800,
-                                                  height: 450,
+                                              : Container(
+                                                  width: double.infinity,
+                                                  height: 200,
+                                                  decoration: BoxDecoration(
+                                                    color: Colors.grey[200],
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            10),
+                                                  ),
                                                   child: Column(
                                                     mainAxisAlignment:
                                                         MainAxisAlignment
@@ -217,14 +218,14 @@ class _ObjavaListScreenState extends State<ObjavaListScreen> {
                                                     children: [
                                                       Icon(
                                                         Icons.image,
-                                                        size: 200,
+                                                        size: 100,
                                                         color: Colors.grey,
                                                       ),
                                                       SizedBox(height: 20),
                                                       Text(
                                                         'Nema dostupne slike',
                                                         style: TextStyle(
-                                                            fontSize: 24,
+                                                            fontSize: 18,
                                                             color: Colors.grey),
                                                       ),
                                                     ],
