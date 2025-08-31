@@ -1,27 +1,27 @@
-### Lokacija `.env` fajla:
-- `.env` fajl treba biti smješten u root direktorijumu projekta.
+🎓 Student Support App
+A desktop and mobile application that helps students find scholarships, internships, and accommodations efficiently. 
+Centralizes all opportunities and allows applications, bookings, reviews, and real-time chat in one platform.
 
-# Kredencijali za prijavu:
+🛠 Technologies
+Backend: .NET REST API
+Database: SQL
+Frontend: Flutter (Desktop & Mobile)
+Containerization: Docker
+Payment: Stripe
+Real-time chat & notifications: Firebase
 
-## DESKTOP: 
-- **Username**: admin
-- **Password**: admin
+🚀 Features
+🖥 Desktop App (Admin)
+Manage students, news, and accommodations (CRUD).
+Manage internship & scholarship ads and student applications.
+Manage reservations and generate reports (occupancy, revenue, applications).
 
-## MOBILE:
-1. **Username**: kemal  
-   **Password**: student
-
-2. **Username**: lejla  
-   **Password**: student
-
-## ONLINE PLAĆANJE:
-
-- **Broj kartice**: 4242 4242 4242 4242
-- **Datum**: 12/34
-
-### RabbitMQ implementacija:
-   
-Na desktop aplikaciji kod rezervacija, prijava na prakse i stipendije klikom na akciju tj. ikonicu za uređivanje i promjenom statusa prijave ili rezervacije šalje se mail korisniku kao obavijest da li je prijava otkazana ili odobrena
-- Publisher: MailService (pozvan unutar poslovne logike u StateMachines dijelu projekta, u funkcijama za odobravanje i otkazivanje prijava/rezervacija) šalje poruku RabbitMQ-u.
-- Subscriber: Konzolni projekt koji sluša poruke i obrađuje ih.
-
+📱 Mobile App (Students)
+Browse and filter scholarships, internships, and accommodations.
+Apply for internships/scholarships directly.
+Book accommodations and pay online via Stripe.
+Leave reviews and ratings.
+Receive personalized recommendations (User-based Collaborative Filtering).
+Chat with other users in real-time (Firebase).
+View and cancel applications/reservations.
+Receive notifications for new ads (Firebase Cloud Messaging).
